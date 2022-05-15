@@ -13,7 +13,7 @@
     "prisma:migrate:dev": "npx prisma migrate dev",
     "prisma:seed": "npx prisma db seed",
     "prisma:migrate:deploy": "npx prisma migrate deploy",
-    "start": "npx prisma migrate dev && npx prisma prod:seed && npx prisma generate && node dist/src/index.js"
+    "start": "npx prisma migrate dev && npx prisma generate && node dist/src/index.js"
   },
   "author": "",
   "license": "ISC",
