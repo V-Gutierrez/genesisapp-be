@@ -8,7 +8,7 @@ export default class Middlewares {
   }
 
   CORS() {
-    this.app.use(cors({ origin: ['http://localhost:3000', 'http://192.168.0.56:3000/', 'https://genesisproject-six.vercel.app/'] }))
+    this.app.use(cors({ origin: ['http://localhost:3000', 'http://192.168.0.56:3000/', 'https://genesisproject-six.vercel.app'] }))
   }
 
   Logger() {
