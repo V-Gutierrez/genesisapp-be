@@ -1,18 +1,18 @@
 import { Express, Request, Response } from 'express'
 
-import { GrowthGroup } from '@prisma/client'
+import { Devotional } from '@prisma/client'
 import Prisma from '@Clients/Prisma'
 import ResponseHandler from 'src/Helpers/ResponseHandler'
 
-class GrowthGroupsRoutes {
+class Devotionals {
   constructor(private readonly app: Express) {
-    this.getGrowthGroups()
+    this.getDevotionals()
   }
 
-  private async getGrowthGroups() {
-    this.app.get('/api/growthgroups', async (_req: Request, res: Response) => {
+  getDevotionals() {
+    this.app.get('/api/devotionals', async (_req: Request, res: Response) => {
       try {
-        const response: GrowthGroup[] = await Prisma.growthGroup.findMany()
+        const response: Devotional[] = await Prisma.devotional.findMany()
 
         new ResponseHandler(res, 200, response)
       } catch (error) {
@@ -20,6 +20,7 @@ class GrowthGroupsRoutes {
       }
     })
   }
+
 }
 
-export default GrowthGroupsRoutes
+export default Devotionals

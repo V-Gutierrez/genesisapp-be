@@ -23,3 +23,11 @@ model GrowthGroup {
   scheduledTime String
   leadership    String[] //Can relate to a user in the future
 }
+
+model Devotional {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  title     String
+  body      String //Probably markdown in the future
+  author    String //Can relate to a user in the future
+}
