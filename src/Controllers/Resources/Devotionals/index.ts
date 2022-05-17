@@ -6,10 +6,10 @@ import ResponseHandler from 'src/Helpers/ResponseHandler'
 
 class Devotionals {
   constructor(private readonly app: Express) {
-    this.getDevotionals()
+    this.get()
   }
 
-  getDevotionals() {
+  get() {
     this.app.get('/api/devotionals', async (_req: Request, res: Response) => {
       try {
         const response: Devotional[] = await Prisma.devotional.findMany()

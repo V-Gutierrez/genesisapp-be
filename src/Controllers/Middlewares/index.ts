@@ -1,4 +1,5 @@
-import { Express } from 'express'
+import { Express, NextFunction, Request, Response } from 'express'
+
 import cors from 'cors'
 
 export default class Middlewares {
@@ -12,7 +13,7 @@ export default class Middlewares {
   }
 
   Logger() {
-    this.app.use((req, res, next) => {
+    this.app.use((req: Request, res: Response, next: NextFunction) => {
       console.log(
         `${req.method} ${req.url} --- Origin: ${req.headers.origin} with Status Code: ${res.statusCode} - ${res.statusMessage
         } - ${Date.now()}`,
@@ -20,4 +21,5 @@ export default class Middlewares {
       next()
     })
   }
+
 }
