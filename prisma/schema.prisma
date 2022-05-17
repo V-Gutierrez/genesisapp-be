@@ -17,17 +17,15 @@ enum Role {
 }
 
 model User {
-  id            String       @id @default(cuid())
-  name          String
-  email         String
-  password      String
-  phone         String
-  role          Role         @default(USER)
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @default(now())
-  growthGroupId String?
-  GrowthGroup   GrowthGroup? @relation(fields: [growthGroupId], references: [id])
-  Devotional    Devotional[]
+  id         String       @id @default(cuid())
+  name       String
+  email      String       @unique
+  password   String
+  phone      String       @unique
+  role       Role         @default(USER)
+  createdAt  DateTime     @default(now())
+  updatedAt  DateTime     @default(now())
+  Devotional Devotional[]
 }
 
 model GrowthGroup {
@@ -40,7 +38,7 @@ model GrowthGroup {
   addressInfo   String
   weekDay       String
   scheduledTime String
-  leadership    User[] //Can relate to a user in the future
+  leadership    String[] //Relate to users in a distant future (leaders need to have an account)
 }
 
 model Devotional {
@@ -48,6 +46,6 @@ model Devotional {
   createdAt DateTime @default(now())
   title     String
   body      String //Probably markdown in the future
-  author    User     @relation(fields: [userId], references: [id])
-  userId    String
+  author    User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }
