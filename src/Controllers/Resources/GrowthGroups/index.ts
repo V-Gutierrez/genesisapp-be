@@ -14,9 +14,9 @@ class GrowthGroups {
       try {
         const response: GrowthGroup[] = await Prisma.growthGroup.findMany()
 
-        new ResponseHandler(res, 200, response)
+        return new ResponseHandler(res, 200, response)
       } catch (error) {
-        new ResponseHandler(res, 500, null)
+        return new ResponseHandler(res, 500, null)
       }
     })
   }

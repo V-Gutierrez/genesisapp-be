@@ -14,9 +14,9 @@ class Devotionals {
       try {
         const response: Devotional[] = await Prisma.devotional.findMany()
 
-        new ResponseHandler(res, 200, response)
+        return new ResponseHandler(res, 200, response)
       } catch (error) {
-        new ResponseHandler(res, 500, null)
+        return new ResponseHandler(res, 500, null)
       }
     })
   }
