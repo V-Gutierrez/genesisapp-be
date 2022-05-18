@@ -103,6 +103,10 @@ class Authentication {
           where: {
             UserRefreshTokens: { some: { token: refreshToken } },
           },
+          select: {
+            email: true,
+            role: true,
+          },
         })
 
         if (!user) return res.sendStatus(403)
@@ -111,10 +115,11 @@ class Authentication {
           refreshToken,
           process.env.REFRESH_TOKEN_SECRET as string,
           (err: any, decoded: any) => {
-            if (err || user.email !== decoded.email) return res.sendStatus(403)
+            if (err || user.email !== decoded.email || user.role !== decoded.role)
+              return res.sendStatus(403)
 
             const accessToken = jwt.sign(
-              { email: user.email },
+              { email: user.email, role: user.role },
               process.env.ACCESS_TOKEN_SECRET as string,
               { expiresIn: '12h' },
             )
@@ -157,10 +162,6 @@ class Authentication {
         res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
         return res.sendStatus(204)
       } catch (error) {
-        console.log(
-          '🚀 ~ file: index.ts ~ line 150 ~ Authentication ~ this.app.delete ~ error',
-          error,
-        )
         res.sendStatus(500)
       }
     })

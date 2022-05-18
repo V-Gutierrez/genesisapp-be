@@ -2,6 +2,9 @@ import 'dotenv/config'
 
 import express, { Express, NextFunction, Request, Response } from 'express'
 
+import Joi from 'joi'
+import Prisma from '@Clients/Prisma'
+import SchemaHelper from '@Helpers/SchemaHelper'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
@@ -36,17 +39,33 @@ export default class Middlewares {
   }
 
   static JWT(app: Express) {
-    app.use((req: Request, res: Response, next: NextFunction) => {
-      const authHeader = req.headers.authorization
+    app.use(async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const schema = Joi.object().keys({
+          jwt: Joi.required(),
+        })
 
-      if (!authHeader) return res.sendStatus(401)
-      const token = authHeader
+        const errors = SchemaHelper.validateSchema(schema, req.cookies)
+        if (errors) return res.sendStatus(401)
 
-      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err, decoded) => {
-        if (err) return res.sendStatus(403)
+        const { jwt: token } = req.cookies
 
-        next()
-      })
+        const user = await Prisma.user.findFirst({
+          where: {
+            UserRefreshTokens: { some: { token } },
+          },
+        })
+
+        if (!user) return res.sendStatus(403)
+
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any, decoded: any) => {
+          if (err || user.email !== decoded.email || user.role !== decoded.role)
+            return res.sendStatus(403)
+          next()
+        })
+      } catch (error) {
+        res.sendStatus(500)
+      }
     })
   }
 }
