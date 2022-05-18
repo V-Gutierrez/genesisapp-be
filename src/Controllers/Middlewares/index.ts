@@ -1,7 +1,9 @@
 import express, { Express, NextFunction, Request, Response } from 'express'
+
+import cookieParser from 'cookie-parser'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
-import cors from 'cors'
 
 export default class Middlewares {
   constructor(private readonly app: Express) {
@@ -11,6 +13,7 @@ export default class Middlewares {
     this.Logger()
 
     this.app.use(express.json())
+    this.app.use(cookieParser())
     this.app.use(express.urlencoded({ extended: false }))
   }
 
@@ -31,19 +34,14 @@ export default class Middlewares {
     app.use((req: Request, res: Response, next: NextFunction) => {
       const authHeader = req.headers.authorization
 
-      if (!authHeader) {
-        res.sendStatus(401)
-      } else {
-        const token = authHeader
+      if (!authHeader) return res.sendStatus(401)
+      const token = authHeader
 
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err, decoded) => {
-          if (err) {
-            res.sendStatus(403)
-            return
-          }
-          next()
-        })
-      }
+      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err, decoded) => {
+        if (err) return res.sendStatus(403)
+
+        next()
+      })
     })
   }
 }

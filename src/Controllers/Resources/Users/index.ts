@@ -1,10 +1,10 @@
-import Middlewares from '@Controllers/Middlewares'
 import { Express, Request, Response } from 'express'
 
-import Bcrypt from 'src/Helpers/Bcrypt';
+import Bcrypt from '@Helpers/Bcrypt';
 import Joi from 'joi'
+import Middlewares from '@Controllers/Middlewares'
 import Prisma from '@Clients/Prisma';
-import SchemaHelper from 'src/Helpers/SchemaHelper';
+import SchemaHelper from '@Helpers/SchemaHelper';
 import { User } from '@prisma/client';
 
 class Users {
