@@ -82,7 +82,6 @@ class Authentication {
           return res.sendStatus(401)
         }
       } catch (error) {
-        console.log('🚀 ~ file: index.ts ~ line 78 ~ Authentication ~ this.app.post ~ error', error)
         res.sendStatus(500)
       }
     })
@@ -124,7 +123,6 @@ class Authentication {
           },
         )
       } catch (error) {
-        console.log('🚀 ~ file: index.ts ~ line 112 ~ Authentication ~ this.app.get ~ error', error)
         res.sendStatus(500)
       }
     })
