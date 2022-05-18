@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
@@ -7,9 +5,11 @@ import Joi from 'joi'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { User } from '@prisma/client'
+import dotenv from 'dotenv'
 import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 
+dotenv.config()
 class Authentication {
   constructor(private readonly app: Express) {
     this.authenticate()
@@ -53,6 +53,7 @@ class Authentication {
             process.env.ACCESS_TOKEN_SECRET as string,
             { expiresIn: '12h' },
           )
+
           console.log(
             '🚀 ~ file: index.ts ~ line 54 ~ Authentication ~ this.app.post ~ process.env.ACCESS_TOKEN_SECRET',
             process.env.ACCESS_TOKEN_SECRET,
@@ -62,6 +63,13 @@ class Authentication {
             '🚀 ~ file: index.ts ~ line 60 ~ Authentication ~ this.app.post ~ process.env.REFRESH_TOKEN_SECRET',
             process.env.REFRESH_TOKEN_SECRET,
           )
+          dotenv.config()
+          console.log(
+            '🚀 ~ file: index.ts ~ line 60 ~ Authentication ~ this.app.post ~ process.env.REFRESH_TOKEN_SECRET',
+            process.env.REFRESH_TOKEN_SECRET,
+          )
+          dotenv.config()
+
           const refreshToken = jwt.sign(
             { email: user.email, role: user.role },
             process.env.REFRESH_TOKEN_SECRET as string,
