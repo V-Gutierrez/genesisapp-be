@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
@@ -7,9 +5,11 @@ import Joi from 'joi'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { User } from '@prisma/client'
+import dotenv from 'dotenv'
 import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 
+dotenv.config()
 class Authentication {
   constructor(private readonly app: Express) {
     this.authenticate()

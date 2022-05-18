@@ -44,117 +44,120 @@
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
-        Object.defineProperty(t, '__esModule', { value: !0 }), r(81)
+        Object.defineProperty(t, '__esModule', { value: !0 })
         const i = n(r(349)),
           o = n(r(506)),
           a = n(r(221)),
           u = n(r(721)),
+          d = n(r(142)),
           c = n(r(668)),
-          d = n(r(344))
-        t.default = class {
-          constructor(e) {
-            ;(this.app = e), this.authenticate(), this.refreshToken(), this.logout()
-          }
-          authenticate() {
-            return s(this, void 0, void 0, function* () {
-              this.app.post('/api/auth', (e, t) =>
-                s(this, void 0, void 0, function* () {
-                  try {
-                    const r = o.default
-                        .object()
-                        .keys({
-                          email: o.default.string().email().required(),
-                          password: o.default.string().required(),
+          l = n(r(344))
+        d.default.config(),
+          (t.default = class {
+            constructor(e) {
+              ;(this.app = e), this.authenticate(), this.refreshToken(), this.logout()
+            }
+            authenticate() {
+              return s(this, void 0, void 0, function* () {
+                this.app.post('/api/auth', (e, t) =>
+                  s(this, void 0, void 0, function* () {
+                    try {
+                      const r = o.default
+                          .object()
+                          .keys({
+                            email: o.default.string().email().required(),
+                            password: o.default.string().required(),
+                          }),
+                        s = u.default.validateSchema(r, e.body)
+                      if (s) return t.status(400).json({ error: s })
+                      const { email: n, password: d } = e.body,
+                        f = yield a.default.user.findFirst({
+                          where: { email: n },
+                          select: { password: !0, email: !0, id: !0, role: !0 },
+                        })
+                      if (!f) return t.sendStatus(401)
+                      if (!(yield i.default.comparePassword(d, f.password)))
+                        return t.sendStatus(401)
+                      {
+                        const e = l.default.sign(
+                            { email: f.email, role: f.role },
+                            process.env.ACCESS_TOKEN_SECRET,
+                            { expiresIn: '12h' },
+                          ),
+                          r = l.default.sign(
+                            { email: f.email, role: f.role },
+                            process.env.REFRESH_TOKEN_SECRET,
+                            { expiresIn: '30d' },
+                          )
+                        yield a.default.userRefreshTokens.upsert({
+                          where: { userId: f.id },
+                          update: { token: r },
+                          create: { userId: f.id, token: r },
                         }),
-                      s = u.default.validateSchema(r, e.body)
-                    if (s) return t.status(400).json({ error: s })
-                    const { email: n, password: l } = e.body,
-                      f = yield a.default.user.findFirst({
-                        where: { email: n },
-                        select: { password: !0, email: !0, id: !0, role: !0 },
-                      })
-                    if (!f) return t.sendStatus(401)
-                    if (!(yield i.default.comparePassword(l, f.password))) return t.sendStatus(401)
-                    {
-                      const e = d.default.sign(
-                          { email: f.email, role: f.role },
+                          t.cookie('jwt', r, { httpOnly: !0, maxAge: 2592e6, secure: c.default }),
+                          t.status(200).json({ userLoggedIn: !0, accessToken: e })
+                      }
+                    } catch (e) {
+                      t.sendStatus(500)
+                    }
+                  }),
+                )
+              })
+            }
+            refreshToken() {
+              return s(this, void 0, void 0, function* () {
+                this.app.get('/api/auth', (e, t) =>
+                  s(this, void 0, void 0, function* () {
+                    try {
+                      const r = o.default.object().keys({ jwt: o.default.required() })
+                      if (u.default.validateSchema(r, e.cookies)) return t.sendStatus(401)
+                      const { jwt: s } = e.cookies,
+                        n = yield a.default.user.findFirst({
+                          where: { UserRefreshTokens: { some: { token: s } } },
+                          select: { email: !0, role: !0 },
+                        })
+                      if (!n) return t.sendStatus(403)
+                      l.default.verify(s, process.env.REFRESH_TOKEN_SECRET, (e, r) => {
+                        if (e || n.email !== r.email || n.role !== r.role) return t.sendStatus(403)
+                        const s = l.default.sign(
+                          { email: n.email, role: n.role },
                           process.env.ACCESS_TOKEN_SECRET,
                           { expiresIn: '12h' },
-                        ),
-                        r = d.default.sign(
-                          { email: f.email, role: f.role },
-                          process.env.REFRESH_TOKEN_SECRET,
-                          { expiresIn: '30d' },
                         )
-                      yield a.default.userRefreshTokens.upsert({
-                        where: { userId: f.id },
-                        update: { token: r },
-                        create: { userId: f.id, token: r },
-                      }),
-                        t.cookie('jwt', r, { httpOnly: !0, maxAge: 2592e6, secure: c.default }),
-                        t.status(200).json({ userLoggedIn: !0, accessToken: e })
+                        t.json({ accessToken: s })
+                      })
+                    } catch (e) {
+                      t.sendStatus(500)
                     }
-                  } catch (e) {
-                    t.sendStatus(500)
-                  }
-                }),
-              )
-            })
-          }
-          refreshToken() {
-            return s(this, void 0, void 0, function* () {
-              this.app.get('/api/auth', (e, t) =>
-                s(this, void 0, void 0, function* () {
-                  try {
-                    const r = o.default.object().keys({ jwt: o.default.required() })
-                    if (u.default.validateSchema(r, e.cookies)) return t.sendStatus(401)
-                    const { jwt: s } = e.cookies,
-                      n = yield a.default.user.findFirst({
-                        where: { UserRefreshTokens: { some: { token: s } } },
-                        select: { email: !0, role: !0 },
-                      })
-                    if (!n) return t.sendStatus(403)
-                    d.default.verify(s, process.env.REFRESH_TOKEN_SECRET, (e, r) => {
-                      if (e || n.email !== r.email || n.role !== r.role) return t.sendStatus(403)
-                      const s = d.default.sign(
-                        { email: n.email, role: n.role },
-                        process.env.ACCESS_TOKEN_SECRET,
-                        { expiresIn: '12h' },
-                      )
-                      t.json({ accessToken: s })
-                    })
-                  } catch (e) {
-                    t.sendStatus(500)
-                  }
-                }),
-              )
-            })
-          }
-          logout() {
-            return s(this, void 0, void 0, function* () {
-              this.app.delete('/api/auth', (e, t) =>
-                s(this, void 0, void 0, function* () {
-                  try {
-                    const r = o.default.object().keys({ jwt: o.default.required() })
-                    if (u.default.validateSchema(r, e.cookies)) return t.sendStatus(204)
-                    const { jwt: s } = e.cookies,
-                      n = yield a.default.user.findFirst({
-                        where: { UserRefreshTokens: { some: { token: s } } },
-                      })
-                    return n
-                      ? (yield a.default.userRefreshTokens.delete({ where: { userId: n.id } }),
-                        t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
-                        t.sendStatus(204))
-                      : (t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
-                        t.sendStatus(204))
-                  } catch (e) {
-                    t.sendStatus(500)
-                  }
-                }),
-              )
-            })
-          }
-        }
+                  }),
+                )
+              })
+            }
+            logout() {
+              return s(this, void 0, void 0, function* () {
+                this.app.delete('/api/auth', (e, t) =>
+                  s(this, void 0, void 0, function* () {
+                    try {
+                      const r = o.default.object().keys({ jwt: o.default.required() })
+                      if (u.default.validateSchema(r, e.cookies)) return t.sendStatus(204)
+                      const { jwt: s } = e.cookies,
+                        n = yield a.default.user.findFirst({
+                          where: { UserRefreshTokens: { some: { token: s } } },
+                        })
+                      return n
+                        ? (yield a.default.userRefreshTokens.delete({ where: { userId: n.id } }),
+                          t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
+                          t.sendStatus(204))
+                        : (t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
+                          t.sendStatus(204))
+                    } catch (e) {
+                      t.sendStatus(500)
+                    }
+                  }),
+                )
+              })
+            }
+          })
       },
       717: function (e, t, r) {
         var s =
@@ -199,8 +202,8 @@
           o = n(r(506)),
           a = n(r(221)),
           u = n(r(721)),
-          c = n(r(710)),
-          d = n(r(582)),
+          d = n(r(710)),
+          c = n(r(582)),
           l = n(r(344))
         t.default = class {
           constructor(e) {
@@ -208,12 +211,12 @@
               this.CORS(),
               this.Logger(),
               this.app.use(i.default.json()),
-              this.app.use((0, c.default)()),
+              this.app.use((0, d.default)()),
               this.app.use(i.default.urlencoded({ extended: !1 }))
           }
           CORS() {
             this.app.use(
-              (0, d.default)({
+              (0, c.default)({
                 origin: [
                   'http://localhost:3000',
                   'http://192.168.0.56:3000/',
@@ -411,7 +414,7 @@
           o = n(r(506)),
           a = n(r(717)),
           u = n(r(221)),
-          c = n(r(721))
+          d = n(r(721))
         t.default = class {
           constructor(e) {
             ;(this.app = e), this.signUp(), a.default.JWT(this.app), this.get()
@@ -450,12 +453,12 @@
                         password: o.default.string().min(8),
                         birthdate: o.default.string().required(),
                       }),
-                    s = c.default.validateSchema(r, e.body)
+                    s = d.default.validateSchema(r, e.body)
                   try {
                     if (s) t.status(400).json({ error: s })
                     else {
                       const { email: r, name: s, password: n, phone: o, birthdate: a } = e.body,
-                        c = yield u.default.user.create({
+                        d = yield u.default.user.create({
                           data: {
                             email: r,
                             name: s,
@@ -464,7 +467,7 @@
                             phone: o,
                           },
                         })
-                      t.status(201).json({ message: 'User created', user: c })
+                      t.status(201).json({ message: 'User created', user: d })
                     }
                   } catch (e) {
                     'P2002' === e.code
@@ -633,6 +636,9 @@
       },
       582: (e) => {
         e.exports = require('cors')
+      },
+      142: (e) => {
+        e.exports = require('dotenv')
       },
       81: (e) => {
         e.exports = require('dotenv/config')
