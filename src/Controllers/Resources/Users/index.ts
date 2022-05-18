@@ -37,6 +37,7 @@ class Users {
           if (user) res.status(200).json(user)
         }
       } catch (error) {
+        console.log("🚀 ~ file: index.ts ~ line 40 ~ Users ~ this.app.get ~ error", error)
         res.sendStatus(500)
       }
     })
@@ -74,6 +75,7 @@ class Users {
           res.status(201).json({ message: 'User created' })
         }
       } catch (error) {
+        console.log("🚀 ~ file: index.ts ~ line 78 ~ Users ~ this.app.post ~ error", error)
         if ((error as any).code === 'P2002') res.status(409).json({ error: 'User already exists' })
         else res.status(500).json({ error: 'Internal server error' })
       }

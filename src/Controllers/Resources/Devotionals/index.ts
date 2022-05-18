@@ -15,6 +15,7 @@ class Devotionals {
 
         res.status(200).json(response)
       } catch (error) {
+        console.log("🚀 ~ file: index.ts ~ line 18 ~ Devotionals ~ this.app.get ~ error", error)
         res.sendStatus(500)
       }
     })

@@ -41,7 +41,7 @@ module.exports = {
   plugins: [
     new WebpackShellPluginNext({
       onBuildStart: {
-        scripts: ['npm run prisma:generate', 'npm run prisma:migrate:dev', 'npm run prisma:seed'],
+       
         blocking: true
       }
     })
