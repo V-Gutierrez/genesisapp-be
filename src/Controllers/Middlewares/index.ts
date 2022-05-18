@@ -24,7 +24,7 @@ export default class Middlewares {
   Logger() {
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       console.log(
-        `${req.method} ${req.url} --- Origin: ${req.headers.origin} - ${JSON.stringify(req.headers)}`,
+        `${req.method} ${req.url} --- Origin: ${req.headers.origin}`,
       )
       next()
     })
