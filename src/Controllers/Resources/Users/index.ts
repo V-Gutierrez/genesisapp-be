@@ -27,6 +27,7 @@ class Users {
               email: true,
               name: true,
               createdAt: true,
+              birthdate: true
             }
           })
 
@@ -47,7 +48,8 @@ class Users {
         email: Joi.string().email().required(),
         name: Joi.string().required(),
         phone: Joi.string().required().min(8).max(14),
-        password: Joi.string().min(8)
+        password: Joi.string().min(8),
+        birthdate: Joi.date().required()
       })
 
       const errors = Schema.validateSchema(schema, req.body)
@@ -57,12 +59,13 @@ class Users {
       }
 
       try {
-        const { email, name, password, phone }: PrismaType.UserCreateInput = req.body
+        const { email, name, password, phone, birthdate }: PrismaType.UserCreateInput = req.body
 
         await Prisma.user.create({
           data: {
             email,
             name,
+            birthdate,
             password: await Bcrypt.hashPassword(password),
             phone
           }

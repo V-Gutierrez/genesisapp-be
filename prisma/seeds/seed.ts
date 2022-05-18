@@ -3,6 +3,10 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
+  await prisma.user.deleteMany({})
+  await prisma.growthGroup.deleteMany({})
+  await prisma.devotional.deleteMany({})
+
   await prisma.user.create({
     data: {
       id: '1',
@@ -10,6 +14,7 @@ async function main() {
       password: "genesisofc",
       name: "Genesis",
       phone: "123456789",
+      birthdate: new Date(Date.now()),
       role: "ADMIN",
     }
   })
