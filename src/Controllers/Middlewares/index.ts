@@ -1,4 +1,4 @@
-import { Express, NextFunction, Request, Response } from 'express'
+import express, { Express, NextFunction, Request, Response } from 'express'
 
 import cors from 'cors'
 
@@ -6,6 +6,9 @@ export default class Middlewares {
   constructor(private readonly app: Express) {
     this.CORS()
     this.Logger()
+
+    this.app.use(express.json())
+    this.app.use(express.urlencoded({ extended: false }))
   }
 
   CORS() {

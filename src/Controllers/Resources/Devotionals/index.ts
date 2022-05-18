@@ -2,7 +2,6 @@ import { Express, Request, Response } from 'express'
 
 import { Devotional } from '@prisma/client'
 import Prisma from '@Clients/Prisma'
-import ResponseHandler from 'src/Helpers/ResponseHandler'
 
 class Devotionals {
   constructor(private readonly app: Express) {
@@ -14,9 +13,9 @@ class Devotionals {
       try {
         const response: Devotional[] = await Prisma.devotional.findMany()
 
-        return new ResponseHandler(res, 200, response)
+        res.status(200).json(response)
       } catch (error) {
-        return new ResponseHandler(res, 500, null)
+        res.sendStatus(500)
       }
     })
   }

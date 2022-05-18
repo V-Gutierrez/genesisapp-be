@@ -2,7 +2,6 @@ import { Express, Request, Response } from 'express'
 
 import { GrowthGroup } from '@prisma/client'
 import Prisma from '@Clients/Prisma'
-import ResponseHandler from 'src/Helpers/ResponseHandler'
 
 class GrowthGroups {
   constructor(private readonly app: Express) {
@@ -14,9 +13,9 @@ class GrowthGroups {
       try {
         const response: GrowthGroup[] = await Prisma.growthGroup.findMany()
 
-        return new ResponseHandler(res, 200, response)
+        res.status(200).json(response)
       } catch (error) {
-        return new ResponseHandler(res, 500, null)
+        res.sendStatus(500).json(null)
       }
     })
   }
