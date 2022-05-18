@@ -26,7 +26,9 @@
     "no-new": "off",
     "no-unused-vars": "warn",
     "node/no-missing-import": "off",
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "consistent-return": "off",
+    "no-console": "warn"
   },
   "settings": {
     "import/resolver": {
