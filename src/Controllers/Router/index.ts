@@ -7,11 +7,12 @@ import Authentication from '@Controllers/Authentication'
 
 export default class RoutesController {
   constructor(private readonly app: Express) {
-
     new Middlewares(this.app)
     new Authentication(this.app)
-    new Users(this.app)
+
     new GrowthGroups(this.app)
     new Devotionals(this.app)
+
+    new Users(this.app)
   }
 }
