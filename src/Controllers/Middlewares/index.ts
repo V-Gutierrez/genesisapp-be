@@ -50,17 +50,8 @@ export default class Middlewares {
 
         const { jwt: token } = req.cookies
 
-        const user = await Prisma.user.findFirst({
-          where: {
-            UserRefreshTokens: { some: { token } },
-          },
-        })
-
-        if (!user) return res.sendStatus(403)
-
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any, decoded: any) => {
-          if (err || user.email !== decoded.email || user.role !== decoded.role)
-            return res.sendStatus(403)
+          if (err) return res.sendStatus(403)
           next()
         })
       } catch (error) {
