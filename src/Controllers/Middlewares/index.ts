@@ -1,14 +1,13 @@
+import 'dotenv/config'
+
 import express, { Express, NextFunction, Request, Response } from 'express'
 
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
-import dotenv from 'dotenv'
 import jwt from 'jsonwebtoken'
 
 export default class Middlewares {
   constructor(private readonly app: Express) {
-    dotenv.config()
-
     this.CORS()
     this.Logger()
 
@@ -18,14 +17,20 @@ export default class Middlewares {
   }
 
   CORS() {
-    this.app.use(cors({ origin: ['http://localhost:3000', 'http://192.168.0.56:3000/', 'https://genesisproject-six.vercel.app'] }))
+    this.app.use(
+      cors({
+        origin: [
+          'http://localhost:3000',
+          'http://192.168.0.56:3000/',
+          'https://genesisproject-six.vercel.app',
+        ],
+      }),
+    )
   }
 
   Logger() {
     this.app.use((req: Request, res: Response, next: NextFunction) => {
-      console.log(
-        `${req.method} ${req.url} --- Origin: ${req.headers.origin}`,
-      )
+      console.log(`${req.method} ${req.url} --- Origin: ${req.headers.origin}`)
       next()
     })
   }

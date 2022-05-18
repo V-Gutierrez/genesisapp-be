@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
@@ -5,13 +7,11 @@ import Joi from 'joi'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { User } from '@prisma/client'
-import dotenv from 'dotenv'
 import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 
 class Authentication {
   constructor(private readonly app: Express) {
-    dotenv.config()
     this.authenticate()
     this.refreshToken()
     this.logout()
@@ -53,10 +53,18 @@ class Authentication {
             process.env.ACCESS_TOKEN_SECRET as string,
             { expiresIn: '12h' },
           )
+          console.log(
+            '🚀 ~ file: index.ts ~ line 54 ~ Authentication ~ this.app.post ~ process.env.ACCESS_TOKEN_SECRET',
+            process.env.ACCESS_TOKEN_SECRET,
+          )
           const refreshToken = jwt.sign(
             { email: user.email, role: user.role },
             process.env.REFRESH_TOKEN_SECRET as string,
             { expiresIn: '30d' },
+          )
+          console.log(
+            '🚀 ~ file: index.ts ~ line 60 ~ Authentication ~ this.app.post ~ process.env.REFRESH_TOKEN_SECRET',
+            process.env.REFRESH_TOKEN_SECRET,
           )
 
           await Prisma.userRefreshTokens.upsert({
@@ -151,14 +159,13 @@ class Authentication {
         if (!user) {
           res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
           return res.sendStatus(204)
-        } 
-          await Prisma.userRefreshTokens.delete({
-            where: { userId: user.id },
-          })
+        }
+        await Prisma.userRefreshTokens.delete({
+          where: { userId: user.id },
+        })
 
-          res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
-          return res.sendStatus(204)
-        
+        res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
+        return res.sendStatus(204)
       } catch (error) {
         console.log(
           '🚀 ~ file: index.ts ~ line 150 ~ Authentication ~ this.app.delete ~ error',
