@@ -57,14 +57,15 @@ class Authentication {
             '🚀 ~ file: index.ts ~ line 54 ~ Authentication ~ this.app.post ~ process.env.ACCESS_TOKEN_SECRET',
             process.env.ACCESS_TOKEN_SECRET,
           )
+
+          console.log(
+            '🚀 ~ file: index.ts ~ line 60 ~ Authentication ~ this.app.post ~ process.env.REFRESH_TOKEN_SECRET',
+            process.env.REFRESH_TOKEN_SECRET,
+          )
           const refreshToken = jwt.sign(
             { email: user.email, role: user.role },
             process.env.REFRESH_TOKEN_SECRET as string,
             { expiresIn: '30d' },
-          )
-          console.log(
-            '🚀 ~ file: index.ts ~ line 60 ~ Authentication ~ this.app.post ~ process.env.REFRESH_TOKEN_SECRET',
-            process.env.REFRESH_TOKEN_SECRET,
           )
 
           await Prisma.userRefreshTokens.upsert({

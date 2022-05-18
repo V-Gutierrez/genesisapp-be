@@ -84,21 +84,21 @@
                       console.log(
                         '🚀 ~ file: index.ts ~ line 54 ~ Authentication ~ this.app.post ~ process.env.ACCESS_TOKEN_SECRET',
                         process.env.ACCESS_TOKEN_SECRET,
-                      )
+                      ),
+                        console.log(
+                          '🚀 ~ file: index.ts ~ line 60 ~ Authentication ~ this.app.post ~ process.env.REFRESH_TOKEN_SECRET',
+                          process.env.REFRESH_TOKEN_SECRET,
+                        )
                       const s = c.default.sign(
                         { email: f.email, role: f.role },
                         process.env.REFRESH_TOKEN_SECRET,
                         { expiresIn: '30d' },
                       )
-                      console.log(
-                        '🚀 ~ file: index.ts ~ line 60 ~ Authentication ~ this.app.post ~ process.env.REFRESH_TOKEN_SECRET',
-                        process.env.REFRESH_TOKEN_SECRET,
-                      ),
-                        yield a.default.userRefreshTokens.upsert({
-                          where: { userId: f.id },
-                          update: { token: s },
-                          create: { userId: f.id, token: s },
-                        }),
+                      yield a.default.userRefreshTokens.upsert({
+                        where: { userId: f.id },
+                        update: { token: s },
+                        create: { userId: f.id, token: s },
+                      }),
                         t.cookie('jwt', s, { httpOnly: !0, maxAge: 2592e6, secure: l.default }),
                         t.status(200).json({ userLoggedIn: !0, accessToken: e })
                     }
