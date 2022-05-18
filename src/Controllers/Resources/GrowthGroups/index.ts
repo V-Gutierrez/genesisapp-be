@@ -15,7 +15,7 @@ class GrowthGroups {
 
         res.status(200).json(response)
       } catch (error) {
-        console.log("🚀 ~ file: index.ts ~ line 18 ~ GrowthGroups ~ this.app.get ~ error", error)
+        console.log("🚀 ~ file: index.ts ~ line 18 ~ GrowthGroups ~ this.app.get ~ error", error.message)
         res.sendStatus(500).json(null)
       }
     })
