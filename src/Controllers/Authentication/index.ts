@@ -50,7 +50,7 @@ class Authentication {
           },
         })
 
-        if (!user) return res.sendStatus(401)
+        if (!user) return res.sendStatus(404)
 
         const matchPassword = await Bcrypt.comparePassword(password as string, user.password)
 
@@ -106,6 +106,7 @@ class Authentication {
 
         const { jwt: accessToken } = req.cookies
 
+        // Check Access Token
         jwt.verify(
           accessToken,
           process.env.ACCESS_TOKEN_SECRET as string,
@@ -135,6 +136,7 @@ class Authentication {
             const { UserRefreshTokens, id: userId } = user
             const [{ token: refreshAccessToken }] = UserRefreshTokens
 
+            // Check if refresh token is still valid
             jwt.verify(
               refreshAccessToken,
               process.env.REFRESH_TOKEN_SECRET as string,
@@ -145,7 +147,6 @@ class Authentication {
                       userId,
                     },
                   })
-
                   res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
                   return res.sendStatus(403)
                 }
@@ -156,6 +157,7 @@ class Authentication {
                   { expiresIn: '12h' },
                 )
 
+                // If valid - Refresh Access Token with new expiration and send in cookie
                 res.cookie('jwt', refreshedAccessToken, {
                   httpOnly: true,
                   maxAge: 60 * 60 * 24 * 30 * 1000,

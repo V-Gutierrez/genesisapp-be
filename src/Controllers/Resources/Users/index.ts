@@ -74,6 +74,7 @@ class Users {
               name: true,
               createdAt: true,
               phone: true,
+              password: false,
             },
           })
 

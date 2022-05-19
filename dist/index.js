@@ -78,7 +78,7 @@
                           where: { email: n },
                           select: { password: !0, email: !0, id: !0, role: !0 },
                         })
-                      if (!f) return t.sendStatus(401)
+                      if (!f) return t.sendStatus(404)
                       if (!(yield i.default.comparePassword(l, f.password)))
                         return t.sendStatus(401)
                       {
@@ -384,7 +384,7 @@
                     const e = yield i.default.growthGroup.findMany()
                     t.status(200).json(e)
                   } catch (e) {
-                    t.sendStatus(500).json(null)
+                    t.sendStatus(500)
                   }
                 }),
               )
@@ -487,7 +487,14 @@
                             password: yield i.default.hashPassword(n),
                             phone: o,
                           },
-                          select: { id: !0, email: !0, name: !0, createdAt: !0, phone: !0 },
+                          select: {
+                            id: !0,
+                            email: !0,
+                            name: !0,
+                            createdAt: !0,
+                            phone: !0,
+                            password: !1,
+                          },
                         })
                       t.status(201).json({ message: 'User created', user: d })
                     }

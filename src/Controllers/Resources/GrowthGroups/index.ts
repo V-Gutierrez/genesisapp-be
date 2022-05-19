@@ -15,7 +15,7 @@ class GrowthGroups {
 
         res.status(200).json(response)
       } catch (error) {
-        res.sendStatus(500).json(null)
+        res.sendStatus(500)
       }
     })
   }
