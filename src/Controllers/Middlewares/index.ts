@@ -3,7 +3,6 @@ import 'dotenv/config'
 import express, { Express, NextFunction, Request, Response } from 'express'
 
 import Joi from 'joi'
-import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -51,7 +50,6 @@ export default class Middlewares {
         const { jwt: token } = req.cookies
 
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any, decoded: any) => {
-          console.log('🚀 ~ file: index.ts ~ line 54 ~ Middlewares ~ jwt.verify ~ err', err)
           if (err) return res.sendStatus(403)
           next()
         })

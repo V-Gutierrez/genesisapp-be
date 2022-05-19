@@ -77,7 +77,7 @@ class Authentication {
             maxAge: 60 * 60 * 24 * 30 * 1000,
             secure: isProduction,
           })
-          res.status(200).json({ userLoggedIn: true, accessToken })
+          res.status(200).json({ userLoggedIn: true })
         } else {
           return res.sendStatus(401)
         }
@@ -97,34 +97,60 @@ class Authentication {
         const errors = SchemaHelper.validateSchema(schema, req.cookies)
         if (errors) return res.sendStatus(401)
 
-        const { jwt: refreshToken } = req.cookies
-
-        const user = await Prisma.user.findFirst({
-          where: {
-            UserRefreshTokens: { some: { token: refreshToken } },
-          },
-          select: {
-            email: true,
-            role: true,
-          },
-        })
-
-        if (!user) return res.sendStatus(403)
+        const { jwt: accessToken } = req.cookies
 
         jwt.verify(
-          refreshToken,
-          process.env.REFRESH_TOKEN_SECRET as string,
-          (err: any, decoded: any) => {
-            if (err || user.email !== decoded.email || user.role !== decoded.role)
-              return res.sendStatus(403)
+          accessToken,
+          process.env.ACCESS_TOKEN_SECRET as string,
+          async (accessTokenError: any, decoded: any) => {
+            if (accessTokenError) return res.sendStatus(403)
 
-            const accessToken = jwt.sign(
-              { email: user.email, role: user.role },
-              process.env.ACCESS_TOKEN_SECRET as string,
-              { expiresIn: '12h' },
+            const user = await Prisma.user.findFirst({
+              where: {
+                email: decoded.email,
+              },
+              select: {
+                id: true,
+                email: true,
+                role: true,
+                UserRefreshTokens: true,
+              },
+            })
+
+            if (!user) return res.sendStatus(403)
+
+            const { UserRefreshTokens, id: userId } = user
+            const [{ token: refreshAccessToken }] = UserRefreshTokens
+
+            jwt.verify(
+              refreshAccessToken,
+              process.env.REFRESH_TOKEN_SECRET as string,
+              async (refreshTokenError: any) => {
+                if (refreshTokenError) {
+                  await Prisma.userRefreshTokens.delete({
+                    where: {
+                      userId,
+                    },
+                  })
+
+                  res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
+                  return res.sendStatus(403)
+                }
+
+                const refreshedAccessToken = jwt.sign(
+                  { email: user.email, role: user.role },
+                  process.env.ACCESS_TOKEN_SECRET as string,
+                  { expiresIn: '12h' },
+                )
+
+                res.cookie('jwt', refreshedAccessToken, {
+                  httpOnly: true,
+                  maxAge: 60 * 60 * 24 * 30 * 1000,
+                  secure: isProduction,
+                })
+                res.status(200).json({ userLoggedIn: true })
+              },
             )
-
-            res.json({ accessToken })
           },
         )
       } catch (error) {
