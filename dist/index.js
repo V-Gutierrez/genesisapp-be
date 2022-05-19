@@ -94,7 +94,7 @@
                           update: { token: r },
                           create: { userId: f.id, token: r },
                         }),
-                          t.cookie('jwt', r, { httpOnly: !0, maxAge: 2592e6, secure: d.default }),
+                          t.cookie('jwt', e, { httpOnly: !0, maxAge: 2592e6, secure: d.default }),
                           t.status(200).json({ userLoggedIn: !0, accessToken: e })
                       }
                     } catch (e) {

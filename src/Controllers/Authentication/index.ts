@@ -72,7 +72,7 @@ class Authentication {
             },
           })
 
-          res.cookie('jwt', refreshToken, {
+          res.cookie('jwt', accessToken, {
             httpOnly: true,
             maxAge: 60 * 60 * 24 * 30 * 1000,
             secure: isProduction,
