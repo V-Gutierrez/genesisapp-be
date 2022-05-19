@@ -114,12 +114,20 @@
                       const { jwt: n } = e.cookies
                       l.default.verify(n, process.env.ACCESS_TOKEN_SECRET, (e, r) =>
                         s(this, void 0, void 0, function* () {
-                          if (e) return t.sendStatus(403)
+                          if (e)
+                            return (
+                              t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
+                              t.sendStatus(403)
+                            )
                           const n = yield a.default.user.findFirst({
                             where: { email: r.email },
                             select: { id: !0, email: !0, role: !0, UserRefreshTokens: !0 },
                           })
-                          if (!n) return t.sendStatus(403)
+                          if (!n)
+                            return (
+                              t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
+                              t.sendStatus(403)
+                            )
                           const { UserRefreshTokens: i, id: o } = n,
                             [{ token: u }] = i
                           l.default.verify(u, process.env.REFRESH_TOKEN_SECRET, (e) =>
@@ -327,7 +335,7 @@
           }
         }
       },
-      96: function (e, t, r) {
+      157: function (e, t, r) {
         var s =
             (this && this.__awaiter) ||
             function (e, t, r, s) {
@@ -504,19 +512,19 @@
             return e && e.__esModule ? e : { default: e }
           }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const n = s(r(226)),
-          i = s(r(96)),
-          o = s(r(717)),
-          a = s(r(575)),
-          u = s(r(765))
+        const n = s(r(765)),
+          i = s(r(226)),
+          o = s(r(157)),
+          a = s(r(717)),
+          u = s(r(575))
         t.default = class {
           constructor(e) {
             ;(this.app = e),
-              new o.default(this.app),
-              new u.default(this.app),
-              new i.default(this.app),
+              new a.default(this.app),
               new n.default(this.app),
-              new a.default(this.app)
+              new o.default(this.app),
+              new i.default(this.app),
+              new u.default(this.app)
           }
         }
       },
@@ -559,7 +567,7 @@
               return n(t, e), t
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const o = i(r(802))
+        const o = i(r(96))
         t.default = class {
           static hashPassword(e) {
             return o.hash(e, 10)
@@ -645,7 +653,7 @@
       524: (e) => {
         e.exports = require('@prisma/client')
       },
-      802: (e) => {
+      96: (e) => {
         e.exports = require('bcrypt')
       },
       710: (e) => {

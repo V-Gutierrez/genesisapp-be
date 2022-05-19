@@ -103,7 +103,10 @@ class Authentication {
           accessToken,
           process.env.ACCESS_TOKEN_SECRET as string,
           async (accessTokenError: any, decoded: any) => {
-            if (accessTokenError) return res.sendStatus(403)
+            if (accessTokenError) {
+              res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
+              return res.sendStatus(403)
+            }
 
             const user = await Prisma.user.findFirst({
               where: {
@@ -117,7 +120,10 @@ class Authentication {
               },
             })
 
-            if (!user) return res.sendStatus(403)
+            if (!user) {
+              res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
+              return res.sendStatus(403)
+            }
 
             const { UserRefreshTokens, id: userId } = user
             const [{ token: refreshAccessToken }] = UserRefreshTokens
