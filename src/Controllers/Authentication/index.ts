@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
@@ -5,11 +7,9 @@ import Joi from 'joi'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { User } from '@prisma/client'
-import dotenv from 'dotenv'
 import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 
-dotenv.config()
 class Authentication {
   constructor(private readonly app: Express) {
     this.authenticate()
@@ -19,6 +19,13 @@ class Authentication {
 
   async authenticate() {
     this.app.post('/api/auth', async (req: Request, res: Response) => {
+      if (req.cookies.jwt) {
+        jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET as string, (error: any) => {
+          if (!error) res.sendStatus(204)
+        })
+        return
+      }
+
       try {
         const schema = Joi.object().keys({
           email: Joi.string().email().required(),

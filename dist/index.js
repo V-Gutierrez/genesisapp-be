@@ -44,23 +44,26 @@
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
-        Object.defineProperty(t, '__esModule', { value: !0 })
+        Object.defineProperty(t, '__esModule', { value: !0 }), r(81)
         const i = n(r(349)),
           o = n(r(506)),
           a = n(r(221)),
           u = n(r(721)),
-          d = n(r(142)),
-          c = n(r(668)),
-          l = n(r(344))
-        d.default.config(),
-          (t.default = class {
-            constructor(e) {
-              ;(this.app = e), this.authenticate(), this.refreshToken(), this.logout()
-            }
-            authenticate() {
-              return s(this, void 0, void 0, function* () {
-                this.app.post('/api/auth', (e, t) =>
-                  s(this, void 0, void 0, function* () {
+          d = n(r(668)),
+          c = n(r(344))
+        t.default = class {
+          constructor(e) {
+            ;(this.app = e), this.authenticate(), this.refreshToken(), this.logout()
+          }
+          authenticate() {
+            return s(this, void 0, void 0, function* () {
+              this.app.post('/api/auth', (e, t) =>
+                s(this, void 0, void 0, function* () {
+                  if (e.cookies.jwt)
+                    c.default.verify(e.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (e) => {
+                      e || t.sendStatus(204)
+                    })
+                  else
                     try {
                       const r = o.default
                           .object()
@@ -70,21 +73,21 @@
                           }),
                         s = u.default.validateSchema(r, e.body)
                       if (s) return t.status(400).json({ error: s })
-                      const { email: n, password: d } = e.body,
+                      const { email: n, password: l } = e.body,
                         f = yield a.default.user.findFirst({
                           where: { email: n },
                           select: { password: !0, email: !0, id: !0, role: !0 },
                         })
                       if (!f) return t.sendStatus(401)
-                      if (!(yield i.default.comparePassword(d, f.password)))
+                      if (!(yield i.default.comparePassword(l, f.password)))
                         return t.sendStatus(401)
                       {
-                        const e = l.default.sign(
+                        const e = c.default.sign(
                             { email: f.email, role: f.role },
                             process.env.ACCESS_TOKEN_SECRET,
                             { expiresIn: '12h' },
                           ),
-                          r = l.default.sign(
+                          r = c.default.sign(
                             { email: f.email, role: f.role },
                             process.env.REFRESH_TOKEN_SECRET,
                             { expiresIn: '30d' },
@@ -94,99 +97,93 @@
                           update: { token: r },
                           create: { userId: f.id, token: r },
                         }),
-                          t.cookie('jwt', e, { httpOnly: !0, maxAge: 2592e6, secure: c.default }),
+                          t.cookie('jwt', e, { httpOnly: !0, maxAge: 2592e6, secure: d.default }),
                           t.status(200).json({ userLoggedIn: !0 })
                       }
                     } catch (e) {
                       t.sendStatus(500)
                     }
-                  }),
-                )
-              })
-            }
-            refreshToken() {
-              return s(this, void 0, void 0, function* () {
-                this.app.get('/api/auth', (e, t) =>
-                  s(this, void 0, void 0, function* () {
-                    try {
-                      const r = o.default.object().keys({ jwt: o.default.required() })
-                      if (u.default.validateSchema(r, e.cookies)) return t.sendStatus(401)
-                      const { jwt: n } = e.cookies
-                      l.default.verify(n, process.env.ACCESS_TOKEN_SECRET, (e, r) =>
-                        s(this, void 0, void 0, function* () {
-                          if (e)
-                            return (
-                              t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
-                              t.sendStatus(403)
-                            )
-                          const n = yield a.default.user.findFirst({
-                            where: { email: r.email },
-                            select: { id: !0, email: !0, role: !0, UserRefreshTokens: !0 },
-                          })
-                          if (!n)
-                            return (
-                              t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
-                              t.sendStatus(403)
-                            )
-                          const { UserRefreshTokens: i, id: o } = n,
-                            [{ token: u }] = i
-                          l.default.verify(u, process.env.REFRESH_TOKEN_SECRET, (e) =>
-                            s(this, void 0, void 0, function* () {
-                              if (e)
-                                return (
-                                  yield a.default.userRefreshTokens.delete({
-                                    where: { userId: o },
-                                  }),
-                                  t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
-                                  t.sendStatus(403)
-                                )
-                              const r = l.default.sign(
-                                { email: n.email, role: n.role },
-                                process.env.ACCESS_TOKEN_SECRET,
-                                { expiresIn: '12h' },
-                              )
-                              t.cookie('jwt', r, {
-                                httpOnly: !0,
-                                maxAge: 2592e6,
-                                secure: c.default,
-                              }),
-                                t.status(200).json({ userLoggedIn: !0 })
-                            }),
+                }),
+              )
+            })
+          }
+          refreshToken() {
+            return s(this, void 0, void 0, function* () {
+              this.app.get('/api/auth', (e, t) =>
+                s(this, void 0, void 0, function* () {
+                  try {
+                    const r = o.default.object().keys({ jwt: o.default.required() })
+                    if (u.default.validateSchema(r, e.cookies)) return t.sendStatus(401)
+                    const { jwt: n } = e.cookies
+                    c.default.verify(n, process.env.ACCESS_TOKEN_SECRET, (e, r) =>
+                      s(this, void 0, void 0, function* () {
+                        if (e)
+                          return (
+                            t.clearCookie('jwt', { httpOnly: !0, secure: d.default }),
+                            t.sendStatus(403)
                           )
-                        }),
-                      )
-                    } catch (e) {
-                      t.sendStatus(500)
-                    }
-                  }),
-                )
-              })
-            }
-            logout() {
-              return s(this, void 0, void 0, function* () {
-                this.app.delete('/api/auth', (e, t) =>
-                  s(this, void 0, void 0, function* () {
-                    try {
-                      const r = o.default.object().keys({ jwt: o.default.required() })
-                      if (u.default.validateSchema(r, e.cookies)) return t.sendStatus(204)
-                      const { jwt: s } = e.cookies,
-                        n = yield a.default.user.findFirst({
-                          where: { UserRefreshTokens: { some: { token: s } } },
+                        const n = yield a.default.user.findFirst({
+                          where: { email: r.email },
+                          select: { id: !0, email: !0, role: !0, UserRefreshTokens: !0 },
                         })
-                      return n
-                        ? (yield a.default.userRefreshTokens.delete({ where: { userId: n.id } }),
-                          t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
-                          t.sendStatus(204))
-                        : (t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
-                          t.sendStatus(204))
-                    } catch (e) {
-                      t.sendStatus(500)
-                    }
-                  }),
-                )
-              })
-            }
-          })
+                        if (!n)
+                          return (
+                            t.clearCookie('jwt', { httpOnly: !0, secure: d.default }),
+                            t.sendStatus(403)
+                          )
+                        const { UserRefreshTokens: i, id: o } = n,
+                          [{ token: u }] = i
+                        c.default.verify(u, process.env.REFRESH_TOKEN_SECRET, (e) =>
+                          s(this, void 0, void 0, function* () {
+                            if (e)
+                              return (
+                                yield a.default.userRefreshTokens.delete({ where: { userId: o } }),
+                                t.clearCookie('jwt', { httpOnly: !0, secure: d.default }),
+                                t.sendStatus(403)
+                              )
+                            const r = c.default.sign(
+                              { email: n.email, role: n.role },
+                              process.env.ACCESS_TOKEN_SECRET,
+                              { expiresIn: '12h' },
+                            )
+                            t.cookie('jwt', r, { httpOnly: !0, maxAge: 2592e6, secure: d.default }),
+                              t.status(200).json({ userLoggedIn: !0 })
+                          }),
+                        )
+                      }),
+                    )
+                  } catch (e) {
+                    t.sendStatus(500)
+                  }
+                }),
+              )
+            })
+          }
+          logout() {
+            return s(this, void 0, void 0, function* () {
+              this.app.delete('/api/auth', (e, t) =>
+                s(this, void 0, void 0, function* () {
+                  try {
+                    const r = o.default.object().keys({ jwt: o.default.required() })
+                    if (u.default.validateSchema(r, e.cookies)) return t.sendStatus(204)
+                    const { jwt: s } = e.cookies,
+                      n = yield a.default.user.findFirst({
+                        where: { UserRefreshTokens: { some: { token: s } } },
+                      })
+                    return n
+                      ? (yield a.default.userRefreshTokens.delete({ where: { userId: n.id } }),
+                        t.clearCookie('jwt', { httpOnly: !0, secure: d.default }),
+                        t.sendStatus(204))
+                      : (t.clearCookie('jwt', { httpOnly: !0, secure: d.default }),
+                        t.sendStatus(204))
+                  } catch (e) {
+                    t.sendStatus(500)
+                  }
+                }),
+              )
+            })
+          }
+        }
       },
       717: function (e, t, r) {
         var s =
@@ -566,11 +563,11 @@
                   'default' !== r && Object.prototype.hasOwnProperty.call(e, r) && s(t, e, r)
               return n(t, e), t
             }
-        Object.defineProperty(t, '__esModule', { value: !0 })
+        Object.defineProperty(t, '__esModule', { value: !0 }), r(81)
         const o = i(r(96))
         t.default = class {
           static hashPassword(e) {
-            return o.hash(e, 10)
+            return o.hash(e, process.env.BCRYPTSALT)
           }
           static comparePassword(e, t) {
             return o.compare(e, t)
@@ -661,9 +658,6 @@
       },
       582: (e) => {
         e.exports = require('cors')
-      },
-      142: (e) => {
-        e.exports = require('dotenv')
       },
       81: (e) => {
         e.exports = require('dotenv/config')
