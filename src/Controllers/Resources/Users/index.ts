@@ -68,6 +68,13 @@ class Users {
               password: await Bcrypt.hashPassword(password),
               phone,
             },
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              createdAt: true,
+              phone: true,
+            },
           })
 
           res.status(201).json({ message: 'User created', user })

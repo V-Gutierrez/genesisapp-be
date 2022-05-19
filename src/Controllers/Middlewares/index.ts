@@ -51,6 +51,7 @@ export default class Middlewares {
         const { jwt: token } = req.cookies
 
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any, decoded: any) => {
+          console.log('🚀 ~ file: index.ts ~ line 54 ~ Middlewares ~ jwt.verify ~ err', err)
           if (err) return res.sendStatus(403)
           next()
         })

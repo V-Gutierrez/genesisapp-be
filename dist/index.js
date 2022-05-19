@@ -237,7 +237,14 @@
                   if (a.default.validateSchema(n, e.cookies)) return t.sendStatus(401)
                   const { jwt: s } = e.cookies
                   d.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, n) => {
-                    if (e) return t.sendStatus(403)
+                    if (
+                      (console.log(
+                        '🚀 ~ file: index.ts ~ line 54 ~ Middlewares ~ jwt.verify ~ err',
+                        e,
+                      ),
+                      e)
+                    )
+                      return t.sendStatus(403)
                     r()
                   })
                 } catch (e) {
@@ -461,6 +468,7 @@
                             password: yield i.default.hashPassword(s),
                             phone: o,
                           },
+                          select: { id: !0, email: !0, name: !0, createdAt: !0, phone: !0 },
                         })
                       t.status(201).json({ message: 'User created', user: c })
                     }
