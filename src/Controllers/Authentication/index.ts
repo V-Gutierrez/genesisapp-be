@@ -48,6 +48,7 @@ class Authentication {
             email,
           },
           select: {
+            name: true,
             password: true,
             email: true,
             id: true,
@@ -63,12 +64,12 @@ class Authentication {
 
         if (matchPassword) {
           const accessToken = jwt.sign(
-            { email: user.email, role: user.role },
+            { email: user.email, role: user.role, id: user.id, name: user.name },
             process.env.ACCESS_TOKEN_SECRET as string,
             { expiresIn: '12h' },
           )
           const refreshToken = jwt.sign(
-            { email: user.email, role: user.role },
+            { email: user.email, role: user.role, id: user.id, name: user.name },
             process.env.REFRESH_TOKEN_SECRET as string,
             { expiresIn: '30d' },
           )
@@ -339,9 +340,9 @@ class Authentication {
         (err: any, decoded: any) => {
           if (err) return res.sendStatus(401)
 
-          const { email, role } = decoded
+          const { email, role, id, name } = decoded
 
-          return res.status(200).json({ email, role })
+          return res.status(200).json({ email, role, id, name })
         },
       )
     })
