@@ -9,6 +9,7 @@ import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import SendgridClient from '@Clients/Sendgrid'
 import { User } from '@prisma/client'
+import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 
 class Users {
@@ -86,14 +87,16 @@ class Users {
             expiresIn: '30d',
           })
 
-          const emailSender = new SendgridClient()
+          if (isProduction) {
+            const emailSender = new SendgridClient()
 
-          await emailSender.send(
-            emailSender.TEMPLATES.confirmationEmail.config(user.email, {
-              userFirstName: user.name.split(' ')[0],
-              activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${token}`,
-            }),
-          )
+            await emailSender.send(
+              emailSender.TEMPLATES.confirmationEmail.config(user.email, {
+                userFirstName: user.name.split(' ')[0],
+                activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${token}`,
+              }),
+            )
+          }
 
           res.status(201).json({ message: 'User created', user })
         }

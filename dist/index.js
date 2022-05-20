@@ -530,7 +530,8 @@
           u = n(i(221)),
           c = n(i(721)),
           d = n(i(189)),
-          l = n(i(344))
+          l = n(i(668)),
+          f = n(i(344))
         t.default = class {
           constructor(e) {
             ;(this.app = e), this.signUp(), a.default.JWT(this.app), this.get()
@@ -591,17 +592,19 @@
                             password: !1,
                           },
                         }),
-                        f = l.default.sign({ id: c.id }, process.env.ACTIVATION_TOKEN_SECRET, {
+                        h = f.default.sign({ id: c.id }, process.env.ACTIVATION_TOKEN_SECRET, {
                           expiresIn: '30d',
-                        }),
-                        h = new d.default()
-                      yield h.send(
-                        h.TEMPLATES.confirmationEmail.config(c.email, {
-                          userFirstName: c.name.split(' ')[0],
-                          activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${f}`,
-                        }),
-                      ),
-                        t.status(201).json({ message: 'User created', user: c })
+                        })
+                      if (l.default) {
+                        const e = new d.default()
+                        yield e.send(
+                          e.TEMPLATES.confirmationEmail.config(c.email, {
+                            userFirstName: c.name.split(' ')[0],
+                            activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${h}`,
+                          }),
+                        )
+                      }
+                      t.status(201).json({ message: 'User created', user: c })
                     }
                   } catch (e) {
                     console.log(
