@@ -135,7 +135,8 @@
               this.resetPassword(),
               this.authenticate(),
               this.refreshToken(),
-              this.logout()
+              this.logout(),
+              this.setNewPassword()
           }
           authenticate() {
             return i(this, void 0, void 0, function* () {
@@ -161,7 +162,8 @@
                           select: { password: !0, email: !0, id: !0, role: !0, active: !0 },
                         })
                       if (!f) return t.sendStatus(404)
-                      if (!(yield n.default.comparePassword(d, f.password)) || !f.active)
+                      if (!f.active) return t.status(403).json({ error: 'User is not activated' })
+                      if (!(yield n.default.comparePassword(d, f.password)))
                         return t.sendStatus(401)
                       {
                         const e = l.default.sign(
@@ -266,7 +268,6 @@
             return i(this, void 0, void 0, function* () {
               this.app.post('/api/auth/reset-password', (e, t) =>
                 i(this, void 0, void 0, function* () {
-                  e.headers.authorization
                   const s = o.default
                       .object()
                       .keys({ email: o.default.string().email().required() }),
@@ -274,14 +275,28 @@
                   if (i) return t.status(400).json({ error: i })
                   try {
                     const { email: s } = e.body,
-                      i = l.default.sign({ email: s }, process.env.PASSWORD_RESET_TOKEN_SECRET, {
-                        expiresIn: '24h',
-                      }),
-                      r = new d.default()
-                    yield r.send(
-                      r.TEMPLATES.resetPassword.config(s, {
-                        resetPasswordUrl: `${process.env.FRONTEND_URL}/reset-password/${i}`,
-                      }),
+                      i = yield a.default.user.findFirst({
+                        where: { email: s },
+                        select: { email: !0, active: !0 },
+                      })
+                    if (!i || !i.active)
+                      return t.status(200).json({ message: 'Reset password email sent' })
+                    const r = l.default.sign(
+                      { email: s },
+                      process.env.PASSWORD_RESET_TOKEN_SECRET,
+                      { expiresIn: '24h' },
+                    )
+                    if (c.default) {
+                      const e = new d.default()
+                      yield e.send(
+                        e.TEMPLATES.resetPassword.config(s, {
+                          resetPasswordUrl: `${process.env.FRONTEND_URL}/reset-password/${r}`,
+                        }),
+                      )
+                    }
+                    console.log(
+                      '🚀 ~ file: index.ts ~ line 242 ~ Authentication ~ this.app.post ~ resetToken',
+                      r,
                     ),
                       t.status(200).json({ message: 'Reset password email sent' })
                   } catch (e) {
@@ -296,18 +311,23 @@
               this.app.put('/api/auth/reset-password', (e, t) =>
                 i(this, void 0, void 0, function* () {
                   const s = e.headers.authorization,
-                    r = o.default.object().keys({ email: o.default.string().email().required() }),
-                    d = u.default.validateSchema(r, e.body)
-                  if (d || !s) return t.sendStatus(400)
+                    r = o.default.object().keys({ password: o.default.string().required() })
+                  if (u.default.validateSchema(r, e.body) || !s) return t.sendStatus(400)
                   try {
-                    const { email: r, password: o } = e.body
+                    const { password: r } = e.body
                     l.default.verify(s, process.env.PASSWORD_RESET_TOKEN_SECRET, (e, s) =>
                       i(this, void 0, void 0, function* () {
-                        if (d || s.email !== r) return t.sendStatus(401)
-                        yield a.default.user.update({
-                          where: { email: r },
-                          data: { password: yield n.default.hashPassword(o) },
-                        })
+                        return e
+                          ? t.sendStatus(401)
+                          : (console.log(
+                              '🚀 ~ file: index.ts ~ line 274 ~ Authentication ~ decoded.email',
+                              s.email,
+                            ),
+                            yield a.default.user.update({
+                              where: { email: s.email },
+                              data: { password: yield n.default.hashPassword(r) },
+                            }),
+                            t.status(200).json({ message: 'New password successfully set' }))
                       }),
                     )
                   } catch (e) {

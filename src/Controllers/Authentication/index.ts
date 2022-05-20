@@ -18,6 +18,7 @@ class Authentication {
     this.authenticate()
     this.refreshToken()
     this.logout()
+    this.setNewPassword()
   }
 
   async authenticate() {
@@ -55,10 +56,11 @@ class Authentication {
         })
 
         if (!user) return res.sendStatus(404)
+        if (!user.active) return res.status(403).json({ error: 'User is not activated' })
 
         const matchPassword = await Bcrypt.comparePassword(password as string, user.password)
 
-        if (matchPassword && user.active) {
+        if (matchPassword) {
           const accessToken = jwt.sign(
             { email: user.email, role: user.role },
             process.env.ACCESS_TOKEN_SECRET as string,
@@ -209,8 +211,6 @@ class Authentication {
 
   async resetPassword() {
     this.app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
-      const authToken = req.headers.authorization
-
       const schema = Joi.object().keys({
         email: Joi.string().email().required(),
       })
@@ -221,16 +221,32 @@ class Authentication {
       try {
         const { email } = req.body
 
+        const user = await Prisma.user.findFirst({
+          where: { email },
+          select: { email: true, active: true },
+        })
+
+        // False 200 status
+        if (!user || !user.active)
+          return res.status(200).json({ message: 'Reset password email sent' })
+        // False 200 status
+
         const resetToken = jwt.sign({ email }, process.env.PASSWORD_RESET_TOKEN_SECRET as string, {
           expiresIn: '24h',
         })
 
-        const emailSender = new SendgridClient()
+        if (isProduction) {
+          const emailSender = new SendgridClient()
 
-        await emailSender.send(
-          emailSender.TEMPLATES.resetPassword.config(email, {
-            resetPasswordUrl: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`,
-          }),
+          await emailSender.send(
+            emailSender.TEMPLATES.resetPassword.config(email, {
+              resetPasswordUrl: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`,
+            }),
+          )
+        }
+        console.log(
+          '🚀 ~ file: index.ts ~ line 242 ~ Authentication ~ this.app.post ~ resetToken',
+          resetToken,
         )
 
         res.status(200).json({ message: 'Reset password email sent' })
@@ -245,27 +261,33 @@ class Authentication {
       const authToken = req.headers.authorization
 
       const schema = Joi.object().keys({
-        email: Joi.string().email().required(),
+        password: Joi.string().required(),
       })
 
       const errors = SchemaHelper.validateSchema(schema, req.body)
       if (errors || !authToken) return res.sendStatus(400)
 
       try {
-        const { email, password } = req.body
+        const { password } = req.body
 
         jwt.verify(
           authToken,
           process.env.PASSWORD_RESET_TOKEN_SECRET as string,
           async (error: any, decoded: any) => {
-            if (errors || decoded.email !== email) return res.sendStatus(401)
+            if (error) return res.sendStatus(401)
+
+            console.log(
+              '🚀 ~ file: index.ts ~ line 274 ~ Authentication ~ decoded.email',
+              decoded.email,
+            )
 
             await Prisma.user.update({
-              where: { email },
+              where: { email: decoded.email },
               data: {
                 password: await Bcrypt.hashPassword(password),
               },
             })
+            return res.status(200).json({ message: 'New password successfully set' })
           },
         )
       } catch (error) {
