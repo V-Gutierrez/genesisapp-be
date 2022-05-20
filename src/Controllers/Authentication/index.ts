@@ -6,6 +6,7 @@ import Bcrypt from '@Helpers/Bcrypt'
 import Joi from 'joi'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
+import SendgridClient from '@Clients/Sendgrid'
 import { User } from '@prisma/client'
 import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
@@ -13,6 +14,7 @@ import jwt from 'jsonwebtoken'
 class Authentication {
   constructor(private readonly app: Express) {
     this.activateNewUser()
+    this.resetPassword()
     this.authenticate()
     this.refreshToken()
     this.logout()
@@ -199,6 +201,73 @@ class Authentication {
         )
 
         res.sendStatus(204)
+      } catch (error) {
+        res.sendStatus(500)
+      }
+    })
+  }
+
+  async resetPassword() {
+    this.app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
+      const authToken = req.headers.authorization
+
+      const schema = Joi.object().keys({
+        email: Joi.string().email().required(),
+      })
+
+      const errors = SchemaHelper.validateSchema(schema, req.body)
+      if (errors) return res.status(400).json({ error: errors })
+
+      try {
+        const { email } = req.body
+
+        const resetToken = jwt.sign({ email }, process.env.PASSWORD_RESET_TOKEN_SECRET as string, {
+          expiresIn: '24h',
+        })
+
+        const emailSender = new SendgridClient()
+
+        await emailSender.send(
+          emailSender.TEMPLATES.resetPassword.config(email, {
+            resetPasswordUrl: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`,
+          }),
+        )
+
+        res.status(200).json({ message: 'Reset password email sent' })
+      } catch (error) {
+        res.sendStatus(500)
+      }
+    })
+  }
+
+  async setNewPassword() {
+    this.app.put('/api/auth/reset-password', async (req: Request, res: Response) => {
+      const authToken = req.headers.authorization
+
+      const schema = Joi.object().keys({
+        email: Joi.string().email().required(),
+      })
+
+      const errors = SchemaHelper.validateSchema(schema, req.body)
+      if (errors || !authToken) return res.sendStatus(400)
+
+      try {
+        const { email, password } = req.body
+
+        jwt.verify(
+          authToken,
+          process.env.PASSWORD_RESET_TOKEN_SECRET as string,
+          async (error: any, decoded: any) => {
+            if (errors || decoded.email !== email) return res.sendStatus(401)
+
+            await Prisma.user.update({
+              where: { email },
+              data: {
+                password: await Bcrypt.hashPassword(password),
+              },
+            })
+          },
+        )
       } catch (error) {
         res.sendStatus(500)
       }

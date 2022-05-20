@@ -16,6 +16,15 @@ class SendgridClient {
         dynamicTemplateData,
       }),
     },
+    resetPassword: {
+      config: (to: string, dynamicTemplateData: { resetPasswordUrl: string }): MailDataRequired => ({
+          to,
+          from: 'suportegenesischurch@gmail.com',
+          subject: 'Alteração de senha',
+          templateId: 'd-03325789ee6f4014858e14ac7cde78e1',
+          dynamicTemplateData,
+        }),
+    },
   }
 
   constructor() {
@@ -27,6 +36,8 @@ class SendgridClient {
 
     try {
       await SendgridMail.send(msg)
+
+      console.log('Sendgrid Service 200')
     } catch (error) {
       console.error(error)
       throw new Error('Error in Sendgrid flow')
