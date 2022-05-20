@@ -323,7 +323,7 @@ class Authentication {
   }
 
   async getUserInformation() {
-    this.app.get('/api/me', async (req: Request, res: Response) => {
+    this.app.get('/api/auth/me', async (req: Request, res: Response) => {
       const schema = Joi.object().keys({
         jwt: Joi.required(),
       })

@@ -356,7 +356,7 @@
           }
           getUserInformation() {
             return r(this, void 0, void 0, function* () {
-              this.app.get('/api/me', (e, t) =>
+              this.app.get('/api/auth/me', (e, t) =>
                 r(this, void 0, void 0, function* () {
                   const s = o.default.object().keys({ jwt: o.default.required() })
                   if (u.default.validateSchema(s, e.cookies)) return t.sendStatus(401)
