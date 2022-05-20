@@ -244,10 +244,6 @@ class Authentication {
             }),
           )
         }
-        console.log(
-          '🚀 ~ file: index.ts ~ line 242 ~ Authentication ~ this.app.post ~ resetToken',
-          resetToken,
-        )
 
         res.status(200).json({ message: 'Reset password email sent' })
       } catch (error) {
@@ -275,11 +271,6 @@ class Authentication {
           process.env.PASSWORD_RESET_TOKEN_SECRET as string,
           async (error: any, decoded: any) => {
             if (error) return res.sendStatus(401)
-
-            console.log(
-              '🚀 ~ file: index.ts ~ line 274 ~ Authentication ~ decoded.email',
-              decoded.email,
-            )
 
             await Prisma.user.update({
               where: { email: decoded.email },

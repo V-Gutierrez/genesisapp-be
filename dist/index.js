@@ -11,14 +11,14 @@
             (this && this.__awaiter) ||
             function (e, t, s, i) {
               return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+                function a(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
                     n(e)
                   }
                 }
-                function a(e) {
+                function o(e) {
                   try {
                     u(i.throw(e))
                   } catch (e) {
@@ -34,7 +34,7 @@
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(a, o)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
@@ -74,9 +74,9 @@
             return i(this, void 0, void 0, function* () {
               const t = e
               try {
-                yield n.default.send(t), console.log('Sendgrid Service 200')
+                yield n.default.send(t), console.log('Sendgrid Service - 200')
               } catch (e) {
-                throw (console.error(e), new Error('Error in Sendgrid flow'))
+                throw new Error('Error in Sendgrid flow')
               }
             })
           }
@@ -87,14 +87,14 @@
             (this && this.__awaiter) ||
             function (e, t, s, i) {
               return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+                function a(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
                     n(e)
                   }
                 }
-                function a(e) {
+                function o(e) {
                   try {
                     u(i.throw(e))
                   } catch (e) {
@@ -110,7 +110,7 @@
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(a, o)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
@@ -122,8 +122,8 @@
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
         const n = r(s(349)),
-          o = r(s(506)),
-          a = r(s(221)),
+          a = r(s(506)),
+          o = r(s(221)),
           u = r(s(721)),
           d = r(s(189)),
           c = r(s(668)),
@@ -148,16 +148,16 @@
                     })
                   else
                     try {
-                      const s = o.default
+                      const s = a.default
                           .object()
                           .keys({
-                            email: o.default.string().email().required(),
-                            password: o.default.string().required(),
+                            email: a.default.string().email().required(),
+                            password: a.default.string().required(),
                           }),
                         i = u.default.validateSchema(s, e.body)
                       if (i) return t.status(400).json({ error: i })
                       const { email: r, password: d } = e.body,
-                        f = yield a.default.user.findFirst({
+                        f = yield o.default.user.findFirst({
                           where: { email: r },
                           select: { password: !0, email: !0, id: !0, role: !0, active: !0 },
                         })
@@ -176,7 +176,7 @@
                             process.env.REFRESH_TOKEN_SECRET,
                             { expiresIn: '30d' },
                           )
-                        yield a.default.userRefreshTokens.upsert({
+                        yield o.default.userRefreshTokens.upsert({
                           where: { userId: f.id },
                           update: { token: s },
                           create: { userId: f.id, token: s },
@@ -196,7 +196,7 @@
               this.app.get('/api/auth', (e, t) =>
                 i(this, void 0, void 0, function* () {
                   try {
-                    const s = o.default.object().keys({ jwt: o.default.required() })
+                    const s = a.default.object().keys({ jwt: a.default.required() })
                     if (u.default.validateSchema(s, e.cookies)) return t.sendStatus(401)
                     const { jwt: r } = e.cookies
                     l.default.verify(r, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
@@ -206,7 +206,7 @@
                             t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
                             t.sendStatus(403)
                           )
-                        const r = yield a.default.user.findFirst({
+                        const r = yield o.default.user.findFirst({
                           where: { email: s.email },
                           select: { id: !0, email: !0, role: !0, UserRefreshTokens: !0 },
                         })
@@ -215,13 +215,13 @@
                             t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
                             t.sendStatus(403)
                           )
-                        const { UserRefreshTokens: n, id: o } = r,
+                        const { UserRefreshTokens: n, id: a } = r,
                           [{ token: u }] = n
                         l.default.verify(u, process.env.REFRESH_TOKEN_SECRET, (e) =>
                           i(this, void 0, void 0, function* () {
                             if (e)
                               return (
-                                yield a.default.userRefreshTokens.delete({ where: { userId: o } }),
+                                yield o.default.userRefreshTokens.delete({ where: { userId: a } }),
                                 t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
                                 t.sendStatus(403)
                               )
@@ -253,7 +253,7 @@
                     l.default.verify(s, process.env.ACTIVATION_TOKEN_SECRET, (e, s) =>
                       i(this, void 0, void 0, function* () {
                         if (e) return t.sendStatus(401)
-                        yield a.default.user.update({ where: { id: s.id }, data: { active: !0 } })
+                        yield o.default.user.update({ where: { id: s.id }, data: { active: !0 } })
                       }),
                     ),
                       t.sendStatus(204)
@@ -268,14 +268,14 @@
             return i(this, void 0, void 0, function* () {
               this.app.post('/api/auth/reset-password', (e, t) =>
                 i(this, void 0, void 0, function* () {
-                  const s = o.default
+                  const s = a.default
                       .object()
-                      .keys({ email: o.default.string().email().required() }),
+                      .keys({ email: a.default.string().email().required() }),
                     i = u.default.validateSchema(s, e.body)
                   if (i) return t.status(400).json({ error: i })
                   try {
                     const { email: s } = e.body,
-                      i = yield a.default.user.findFirst({
+                      i = yield o.default.user.findFirst({
                         where: { email: s },
                         select: { email: !0, active: !0 },
                       })
@@ -294,11 +294,7 @@
                         }),
                       )
                     }
-                    console.log(
-                      '🚀 ~ file: index.ts ~ line 242 ~ Authentication ~ this.app.post ~ resetToken',
-                      r,
-                    ),
-                      t.status(200).json({ message: 'Reset password email sent' })
+                    t.status(200).json({ message: 'Reset password email sent' })
                   } catch (e) {
                     t.sendStatus(500)
                   }
@@ -311,7 +307,7 @@
               this.app.put('/api/auth/reset-password', (e, t) =>
                 i(this, void 0, void 0, function* () {
                   const s = e.headers.authorization,
-                    r = o.default.object().keys({ password: o.default.string().required() })
+                    r = a.default.object().keys({ password: a.default.string().required() })
                   if (u.default.validateSchema(r, e.body) || !s) return t.sendStatus(400)
                   try {
                     const { password: r } = e.body
@@ -319,11 +315,7 @@
                       i(this, void 0, void 0, function* () {
                         return e
                           ? t.sendStatus(401)
-                          : (console.log(
-                              '🚀 ~ file: index.ts ~ line 274 ~ Authentication ~ decoded.email',
-                              s.email,
-                            ),
-                            yield a.default.user.update({
+                          : (yield o.default.user.update({
                               where: { email: s.email },
                               data: { password: yield n.default.hashPassword(r) },
                             }),
@@ -342,14 +334,14 @@
               this.app.delete('/api/auth', (e, t) =>
                 i(this, void 0, void 0, function* () {
                   try {
-                    const s = o.default.object().keys({ jwt: o.default.required() })
+                    const s = a.default.object().keys({ jwt: a.default.required() })
                     if (u.default.validateSchema(s, e.cookies)) return t.sendStatus(204)
                     const { jwt: i } = e.cookies,
-                      r = yield a.default.user.findFirst({
+                      r = yield o.default.user.findFirst({
                         where: { UserRefreshTokens: { some: { token: i } } },
                       })
                     return r
-                      ? (yield a.default.userRefreshTokens.delete({ where: { userId: r.id } }),
+                      ? (yield o.default.userRefreshTokens.delete({ where: { userId: r.id } }),
                         t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
                         t.sendStatus(204))
                       : (t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
@@ -368,14 +360,14 @@
             (this && this.__awaiter) ||
             function (e, t, s, i) {
               return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+                function a(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
                     n(e)
                   }
                 }
-                function a(e) {
+                function o(e) {
                   try {
                     u(i.throw(e))
                   } catch (e) {
@@ -391,7 +383,7 @@
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(a, o)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
@@ -403,8 +395,8 @@
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
         const n = r(s(860)),
-          o = r(s(506)),
-          a = r(s(721)),
+          a = r(s(506)),
+          o = r(s(721)),
           u = r(s(710)),
           d = r(s(582)),
           c = r(s(344))
@@ -437,8 +429,8 @@
             e.use((e, t, s) =>
               i(this, void 0, void 0, function* () {
                 try {
-                  const i = o.default.object().keys({ jwt: o.default.required() })
-                  if (a.default.validateSchema(i, e.cookies)) return t.sendStatus(401)
+                  const i = a.default.object().keys({ jwt: a.default.required() })
+                  if (o.default.validateSchema(i, e.cookies)) return t.sendStatus(401)
                   const { jwt: r } = e.cookies
                   c.default.verify(r, process.env.ACCESS_TOKEN_SECRET, (e, i) => {
                     if (e) return t.sendStatus(403)
@@ -457,14 +449,14 @@
             (this && this.__awaiter) ||
             function (e, t, s, i) {
               return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+                function a(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
                     n(e)
                   }
                 }
-                function a(e) {
+                function o(e) {
                   try {
                     u(i.throw(e))
                   } catch (e) {
@@ -480,7 +472,7 @@
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(a, o)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
@@ -515,14 +507,14 @@
             (this && this.__awaiter) ||
             function (e, t, s, i) {
               return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+                function a(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
                     n(e)
                   }
                 }
-                function a(e) {
+                function o(e) {
                   try {
                     u(i.throw(e))
                   } catch (e) {
@@ -538,7 +530,7 @@
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(a, o)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
@@ -575,14 +567,14 @@
             (this && this.__awaiter) ||
             function (e, t, s, i) {
               return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+                function a(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
                     n(e)
                   }
                 }
-                function a(e) {
+                function o(e) {
                   try {
                     u(i.throw(e))
                   } catch (e) {
@@ -598,7 +590,7 @@
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(a, o)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
@@ -610,8 +602,8 @@
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
         const n = r(s(349)),
-          o = r(s(506)),
-          a = r(s(717)),
+          a = r(s(506)),
+          o = r(s(717)),
           u = r(s(221)),
           d = r(s(721)),
           c = r(s(189)),
@@ -619,7 +611,7 @@
           f = r(s(344))
         t.default = class {
           constructor(e) {
-            ;(this.app = e), this.signUp(), a.default.JWT(this.app), this.get()
+            ;(this.app = e), this.signUp(), o.default.JWT(this.app), this.get()
           }
           get() {
             return i(this, void 0, void 0, function* () {
@@ -646,27 +638,27 @@
             return i(this, void 0, void 0, function* () {
               this.app.post('/api/users', (e, t) =>
                 i(this, void 0, void 0, function* () {
-                  const s = o.default
+                  const s = a.default
                       .object()
                       .keys({
-                        email: o.default.string().email().required(),
-                        name: o.default.string().required(),
-                        phone: o.default.string().required().min(8).max(14),
-                        password: o.default.string().min(8),
-                        birthdate: o.default.string().required(),
+                        email: a.default.string().email().required(),
+                        name: a.default.string().required(),
+                        phone: a.default.string().required().min(8).max(14),
+                        password: a.default.string().min(8),
+                        birthdate: a.default.string().required(),
                       }),
                     i = d.default.validateSchema(s, e.body)
                   try {
                     if (i) t.status(400).json({ error: i })
                     else {
-                      const { email: s, name: i, password: r, phone: o, birthdate: a } = e.body,
+                      const { email: s, name: i, password: r, phone: a, birthdate: o } = e.body,
                         d = yield u.default.user.create({
                           data: {
                             email: s,
                             name: i,
-                            birthdate: new Date(a).toISOString(),
+                            birthdate: new Date(o).toISOString(),
                             password: yield n.default.hashPassword(r),
-                            phone: o,
+                            phone: a,
                           },
                           select: {
                             id: !0,
@@ -692,13 +684,9 @@
                       t.status(201).json({ message: 'User created', user: d })
                     }
                   } catch (e) {
-                    console.log(
-                      '🚀 ~ file: index.ts ~ line 101 ~ Users ~ this.app.post ~ error',
-                      e,
-                    ),
-                      'P2002' === e.code
-                        ? t.status(409).json({ error: 'User already exists' })
-                        : t.status(500).json({ error: 'Internal server error' })
+                    'P2002' === e.code
+                      ? t.status(409).json({ error: 'User already exists' })
+                      : t.status(500).json({ error: 'Internal server error' })
                   }
                 }),
               )
@@ -715,15 +703,15 @@
         Object.defineProperty(t, '__esModule', { value: !0 })
         const r = i(s(765)),
           n = i(s(226)),
-          o = i(s(157)),
-          a = i(s(717)),
+          a = i(s(157)),
+          o = i(s(717)),
           u = i(s(575))
         t.default = class {
           constructor(e) {
             ;(this.app = e),
-              new a.default(this.app),
-              new r.default(this.app),
               new o.default(this.app),
+              new r.default(this.app),
+              new a.default(this.app),
               new n.default(this.app),
               new u.default(this.app)
           }
@@ -768,13 +756,13 @@
               return r(t, e), t
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
-        const o = n(s(96))
+        const a = n(s(96))
         t.default = class {
           static hashPassword(e) {
-            return o.hash(e, process.env.BCRYPTSALT)
+            return a.hash(e, process.env.BCRYPTSALT)
           }
           static comparePassword(e, t) {
-            return o.compare(e, t)
+            return a.compare(e, t)
           }
         }
       },
@@ -819,20 +807,20 @@
                   'default' !== s && Object.prototype.hasOwnProperty.call(e, s) && i(t, e, s)
               return r(t, e), t
             },
-          o =
+          a =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const a = n(s(634)),
-          u = o(s(506))
+        const o = n(s(634)),
+          u = a(s(506))
         t.default = class {
           static validateSchema(e, t) {
             const { error: s } = u.default.validate(t, e, { abortEarly: !1, convert: !1 })
             if (!s || !s.details) return
             const i = s.details.map(({ message: e, path: t }) => ({ [t.join('.')]: e }))
-            return a.mergeAll(i)
+            return o.mergeAll(i)
           }
         }
       },
