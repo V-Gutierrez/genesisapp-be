@@ -1,5 +1,6 @@
 import 'dotenv/config'
 
+import { Errors, Success } from '@Helpers/Errors'
 import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
@@ -25,7 +26,7 @@ class Users {
       const { id } = req.params
 
       try {
-        if (!id) res.status(401).json({ error: 'Invalid or missing ID' })
+        if (!id) res.status(401).json({ error: Errors.INVALID_OR_MISSING_ID })
         else {
           const user = await Prisma.user.findFirst({
             where: { id },
@@ -38,7 +39,7 @@ class Users {
             },
           })
 
-          if (!user) res.status(404).json({ error: 'User not found' })
+          if (!user) res.status(404).json({ error: Errors.USER_NOT_FOUND })
           if (user) res.status(200).json(user)
         }
       } catch (error) {
@@ -98,11 +99,12 @@ class Users {
             )
           }
 
-          res.status(201).json({ message: 'User created', user })
+          res.status(201).json({ message: Success.USER_CREATED, user })
         }
       } catch (error) {
-        if ((error as any).code === 'P2002') res.status(409).json({ error: 'User already exists' })
-        else res.status(500).json({ error: 'Internal server error' })
+        if ((error as any).code === 'P2002')
+          res.status(409).json({ error: Errors.USER_ALREADY_EXISTS })
+        else res.status(500).json({ error: Errors.INTERNAL_SERVER_ERROR })
       }
     })
   }
