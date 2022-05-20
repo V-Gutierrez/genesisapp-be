@@ -13,6 +13,7 @@ import jwt from 'jsonwebtoken'
 class Authentication {
   constructor(private readonly app: Express) {
     this.authenticate()
+    this.activateNewUser()
     this.refreshToken()
     this.logout()
   }
@@ -47,6 +48,7 @@ class Authentication {
             email: true,
             id: true,
             role: true,
+            active: true,
           },
         })
 
@@ -54,7 +56,7 @@ class Authentication {
 
         const matchPassword = await Bcrypt.comparePassword(password as string, user.password)
 
-        if (matchPassword) {
+        if (matchPassword && user.active) {
           const accessToken = jwt.sign(
             { email: user.email, role: user.role },
             process.env.ACCESS_TOKEN_SECRET as string,
@@ -84,6 +86,7 @@ class Authentication {
             maxAge: 60 * 60 * 24 * 30 * 1000,
             secure: isProduction,
           })
+
           res.status(200).json({ userLoggedIn: true })
         } else {
           return res.sendStatus(401)
@@ -168,6 +171,38 @@ class Authentication {
             )
           },
         )
+      } catch (error) {
+        res.sendStatus(500)
+      }
+    })
+  }
+
+  async activateNewUser() {
+    this.app.post('/api/auth/activate', async (req: Request, res: Response) => {
+      const schema = Joi.object().keys({
+        authorization: Joi.required(),
+      })
+
+      const errors = SchemaHelper.validateSchema(schema, req.headers)
+      if (errors) return res.sendStatus(401)
+
+      try {
+        const { authorization } = req.headers
+
+        jwt.verify(
+          authorization as string,
+          process.env.ACTIVATION_TOKEN_SECRET as string,
+          async (error: any, decoded: any) => {
+            if (error) return res.sendStatus(401)
+
+            await Prisma.user.update({
+              where: { id: decoded.id as string },
+              data: { active: true },
+            })
+          },
+        )
+
+        res.sendStatus(204)
       } catch (error) {
         res.sendStatus(500)
       }

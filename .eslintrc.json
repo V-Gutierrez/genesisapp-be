@@ -28,7 +28,8 @@
     "node/no-missing-import": "off",
     "import/extensions": "off",
     "consistent-return": "off",
-    "no-console": "warn"
+    "no-console": "warn",
+    "class-methods-use-this": "off"
   },
   "settings": {
     "import/resolver": {

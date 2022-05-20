@@ -28,6 +28,7 @@ model User {
   updatedAt         DateTime            @default(now())
   Devotional        Devotional[]
   UserRefreshTokens UserRefreshTokens[]
+  active            Boolean             @default(false)
 }
 
 model UserRefreshTokens {

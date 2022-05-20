@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
@@ -5,7 +7,9 @@ import Joi from 'joi'
 import Middlewares from '@Controllers/Middlewares'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
+import SendgridClient from '@Clients/Sendgrid'
 import { User } from '@prisma/client'
+import jwt from 'jsonwebtoken'
 
 class Users {
   constructor(private readonly app: Express) {
@@ -77,6 +81,19 @@ class Users {
               password: false,
             },
           })
+
+          const token = jwt.sign({ id: user.id }, process.env.ACTIVATION_TOKEN_SECRET as string, {
+            expiresIn: Infinity,
+          })
+
+          const emailSender = new SendgridClient()
+
+          emailSender.send(
+            emailSender.TEMPLATES.confirmationEmail.config(user.email, {
+              userFirstName: user.name.split(' ')[0],
+              activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${token}`,
+            }),
+          )
 
           res.status(201).json({ message: 'User created', user })
         }
