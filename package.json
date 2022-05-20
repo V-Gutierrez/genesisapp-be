@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "build": "npx prisma generate && npx prisma migrate deploy",
+    "build": "",
+    "build:dev": "npx prisma generate && npx prisma migrate deploy",
     "build:webpack": "webpack --config webpack.config.js",
     "test": "jest",
     "prepare": "husky install",
