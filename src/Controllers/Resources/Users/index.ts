@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import { Errors, Success } from '@Helpers/Errors'
+import { Errors, Success } from '@Helpers/Messages'
 import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'

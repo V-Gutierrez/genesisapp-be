@@ -1,12 +1,12 @@
 ;(() => {
   'use strict'
   var e = {
-      221: (e, t, s) => {
+      988: (e, t, s) => {
         Object.defineProperty(t, '__esModule', { value: !0 })
         const r = new (s(524).PrismaClient)()
         t.default = r
       },
-      189: function (e, t, s) {
+      790: function (e, t, s) {
         var r =
             (this && this.__awaiter) ||
             function (e, t, s, r) {
@@ -82,7 +82,7 @@
           }
         }
       },
-      765: function (e, t, s) {
+      835: function (e, t, s) {
         var r =
             (this && this.__awaiter) ||
             function (e, t, s, r) {
@@ -121,12 +121,12 @@
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
-        const n = i(s(349)),
+        const n = i(s(632)),
           o = i(s(506)),
-          a = i(s(221)),
-          u = i(s(721)),
-          d = i(s(189)),
-          c = i(s(668)),
+          a = i(s(988)),
+          u = i(s(448)),
+          d = i(s(790)),
+          c = i(s(766)),
           l = i(s(344))
         t.default = class {
           constructor(e) {
@@ -355,7 +355,7 @@
           }
         }
       },
-      717: function (e, t, s) {
+      488: function (e, t, s) {
         var r =
             (this && this.__awaiter) ||
             function (e, t, s, r) {
@@ -396,7 +396,7 @@
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
         const n = i(s(860)),
           o = i(s(506)),
-          a = i(s(721)),
+          a = i(s(448)),
           u = i(s(710)),
           d = i(s(582)),
           c = i(s(344))
@@ -444,7 +444,7 @@
           }
         }
       },
-      226: function (e, t, s) {
+      116: function (e, t, s) {
         var r =
             (this && this.__awaiter) ||
             function (e, t, s, r) {
@@ -483,7 +483,7 @@
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const n = i(s(221))
+        const n = i(s(988))
         t.default = class {
           constructor(e) {
             ;(this.app = e), this.get()
@@ -502,7 +502,7 @@
           }
         }
       },
-      157: function (e, t, s) {
+      334: function (e, t, s) {
         var r =
             (this && this.__awaiter) ||
             function (e, t, s, r) {
@@ -541,7 +541,7 @@
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const n = i(s(221))
+        const n = i(s(988))
         t.default = class {
           constructor(e) {
             ;(this.app = e), this.getGrowthGroups()
@@ -562,7 +562,7 @@
           }
         }
       },
-      575: function (e, t, s) {
+      785: function (e, t, s) {
         var r =
             (this && this.__awaiter) ||
             function (e, t, s, r) {
@@ -601,14 +601,14 @@
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
-        const n = s(584),
-          o = i(s(349)),
+        const n = s(590),
+          o = i(s(632)),
           a = i(s(506)),
-          u = i(s(717)),
-          d = i(s(221)),
-          c = i(s(721)),
-          l = i(s(189)),
-          f = i(s(668)),
+          u = i(s(488)),
+          d = i(s(988)),
+          c = i(s(448)),
+          l = i(s(790)),
+          f = i(s(766)),
           h = i(s(344))
         t.default = class {
           constructor(e) {
@@ -695,18 +695,18 @@
           }
         }
       },
-      536: function (e, t, s) {
+      618: function (e, t, s) {
         var r =
           (this && this.__importDefault) ||
           function (e) {
             return e && e.__esModule ? e : { default: e }
           }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const i = r(s(765)),
-          n = r(s(226)),
-          o = r(s(157)),
-          a = r(s(717)),
-          u = r(s(575))
+        const i = r(s(835)),
+          n = r(s(116)),
+          o = r(s(334)),
+          a = r(s(488)),
+          u = r(s(785))
         t.default = class {
           constructor(e) {
             ;(this.app = e),
@@ -718,7 +718,7 @@
           }
         }
       },
-      349: function (e, t, s) {
+      632: function (e, t, s) {
         var r =
             (this && this.__createBinding) ||
             (Object.create
@@ -767,21 +767,23 @@
           }
         }
       },
-      668: (e, t, s) => {
+      766: (e, t, s) => {
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81), (t.default = !0)
       },
-      584: (e, t) => {
+      590: (e, t) => {
         Object.defineProperty(t, '__esModule', { value: !0 }),
           (t.Success = t.Errors = void 0),
           (t.Errors = {
-            INVALID_OR_MISSING_ID: 'INVALID_OR_MISSING_ID',
-            USER_NOT_FOUND: 'USER_NOT_FOUND',
-            USER_ALREADY_EXISTS: 'USER_ALREADY_EXISTS',
-            INTERNAL_SERVER_ERROR: 'INTERNAL_SERVER_ERROR',
+            INVALID_OR_MISSING_ID: 'É necessário enviar um ID para a busca',
+            USER_NOT_FOUND: 'Usuário não encontrado',
+            USER_ALREADY_EXISTS: 'Este usuário já existe. Você esqueceu sua senha?',
+            INTERNAL_SERVER_ERROR: 'Houve um problema. Se este erro persistis contate o suporte',
           }),
-          (t.Success = { USER_CREATED: 'USER_CREATED' })
+          (t.Success = {
+            USER_CREATED: 'Usuário criado com sucesso. Verifique seu email para ativar sua conta',
+          })
       },
-      721: function (e, t, s) {
+      448: function (e, t, s) {
         var r =
             (this && this.__createBinding) ||
             (Object.create
@@ -836,14 +838,14 @@
           }
         }
       },
-      920: function (e, t, s) {
+      607: function (e, t, s) {
         var r =
           (this && this.__importDefault) ||
           function (e) {
             return e && e.__esModule ? e : { default: e }
           }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const i = r(s(536)),
+        const i = r(s(618)),
           n = r(s(860))
         new (class {
           constructor(e = (0, n.default)()) {
@@ -888,5 +890,5 @@
     if (void 0 !== i) return i.exports
     var n = (t[r] = { exports: {} })
     return e[r].call(n.exports, n, n.exports, s), n.exports
-  })(920)
+  })(607)
 })()
