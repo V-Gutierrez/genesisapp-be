@@ -83,12 +83,12 @@ class Users {
           })
 
           const token = jwt.sign({ id: user.id }, process.env.ACTIVATION_TOKEN_SECRET as string, {
-            expiresIn: Infinity,
+            expiresIn: '30d',
           })
 
           const emailSender = new SendgridClient()
 
-          emailSender.send(
+          await emailSender.send(
             emailSender.TEMPLATES.confirmationEmail.config(user.email, {
               userFirstName: user.name.split(' ')[0],
               activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${token}`,
@@ -98,6 +98,7 @@ class Users {
           res.status(201).json({ message: 'User created', user })
         }
       } catch (error) {
+        console.log('🚀 ~ file: index.ts ~ line 101 ~ Users ~ this.app.post ~ error', error)
         if ((error as any).code === 'P2002') res.status(409).json({ error: 'User already exists' })
         else res.status(500).json({ error: 'Internal server error' })
       }
