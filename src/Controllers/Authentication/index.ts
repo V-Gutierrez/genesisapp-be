@@ -179,29 +179,16 @@ class Authentication {
 
   async activateNewUser() {
     this.app.post('/api/auth/activate', async (req: Request, res: Response) => {
-      const schema = Joi.object().keys({
-        authorization: Joi.required(),
-      })
+      const authToken = req.headers.authorization
 
-      const errors = SchemaHelper.validateSchema(schema, req.headers)
-      console.log(
-        '🚀 ~ file: index.ts ~ line 189 ~ Authentication ~ this.app.post ~ errors',
-        errors,
-      )
-      if (errors) return res.sendStatus(401)
-
+      if (!authToken) return res.sendStatus(401)
       try {
         const { authorization } = req.headers
-        console.log(
-          '🚀 ~ file: index.ts ~ line 192 ~ Authentication ~ this.app.post ~ authorization',
-          authorization,
-        )
 
         jwt.verify(
           authorization as string,
           process.env.ACTIVATION_TOKEN_SECRET as string,
           async (error: any, decoded: any) => {
-            console.log('🚀 ~ file: index.ts ~ line 200 ~ Authentication ~ error', error)
             if (error) return res.sendStatus(401)
 
             await Prisma.user.update({

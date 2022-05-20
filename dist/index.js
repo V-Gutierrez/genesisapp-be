@@ -10,25 +10,25 @@
         var n =
             (this && this.__awaiter) ||
             function (e, t, i, n) {
-              return new (i || (i = Promise))(function (s, r) {
+              return new (i || (i = Promise))(function (r, s) {
                 function o(e) {
                   try {
                     u(n.next(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function a(e) {
                   try {
                     u(n.throw(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function u(e) {
                   var t
                   e.done
-                    ? s(e.value)
+                    ? r(e.value)
                     : ((t = e.value),
                       t instanceof i
                         ? t
@@ -39,13 +39,13 @@
                 u((n = n.apply(e, t || [])).next())
               })
             },
-          s =
+          r =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), i(81)
-        const r = s(i(139))
+        const s = r(i(139))
         t.default = class {
           constructor() {
             ;(this.TEMPLATES = {
@@ -59,13 +59,13 @@
                 }),
               },
             }),
-              r.default.setApiKey(process.env.SENDGRID_API_KEY)
+              s.default.setApiKey(process.env.SENDGRID_API_KEY)
           }
           send(e) {
             return n(this, void 0, void 0, function* () {
               const t = e
               try {
-                yield r.default.send(t)
+                yield s.default.send(t)
               } catch (e) {
                 throw (console.error(e), new Error('Error in Sendgrid flow'))
               }
@@ -77,25 +77,25 @@
         var n =
             (this && this.__awaiter) ||
             function (e, t, i, n) {
-              return new (i || (i = Promise))(function (s, r) {
+              return new (i || (i = Promise))(function (r, s) {
                 function o(e) {
                   try {
                     u(n.next(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function a(e) {
                   try {
                     u(n.throw(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function u(e) {
                   var t
                   e.done
-                    ? s(e.value)
+                    ? r(e.value)
                     : ((t = e.value),
                       t instanceof i
                         ? t
@@ -106,18 +106,18 @@
                 u((n = n.apply(e, t || [])).next())
               })
             },
-          s =
+          r =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), i(81)
-        const r = s(i(349)),
-          o = s(i(506)),
-          a = s(i(221)),
-          u = s(i(721)),
-          c = s(i(668)),
-          d = s(i(344))
+        const s = r(i(349)),
+          o = r(i(506)),
+          a = r(i(221)),
+          u = r(i(721)),
+          c = r(i(668)),
+          d = r(i(344))
         t.default = class {
           constructor(e) {
             ;(this.app = e),
@@ -144,13 +144,13 @@
                           }),
                         n = u.default.validateSchema(i, e.body)
                       if (n) return t.status(400).json({ error: n })
-                      const { email: s, password: l } = e.body,
+                      const { email: r, password: l } = e.body,
                         f = yield a.default.user.findFirst({
-                          where: { email: s },
+                          where: { email: r },
                           select: { password: !0, email: !0, id: !0, role: !0, active: !0 },
                         })
                       if (!f) return t.sendStatus(404)
-                      if (!(yield r.default.comparePassword(l, f.password)) || !f.active)
+                      if (!(yield s.default.comparePassword(l, f.password)) || !f.active)
                         return t.sendStatus(401)
                       {
                         const e = d.default.sign(
@@ -185,25 +185,25 @@
                   try {
                     const i = o.default.object().keys({ jwt: o.default.required() })
                     if (u.default.validateSchema(i, e.cookies)) return t.sendStatus(401)
-                    const { jwt: s } = e.cookies
-                    d.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, i) =>
+                    const { jwt: r } = e.cookies
+                    d.default.verify(r, process.env.ACCESS_TOKEN_SECRET, (e, i) =>
                       n(this, void 0, void 0, function* () {
                         if (e)
                           return (
                             t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
                             t.sendStatus(403)
                           )
-                        const s = yield a.default.user.findFirst({
+                        const r = yield a.default.user.findFirst({
                           where: { email: i.email },
                           select: { id: !0, email: !0, role: !0, UserRefreshTokens: !0 },
                         })
-                        if (!s)
+                        if (!r)
                           return (
                             t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
                             t.sendStatus(403)
                           )
-                        const { UserRefreshTokens: r, id: o } = s,
-                          [{ token: u }] = r
+                        const { UserRefreshTokens: s, id: o } = r,
+                          [{ token: u }] = s
                         d.default.verify(u, process.env.REFRESH_TOKEN_SECRET, (e) =>
                           n(this, void 0, void 0, function* () {
                             if (e)
@@ -213,7 +213,7 @@
                                 t.sendStatus(403)
                               )
                             const i = d.default.sign(
-                              { email: s.email, role: s.role },
+                              { email: r.email, role: r.role },
                               process.env.ACCESS_TOKEN_SECRET,
                               { expiresIn: '12h' },
                             )
@@ -234,35 +234,15 @@
             return n(this, void 0, void 0, function* () {
               this.app.post('/api/auth/activate', (e, t) =>
                 n(this, void 0, void 0, function* () {
-                  const i = o.default.object().keys({ authorization: o.default.required() }),
-                    s = u.default.validateSchema(i, e.headers)
-                  if (
-                    (console.log(
-                      '🚀 ~ file: index.ts ~ line 189 ~ Authentication ~ this.app.post ~ errors',
-                      s,
-                    ),
-                    s)
-                  )
-                    return t.sendStatus(401)
+                  if (!e.headers.authorization) return t.sendStatus(401)
                   try {
                     const { authorization: i } = e.headers
-                    console.log(
-                      '🚀 ~ file: index.ts ~ line 192 ~ Authentication ~ this.app.post ~ authorization',
-                      i,
+                    d.default.verify(i, process.env.ACTIVATION_TOKEN_SECRET, (e, i) =>
+                      n(this, void 0, void 0, function* () {
+                        if (e) return t.sendStatus(401)
+                        yield a.default.user.update({ where: { id: i.id }, data: { active: !0 } })
+                      }),
                     ),
-                      d.default.verify(i, process.env.ACTIVATION_TOKEN_SECRET, (e, i) =>
-                        n(this, void 0, void 0, function* () {
-                          if (
-                            (console.log(
-                              '🚀 ~ file: index.ts ~ line 200 ~ Authentication ~ error',
-                              e,
-                            ),
-                            e)
-                          )
-                            return t.sendStatus(401)
-                          yield a.default.user.update({ where: { id: i.id }, data: { active: !0 } })
-                        }),
-                      ),
                       t.sendStatus(204)
                   } catch (e) {
                     t.sendStatus(500)
@@ -279,11 +259,11 @@
                     const i = o.default.object().keys({ jwt: o.default.required() })
                     if (u.default.validateSchema(i, e.cookies)) return t.sendStatus(204)
                     const { jwt: n } = e.cookies,
-                      s = yield a.default.user.findFirst({
+                      r = yield a.default.user.findFirst({
                         where: { UserRefreshTokens: { some: { token: n } } },
                       })
-                    return s
-                      ? (yield a.default.userRefreshTokens.delete({ where: { userId: s.id } }),
+                    return r
+                      ? (yield a.default.userRefreshTokens.delete({ where: { userId: r.id } }),
                         t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
                         t.sendStatus(204))
                       : (t.clearCookie('jwt', { httpOnly: !0, secure: c.default }),
@@ -301,25 +281,25 @@
         var n =
             (this && this.__awaiter) ||
             function (e, t, i, n) {
-              return new (i || (i = Promise))(function (s, r) {
+              return new (i || (i = Promise))(function (r, s) {
                 function o(e) {
                   try {
                     u(n.next(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function a(e) {
                   try {
                     u(n.throw(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function u(e) {
                   var t
                   e.done
-                    ? s(e.value)
+                    ? r(e.value)
                     : ((t = e.value),
                       t instanceof i
                         ? t
@@ -330,26 +310,26 @@
                 u((n = n.apply(e, t || [])).next())
               })
             },
-          s =
+          r =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), i(81)
-        const r = s(i(860)),
-          o = s(i(506)),
-          a = s(i(721)),
-          u = s(i(710)),
-          c = s(i(582)),
-          d = s(i(344))
+        const s = r(i(860)),
+          o = r(i(506)),
+          a = r(i(721)),
+          u = r(i(710)),
+          c = r(i(582)),
+          d = r(i(344))
         t.default = class {
           constructor(e) {
             ;(this.app = e),
               this.CORS(),
               this.Logger(),
-              this.app.use(r.default.json()),
+              this.app.use(s.default.json()),
               this.app.use((0, u.default)()),
-              this.app.use(r.default.urlencoded({ extended: !1 }))
+              this.app.use(s.default.urlencoded({ extended: !1 }))
           }
           CORS() {
             this.app.use(
@@ -373,8 +353,8 @@
                 try {
                   const n = o.default.object().keys({ jwt: o.default.required() })
                   if (a.default.validateSchema(n, e.cookies)) return t.sendStatus(401)
-                  const { jwt: s } = e.cookies
-                  d.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, n) => {
+                  const { jwt: r } = e.cookies
+                  d.default.verify(r, process.env.ACCESS_TOKEN_SECRET, (e, n) => {
                     if (e) return t.sendStatus(403)
                     i()
                   })
@@ -390,25 +370,25 @@
         var n =
             (this && this.__awaiter) ||
             function (e, t, i, n) {
-              return new (i || (i = Promise))(function (s, r) {
+              return new (i || (i = Promise))(function (r, s) {
                 function o(e) {
                   try {
                     u(n.next(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function a(e) {
                   try {
                     u(n.throw(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function u(e) {
                   var t
                   e.done
-                    ? s(e.value)
+                    ? r(e.value)
                     : ((t = e.value),
                       t instanceof i
                         ? t
@@ -419,13 +399,13 @@
                 u((n = n.apply(e, t || [])).next())
               })
             },
-          s =
+          r =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const r = s(i(221))
+        const s = r(i(221))
         t.default = class {
           constructor(e) {
             ;(this.app = e), this.get()
@@ -434,7 +414,7 @@
             this.app.get('/api/devotionals', (e, t) =>
               n(this, void 0, void 0, function* () {
                 try {
-                  const e = yield r.default.devotional.findMany()
+                  const e = yield s.default.devotional.findMany()
                   t.status(200).json(e)
                 } catch (e) {
                   t.sendStatus(500)
@@ -448,25 +428,25 @@
         var n =
             (this && this.__awaiter) ||
             function (e, t, i, n) {
-              return new (i || (i = Promise))(function (s, r) {
+              return new (i || (i = Promise))(function (r, s) {
                 function o(e) {
                   try {
                     u(n.next(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function a(e) {
                   try {
                     u(n.throw(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function u(e) {
                   var t
                   e.done
-                    ? s(e.value)
+                    ? r(e.value)
                     : ((t = e.value),
                       t instanceof i
                         ? t
@@ -477,13 +457,13 @@
                 u((n = n.apply(e, t || [])).next())
               })
             },
-          s =
+          r =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const r = s(i(221))
+        const s = r(i(221))
         t.default = class {
           constructor(e) {
             ;(this.app = e), this.getGrowthGroups()
@@ -493,7 +473,7 @@
               this.app.get('/api/growthgroups', (e, t) =>
                 n(this, void 0, void 0, function* () {
                   try {
-                    const e = yield r.default.growthGroup.findMany()
+                    const e = yield s.default.growthGroup.findMany()
                     t.status(200).json(e)
                   } catch (e) {
                     t.sendStatus(500)
@@ -508,25 +488,25 @@
         var n =
             (this && this.__awaiter) ||
             function (e, t, i, n) {
-              return new (i || (i = Promise))(function (s, r) {
+              return new (i || (i = Promise))(function (r, s) {
                 function o(e) {
                   try {
                     u(n.next(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function a(e) {
                   try {
                     u(n.throw(e))
                   } catch (e) {
-                    r(e)
+                    s(e)
                   }
                 }
                 function u(e) {
                   var t
                   e.done
-                    ? s(e.value)
+                    ? r(e.value)
                     : ((t = e.value),
                       t instanceof i
                         ? t
@@ -537,20 +517,20 @@
                 u((n = n.apply(e, t || [])).next())
               })
             },
-          s =
+          r =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), i(81)
-        const r = s(i(349)),
-          o = s(i(506)),
-          a = s(i(717)),
-          u = s(i(221)),
-          c = s(i(721)),
-          d = s(i(189)),
-          l = s(i(668)),
-          f = s(i(344))
+        const s = r(i(349)),
+          o = r(i(506)),
+          a = r(i(717)),
+          u = r(i(221)),
+          c = r(i(721)),
+          d = r(i(189)),
+          l = r(i(668)),
+          f = r(i(344))
         t.default = class {
           constructor(e) {
             ;(this.app = e), this.signUp(), a.default.JWT(this.app), this.get()
@@ -593,13 +573,13 @@
                   try {
                     if (n) t.status(400).json({ error: n })
                     else {
-                      const { email: i, name: n, password: s, phone: o, birthdate: a } = e.body,
+                      const { email: i, name: n, password: r, phone: o, birthdate: a } = e.body,
                         c = yield u.default.user.create({
                           data: {
                             email: i,
                             name: n,
                             birthdate: new Date(a).toISOString(),
-                            password: yield r.default.hashPassword(s),
+                            password: yield s.default.hashPassword(r),
                             phone: o,
                           },
                           select: {
@@ -647,8 +627,8 @@
             return e && e.__esModule ? e : { default: e }
           }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const s = n(i(765)),
-          r = n(i(226)),
+        const r = n(i(765)),
+          s = n(i(226)),
           o = n(i(157)),
           a = n(i(717)),
           u = n(i(575))
@@ -656,9 +636,9 @@
           constructor(e) {
             ;(this.app = e),
               new a.default(this.app),
-              new s.default(this.app),
-              new o.default(this.app),
               new r.default(this.app),
+              new o.default(this.app),
+              new s.default(this.app),
               new u.default(this.app)
           }
         }
@@ -669,20 +649,20 @@
             (Object.create
               ? function (e, t, i, n) {
                   void 0 === n && (n = i)
-                  var s = Object.getOwnPropertyDescriptor(t, i)
-                  ;(s && !('get' in s ? !t.__esModule : s.writable || s.configurable)) ||
-                    (s = {
+                  var r = Object.getOwnPropertyDescriptor(t, i)
+                  ;(r && !('get' in r ? !t.__esModule : r.writable || r.configurable)) ||
+                    (r = {
                       enumerable: !0,
                       get: function () {
                         return t[i]
                       },
                     }),
-                    Object.defineProperty(e, n, s)
+                    Object.defineProperty(e, n, r)
                 }
               : function (e, t, i, n) {
                   void 0 === n && (n = i), (e[n] = t[i])
                 }),
-          s =
+          r =
             (this && this.__setModuleDefault) ||
             (Object.create
               ? function (e, t) {
@@ -691,7 +671,7 @@
               : function (e, t) {
                   e.default = t
                 }),
-          r =
+          s =
             (this && this.__importStar) ||
             function (e) {
               if (e && e.__esModule) return e
@@ -699,10 +679,10 @@
               if (null != e)
                 for (var i in e)
                   'default' !== i && Object.prototype.hasOwnProperty.call(e, i) && n(t, e, i)
-              return s(t, e), t
+              return r(t, e), t
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), i(81)
-        const o = r(i(96))
+        const o = s(i(96))
         t.default = class {
           static hashPassword(e) {
             return o.hash(e, process.env.BCRYPTSALT)
@@ -721,20 +701,20 @@
             (Object.create
               ? function (e, t, i, n) {
                   void 0 === n && (n = i)
-                  var s = Object.getOwnPropertyDescriptor(t, i)
-                  ;(s && !('get' in s ? !t.__esModule : s.writable || s.configurable)) ||
-                    (s = {
+                  var r = Object.getOwnPropertyDescriptor(t, i)
+                  ;(r && !('get' in r ? !t.__esModule : r.writable || r.configurable)) ||
+                    (r = {
                       enumerable: !0,
                       get: function () {
                         return t[i]
                       },
                     }),
-                    Object.defineProperty(e, n, s)
+                    Object.defineProperty(e, n, r)
                 }
               : function (e, t, i, n) {
                   void 0 === n && (n = i), (e[n] = t[i])
                 }),
-          s =
+          r =
             (this && this.__setModuleDefault) ||
             (Object.create
               ? function (e, t) {
@@ -743,7 +723,7 @@
               : function (e, t) {
                   e.default = t
                 }),
-          r =
+          s =
             (this && this.__importStar) ||
             function (e) {
               if (e && e.__esModule) return e
@@ -751,7 +731,7 @@
               if (null != e)
                 for (var i in e)
                   'default' !== i && Object.prototype.hasOwnProperty.call(e, i) && n(t, e, i)
-              return s(t, e), t
+              return r(t, e), t
             },
           o =
             (this && this.__importDefault) ||
@@ -759,7 +739,7 @@
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const a = r(i(634)),
+        const a = s(i(634)),
           u = o(i(506))
         t.default = class {
           static validateSchema(e, t) {
@@ -777,11 +757,11 @@
             return e && e.__esModule ? e : { default: e }
           }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const s = n(i(536)),
-          r = n(i(860))
+        const r = n(i(536)),
+          s = n(i(860))
         new (class {
-          constructor(e = (0, r.default)()) {
-            ;(this.app = e), this.app.listen(process.env.PORT || 5e3, () => new s.default(e))
+          constructor(e = (0, s.default)()) {
+            ;(this.app = e), this.app.listen(process.env.PORT || 5e3, () => new r.default(e))
           }
         })()
       },
@@ -818,9 +798,9 @@
     },
     t = {}
   !(function i(n) {
-    var s = t[n]
-    if (void 0 !== s) return s.exports
-    var r = (t[n] = { exports: {} })
-    return e[n].call(r.exports, r, r.exports, i), r.exports
+    var r = t[n]
+    if (void 0 !== r) return r.exports
+    var s = (t[n] = { exports: {} })
+    return e[n].call(s.exports, s, s.exports, i), s.exports
   })(920)
 })()
