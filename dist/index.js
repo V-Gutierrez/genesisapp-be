@@ -136,7 +136,8 @@
               this.authenticate(),
               this.refreshToken(),
               this.logout(),
-              this.setNewPassword()
+              this.setNewPassword(),
+              this.getUserInformation()
           }
           authenticate() {
             return r(this, void 0, void 0, function* () {
@@ -349,6 +350,22 @@
                   } catch (e) {
                     t.sendStatus(500)
                   }
+                }),
+              )
+            })
+          }
+          getUserInformation() {
+            return r(this, void 0, void 0, function* () {
+              this.app.get('/api/me', (e, t) =>
+                r(this, void 0, void 0, function* () {
+                  const s = o.default.object().keys({ jwt: o.default.required() })
+                  if (u.default.validateSchema(s, e.cookies)) return t.sendStatus(401)
+                  const { jwt: r } = e.cookies
+                  l.default.verify(r, process.env.ACCESS_TOKEN_SECRET, (e, s) => {
+                    if (e) return t.sendStatus(401)
+                    const { email: r, role: i } = s
+                    return t.status(200).json({ email: r, role: i })
+                  })
                 }),
               )
             })

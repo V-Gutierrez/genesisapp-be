@@ -19,6 +19,7 @@ class Authentication {
     this.refreshToken()
     this.logout()
     this.setNewPassword()
+    this.getUserInformation()
   }
 
   async authenticate() {
@@ -318,6 +319,31 @@ class Authentication {
       } catch (error) {
         res.sendStatus(500)
       }
+    })
+  }
+
+  async getUserInformation() {
+    this.app.get('/api/me', async (req: Request, res: Response) => {
+      const schema = Joi.object().keys({
+        jwt: Joi.required(),
+      })
+
+      const errors = SchemaHelper.validateSchema(schema, req.cookies)
+      if (errors) return res.sendStatus(401)
+
+      const { jwt: accessToken } = req.cookies
+
+      jwt.verify(
+        accessToken,
+        process.env.ACCESS_TOKEN_SECRET as string,
+        (err: any, decoded: any) => {
+          if (err) return res.sendStatus(401)
+
+          const { email, role } = decoded
+
+          return res.status(200).json({ email, role })
+        },
+      )
     })
   }
 }
