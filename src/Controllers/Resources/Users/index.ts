@@ -98,6 +98,7 @@ class Users {
               }),
             )
           }
+          console.log('🚀 ~ file: index.ts ~ line 98 ~ Users ~ this.app.post ~ token', token)
 
           res.status(201).json({ message: Success.USER_CREATED, user })
         }
