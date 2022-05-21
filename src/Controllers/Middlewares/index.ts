@@ -6,6 +6,7 @@ import Joi from 'joi'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
+import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 
 export default class Middlewares {
@@ -19,11 +20,12 @@ export default class Middlewares {
   }
 
   CORS() {
+    const localEnvironments = isProduction ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000/']
+
     this.app.use(
       cors({
         origin: [
-          'http://localhost:3000',
-          'http://192.168.0.56:3000/',
+          ...localEnvironments,
           'https://genesisproject-six.vercel.app',
         ],
         credentials: true,

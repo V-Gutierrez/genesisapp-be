@@ -418,7 +418,8 @@
           a = i(s(448)),
           u = i(s(710)),
           d = i(s(582)),
-          c = i(s(344))
+          c = i(s(766)),
+          l = i(s(344))
         t.default = class {
           constructor(e) {
             ;(this.app = e),
@@ -429,13 +430,10 @@
               this.app.use(n.default.urlencoded({ extended: !1 }))
           }
           CORS() {
+            const e = c.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000/']
             this.app.use(
               (0, d.default)({
-                origin: [
-                  'http://localhost:3000',
-                  'http://192.168.0.56:3000/',
-                  'https://genesisproject-six.vercel.app',
-                ],
+                origin: [...e, 'https://genesisproject-six.vercel.app'],
                 credentials: !0,
               }),
             )
@@ -452,7 +450,7 @@
                   const r = o.default.object().keys({ jwt: o.default.required() })
                   if (a.default.validateSchema(r, e.cookies)) return t.sendStatus(401)
                   const { jwt: i } = e.cookies
-                  c.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, r) => {
+                  l.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, r) => {
                     if (e) return t.sendStatus(403)
                     s()
                   })
