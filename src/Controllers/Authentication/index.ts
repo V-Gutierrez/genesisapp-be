@@ -93,7 +93,6 @@ class Authentication {
             maxAge: 60 * 60 * 24 * 30 * 1000,
             secure: isProduction,
           })
-
           res.status(200).json({ userLoggedIn: true })
         } else {
           return res.status(401).json({ error: Errors.NO_AUTH })
@@ -107,13 +106,6 @@ class Authentication {
   async refreshToken() {
     this.app.get('/api/auth', async (req: Request, res: Response) => {
       try {
-        const schema = Joi.object().keys({
-          jwt: Joi.required(),
-        })
-
-        const errors = SchemaHelper.validateSchema(schema, req.cookies)
-        if (errors) return res.sendStatus(401)
-
         const { jwt: accessToken } = req.cookies
 
         // Check Access Token
@@ -293,13 +285,6 @@ class Authentication {
   async logout() {
     this.app.delete('/api/auth', async (req: Request, res: Response) => {
       try {
-        const schema = Joi.object().keys({
-          jwt: Joi.required(),
-        })
-
-        const errors = SchemaHelper.validateSchema(schema, req.cookies)
-        if (errors) return res.sendStatus(204)
-
         const { jwt: refreshToken } = req.cookies
 
         const user = await Prisma.user.findFirst({
@@ -326,13 +311,6 @@ class Authentication {
 
   async getUserInformation() {
     this.app.get('/api/auth/me', async (req: Request, res: Response) => {
-      const schema = Joi.object().keys({
-        jwt: Joi.required(),
-      })
-
-      const errors = SchemaHelper.validateSchema(schema, req.cookies)
-      if (errors) return res.sendStatus(401)
-
       const { jwt: accessToken } = req.cookies
 
       jwt.verify(

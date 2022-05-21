@@ -205,10 +205,8 @@
               this.app.get('/api/auth', (e, t) =>
                 r(this, void 0, void 0, function* () {
                   try {
-                    const s = a.default.object().keys({ jwt: a.default.required() })
-                    if (d.default.validateSchema(s, e.cookies)) return t.sendStatus(401)
-                    const { jwt: i } = e.cookies
-                    f.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
+                    const { jwt: s } = e.cookies
+                    f.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
                       r(this, void 0, void 0, function* () {
                         if (e)
                           return (
@@ -343,14 +341,12 @@
               this.app.delete('/api/auth', (e, t) =>
                 r(this, void 0, void 0, function* () {
                   try {
-                    const s = a.default.object().keys({ jwt: a.default.required() })
-                    if (d.default.validateSchema(s, e.cookies)) return t.sendStatus(204)
-                    const { jwt: r } = e.cookies,
-                      i = yield u.default.user.findFirst({
-                        where: { UserRefreshTokens: { some: { token: r } } },
+                    const { jwt: s } = e.cookies,
+                      r = yield u.default.user.findFirst({
+                        where: { UserRefreshTokens: { some: { token: s } } },
                       })
-                    return i
-                      ? (yield u.default.userRefreshTokens.delete({ where: { userId: i.id } }),
+                    return r
+                      ? (yield u.default.userRefreshTokens.delete({ where: { userId: r.id } }),
                         t.clearCookie('jwt', { httpOnly: !0, secure: l.default }),
                         t.sendStatus(204))
                       : (t.clearCookie('jwt', { httpOnly: !0, secure: l.default }),
@@ -366,10 +362,8 @@
             return r(this, void 0, void 0, function* () {
               this.app.get('/api/auth/me', (e, t) =>
                 r(this, void 0, void 0, function* () {
-                  const s = a.default.object().keys({ jwt: a.default.required() })
-                  if (d.default.validateSchema(s, e.cookies)) return t.sendStatus(401)
-                  const { jwt: r } = e.cookies
-                  f.default.verify(r, process.env.ACCESS_TOKEN_SECRET, (e, s) => {
+                  const { jwt: s } = e.cookies
+                  f.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) => {
                     if (e) return t.sendStatus(401)
                     const { email: r, role: i, id: n, name: o } = s
                     return t.status(200).json({ email: r, role: i, id: n, name: o })
@@ -442,6 +436,7 @@
                   'http://192.168.0.56:3000/',
                   'https://genesisproject-six.vercel.app',
                 ],
+                credentials: !0,
               }),
             )
           }
@@ -707,7 +702,11 @@
                           }),
                         )
                       }
-                      t.status(201).json({ message: n.Success.USER_CREATED, user: c })
+                      console.log(
+                        '🚀 ~ file: index.ts ~ line 98 ~ Users ~ this.app.post ~ token',
+                        p,
+                      ),
+                        t.status(201).json({ message: n.Success.USER_CREATED, user: c })
                     }
                   } catch (e) {
                     'P2002' === e.code

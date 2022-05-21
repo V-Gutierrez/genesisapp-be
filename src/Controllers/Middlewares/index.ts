@@ -26,6 +26,7 @@ export default class Middlewares {
           'http://192.168.0.56:3000/',
           'https://genesisproject-six.vercel.app',
         ],
+        credentials: true,
       }),
     )
   }
