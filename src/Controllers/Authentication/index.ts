@@ -3,6 +3,7 @@ import 'dotenv/config'
 import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
+import { Errors } from '@Helpers/Messages'
 import Joi from 'joi'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
@@ -95,7 +96,7 @@ class Authentication {
 
           res.status(200).json({ userLoggedIn: true })
         } else {
-          return res.sendStatus(401)
+          return res.status(401).json({ error: Errors.NO_AUTH })
         }
       } catch (error) {
         res.sendStatus(500)

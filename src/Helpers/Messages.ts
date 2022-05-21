@@ -3,6 +3,7 @@ export const Errors = {
   USER_NOT_FOUND: 'Usuário não encontrado',
   USER_ALREADY_EXISTS: 'Este usuário já existe. Você esqueceu sua senha?',
   INTERNAL_SERVER_ERROR: 'Houve um problema. Se este erro persistis contate o suporte',
+  NO_AUTH: 'Usuário ou senha inválido',
 }
 
 export const Success = {
