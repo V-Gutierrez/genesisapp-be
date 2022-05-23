@@ -20,15 +20,22 @@ export default class Middlewares {
   }
 
   CORS() {
-    const localEnvironments = isProduction ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000/']
+    const localEnvironments = isProduction
+      ? []
+      : ['http://localhost:3000', 'http://192.168.0.56:3000/']
 
     this.app.use(
       cors({
-        origin: [
-          ...localEnvironments,
-          'https://genesisproject-six.vercel.app',
-        ],
+        origin: [process.env.FRONT_BASE_URL as string, ...localEnvironments],
         credentials: true,
+        allowedHeaders: [
+          'Origin',
+          'X-Requested-With',
+          'Content-Type',
+          'Accept',
+          'content-type',
+          'application/json',
+        ],
       }),
     )
   }
