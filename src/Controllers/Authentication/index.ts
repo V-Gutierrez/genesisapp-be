@@ -89,12 +89,20 @@ class Authentication {
           })
 
           res.setHeader('Access-Control-Allow-Credentials', 'true')
-          res.cookie('jwt', accessToken, {
-            httpOnly: true,
-            maxAge: 60 * 60 * 24 * 30 * 1000,
-            secure: isProduction,
-            sameSite: 'none',
-          })
+
+          if (isProduction) {
+            res.cookie('jwt', accessToken, {
+              httpOnly: true,
+              maxAge: 60 * 60 * 24 * 30 * 1000,
+              secure: true,
+              sameSite: 'none',
+            })
+          } else {
+            res.cookie('jwt', accessToken, {
+              httpOnly: true,
+              maxAge: 60 * 60 * 24 * 30 * 1000,
+            })
+          }
           res.status(200).json({ userLoggedIn: true })
         } else {
           return res.status(401).json({ error: Errors.NO_AUTH })
