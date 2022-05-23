@@ -114,8 +114,8 @@
                           update: { token: s },
                           create: { userId: h.id, token: s },
                         }),
-                          t.cookie('jwt', e, { httpOnly: !0, maxAge: 2592e6, secure: l.default }),
                           t.setHeader('Access-Control-Allow-Credentials', 'true'),
+                          t.cookie('jwt', e, { httpOnly: !0, maxAge: 2592e6, secure: l.default }),
                           t.status(200).json({ userLoggedIn: !0 })
                       }
                     } catch (e) {
