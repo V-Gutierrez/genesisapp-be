@@ -29,7 +29,8 @@
     "import/extensions": "off",
     "consistent-return": "off",
     "no-console": "warn",
-    "class-methods-use-this": "off"
+    "class-methods-use-this": "off",
+    "no-useless-escape": "off"
   },
   "settings": {
     "import/resolver": {

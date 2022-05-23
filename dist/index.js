@@ -660,15 +660,16 @@
             return r(this, void 0, void 0, function* () {
               this.app.post('/api/users', (e, t) =>
                 r(this, void 0, void 0, function* () {
-                  const s = a.default
-                      .object()
-                      .keys({
-                        email: a.default.string().email().required(),
-                        name: a.default.string().required(),
-                        phone: a.default.string().required().min(8).max(14),
-                        password: a.default.string().min(8),
-                        birthdate: a.default.string().required(),
-                      }),
+                  const s = a.default.object().keys({
+                      email: a.default.string().email().required(),
+                      name: a.default.string().required(),
+                      phone: a.default
+                        .string()
+                        .regex(/^\+[0-9]{2}\s[0-9]{1,2}\s[0-9]{1,2}\s[0-9]{4}\-[0-9]{4}/)
+                        .required(),
+                      password: a.default.string().min(8),
+                      birthdate: a.default.string().required(),
+                    }),
                     r = c.default.validateSchema(s, e.body)
                   try {
                     if (r) t.status(400).json({ error: r })
@@ -702,12 +703,8 @@
                             activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${p}`,
                           }),
                         )
-                      }
-                      console.log(
-                        '🚀 ~ file: index.ts ~ line 98 ~ Users ~ this.app.post ~ token',
-                        p,
-                      ),
-                        t.status(201).json({ message: n.Success.USER_CREATED, user: c })
+                      } else console.log('Activation token for ', s, ' : ', p)
+                      t.status(201).json({ message: n.Success.USER_CREATED, user: c })
                     }
                   } catch (e) {
                     'P2002' === e.code

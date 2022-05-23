@@ -53,7 +53,9 @@ class Users {
       const schema = Joi.object().keys({
         email: Joi.string().email().required(),
         name: Joi.string().required(),
-        phone: Joi.string().required().min(8).max(14),
+        phone: Joi.string()
+          .regex(/^\+[0-9]{2}\s[0-9]{1,2}\s[0-9]{1,2}\s[0-9]{4}\-[0-9]{4}/)
+          .required(),
         password: Joi.string().min(8),
         birthdate: Joi.string().required(),
       })
@@ -97,8 +99,9 @@ class Users {
                 activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${token}`,
               }),
             )
+          } else {
+            console.log('Activation token for ', email, ' : ', token)
           }
-          console.log('🚀 ~ file: index.ts ~ line 98 ~ Users ~ this.app.post ~ token', token)
 
           res.status(201).json({ message: Success.USER_CREATED, user })
         }
