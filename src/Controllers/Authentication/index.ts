@@ -93,6 +93,7 @@ class Authentication {
             httpOnly: true,
             maxAge: 60 * 60 * 24 * 30 * 1000,
             secure: isProduction,
+            sameSite: 'none',
           })
           res.status(200).json({ userLoggedIn: true })
         } else {
