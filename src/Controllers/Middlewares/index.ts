@@ -13,18 +13,10 @@ export default class Middlewares {
   constructor(private readonly app: Express) {
     this.CORS()
     this.Logger()
-    this.Headers()
 
     this.app.use(express.json())
     this.app.use(cookieParser())
     this.app.use(express.urlencoded({ extended: false }))
-  }
-
-  Headers() {
-    this.app.use((req: Request, res: Response, next: NextFunction) => {
-      res.setHeader('Access-Control-Allow-Credentials', 'true')
-      next()
-    })
   }
 
   CORS() {

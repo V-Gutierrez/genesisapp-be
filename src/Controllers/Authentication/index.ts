@@ -93,6 +93,7 @@ class Authentication {
             maxAge: 60 * 60 * 24 * 30 * 1000,
             secure: isProduction,
           })
+          res.setHeader('Access-Control-Allow-Credentials', 'true')
           res.status(200).json({ userLoggedIn: true })
         } else {
           return res.status(401).json({ error: Errors.NO_AUTH })

@@ -115,6 +115,7 @@
                           create: { userId: h.id, token: s },
                         }),
                           t.cookie('jwt', e, { httpOnly: !0, maxAge: 2592e6, secure: l.default }),
+                          t.setHeader('Access-Control-Allow-Credentials', 'true'),
                           t.status(200).json({ userLoggedIn: !0 })
                       }
                     } catch (e) {
@@ -349,15 +350,9 @@
             ;(this.app = e),
               this.CORS(),
               this.Logger(),
-              this.Headers(),
               this.app.use(n.default.json()),
               this.app.use((0, u.default)()),
               this.app.use(n.default.urlencoded({ extended: !1 }))
-          }
-          Headers() {
-            this.app.use((e, t, s) => {
-              t.setHeader('Access-Control-Allow-Credentials', 'true'), s()
-            })
           }
           CORS() {
             const e = c.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
