@@ -339,25 +339,23 @@
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
         const n = i(s(860)),
-          o = i(s(506)),
-          a = i(s(448)),
-          u = i(s(710)),
-          d = i(s(582)),
-          c = i(s(766)),
-          l = i(s(344))
+          o = i(s(710)),
+          a = i(s(582)),
+          u = i(s(766)),
+          d = i(s(344))
         t.default = class {
           constructor(e) {
             ;(this.app = e),
               this.CORS(),
               this.Logger(),
               this.app.use(n.default.json()),
-              this.app.use((0, u.default)()),
+              this.app.use((0, o.default)()),
               this.app.use(n.default.urlencoded({ extended: !1 }))
           }
           CORS() {
-            const e = c.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
+            const e = u.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
             this.app.use(
-              (0, d.default)({ credentials: !0, origin: [process.env.FRONT_BASE_URL, ...e] }),
+              (0, a.default)({ credentials: !0, origin: [process.env.FRONT_BASE_URL, ...e] }),
             )
           }
           Logger() {
@@ -369,10 +367,8 @@
             e.use((e, t, s) =>
               r(this, void 0, void 0, function* () {
                 try {
-                  const r = o.default.object().keys({ jwt: o.default.required() })
-                  if (a.default.validateSchema(r, e.cookies)) return t.sendStatus(401)
-                  const { jwt: i } = e.cookies
-                  l.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, r) => {
+                  const { jwt: r } = e.cookies
+                  d.default.verify(r, process.env.ACCESS_TOKEN_SECRET, (e, r) => {
                     if (e) return t.sendStatus(403)
                     s()
                   })

@@ -42,13 +42,6 @@ export default class Middlewares {
   static JWT(app: Express) {
     app.use(async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const schema = Joi.object().keys({
-          jwt: Joi.required(),
-        })
-
-        const errors = SchemaHelper.validateSchema(schema, req.cookies)
-        if (errors) return res.sendStatus(401)
-
         const { jwt: token } = req.cookies
 
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any, decoded: any) => {
