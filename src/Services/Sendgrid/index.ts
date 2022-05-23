@@ -10,7 +10,7 @@ class SendgridClient {
         dynamicTemplateData: { userFirstName: string; activationUrl: string },
       ): MailDataRequired => ({
         to,
-        from: 'suportegenesischurch@gmail.com',
+        from: { email: 'suportegenesischurch@gmail.com', name: 'Genesis Church' },
         subject: 'Seja bem vindo à Genesis Church',
         templateId: 'd-20dab053877c41cdb7feeda798233024',
         dynamicTemplateData,
@@ -22,7 +22,7 @@ class SendgridClient {
         dynamicTemplateData: { resetPasswordUrl: string },
       ): MailDataRequired => ({
         to,
-        from: 'suportegenesischurch@gmail.com',
+        from: { email: 'suportegenesischurch@gmail.com', name: 'Genesis Church' },
         subject: 'Alteração de senha',
         templateId: 'd-03325789ee6f4014858e14ac7cde78e1',
         dynamicTemplateData,

@@ -6,82 +6,6 @@
         const r = new (s(524).PrismaClient)()
         t.default = r
       },
-      790: function (e, t, s) {
-        var r =
-            (this && this.__awaiter) ||
-            function (e, t, s, r) {
-              return new (s || (s = Promise))(function (i, n) {
-                function o(e) {
-                  try {
-                    u(r.next(e))
-                  } catch (e) {
-                    n(e)
-                  }
-                }
-                function a(e) {
-                  try {
-                    u(r.throw(e))
-                  } catch (e) {
-                    n(e)
-                  }
-                }
-                function u(e) {
-                  var t
-                  e.done
-                    ? i(e.value)
-                    : ((t = e.value),
-                      t instanceof s
-                        ? t
-                        : new s(function (e) {
-                            e(t)
-                          })).then(o, a)
-                }
-                u((r = r.apply(e, t || [])).next())
-              })
-            },
-          i =
-            (this && this.__importDefault) ||
-            function (e) {
-              return e && e.__esModule ? e : { default: e }
-            }
-        Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
-        const n = i(s(139))
-        t.default = class {
-          constructor() {
-            ;(this.TEMPLATES = {
-              confirmationEmail: {
-                config: (e, t) => ({
-                  to: e,
-                  from: 'suportegenesischurch@gmail.com',
-                  subject: 'Seja bem vindo à Genesis Church',
-                  templateId: 'd-20dab053877c41cdb7feeda798233024',
-                  dynamicTemplateData: t,
-                }),
-              },
-              resetPassword: {
-                config: (e, t) => ({
-                  to: e,
-                  from: 'suportegenesischurch@gmail.com',
-                  subject: 'Alteração de senha',
-                  templateId: 'd-03325789ee6f4014858e14ac7cde78e1',
-                  dynamicTemplateData: t,
-                }),
-              },
-            }),
-              n.default.setApiKey(process.env.SENDGRID_API_KEY)
-          }
-          send(e) {
-            return r(this, void 0, void 0, function* () {
-              const t = e
-              try {
-                yield n.default.send(t), console.log('Sendgrid Service - 200')
-              } catch (e) {
-                throw new Error('Error in Sendgrid flow')
-              }
-            })
-          }
-        }
-      },
       835: function (e, t, s) {
         var r =
             (this && this.__awaiter) ||
@@ -126,7 +50,7 @@
           a = i(s(506)),
           u = i(s(988)),
           d = i(s(448)),
-          c = i(s(790)),
+          c = i(s(29)),
           l = i(s(766)),
           f = i(s(344))
         t.default = class {
@@ -628,7 +552,7 @@
           u = i(s(488)),
           d = i(s(988)),
           c = i(s(448)),
-          l = i(s(790)),
+          l = i(s(29)),
           f = i(s(766)),
           h = i(s(344))
         t.default = class {
@@ -858,6 +782,82 @@
             if (!s || !s.details) return
             const r = s.details.map(({ message: e, path: t }) => ({ [t.join('.')]: e }))
             return a.mergeAll(r)
+          }
+        }
+      },
+      29: function (e, t, s) {
+        var r =
+            (this && this.__awaiter) ||
+            function (e, t, s, r) {
+              return new (s || (s = Promise))(function (i, n) {
+                function o(e) {
+                  try {
+                    u(r.next(e))
+                  } catch (e) {
+                    n(e)
+                  }
+                }
+                function a(e) {
+                  try {
+                    u(r.throw(e))
+                  } catch (e) {
+                    n(e)
+                  }
+                }
+                function u(e) {
+                  var t
+                  e.done
+                    ? i(e.value)
+                    : ((t = e.value),
+                      t instanceof s
+                        ? t
+                        : new s(function (e) {
+                            e(t)
+                          })).then(o, a)
+                }
+                u((r = r.apply(e, t || [])).next())
+              })
+            },
+          i =
+            (this && this.__importDefault) ||
+            function (e) {
+              return e && e.__esModule ? e : { default: e }
+            }
+        Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
+        const n = i(s(139))
+        t.default = class {
+          constructor() {
+            ;(this.TEMPLATES = {
+              confirmationEmail: {
+                config: (e, t) => ({
+                  to: e,
+                  from: { email: 'suportegenesischurch@gmail.com', name: 'Genesis Church' },
+                  subject: 'Seja bem vindo à Genesis Church',
+                  templateId: 'd-20dab053877c41cdb7feeda798233024',
+                  dynamicTemplateData: t,
+                }),
+              },
+              resetPassword: {
+                config: (e, t) => ({
+                  to: e,
+                  from: { email: 'suportegenesischurch@gmail.com', name: 'Genesis Church' },
+                  subject: 'Alteração de senha',
+                  templateId: 'd-03325789ee6f4014858e14ac7cde78e1',
+                  dynamicTemplateData: t,
+                }),
+              },
+            }),
+              n.default.setApiKey(process.env.SENDGRID_API_KEY)
+          }
+          send(e) {
+            return r(this, void 0, void 0, function* () {
+              const t = e
+              try {
+                yield n.default.send(t), console.log('Sendgrid Service - 200')
+              } catch (e) {
+                throw new Error('Error in Sendgrid flow')
+              }
+            })
           }
         }
       },
