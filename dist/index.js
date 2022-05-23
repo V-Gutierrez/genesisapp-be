@@ -425,17 +425,20 @@
             ;(this.app = e),
               this.CORS(),
               this.Logger(),
+              this.Headers(),
               this.app.use(n.default.json()),
               this.app.use((0, u.default)()),
               this.app.use(n.default.urlencoded({ extended: !1 }))
           }
+          Headers() {
+            this.app.use((e, t, s) => {
+              t.setHeader('Access-Control-Allow-Credentials', 'true'), s()
+            })
+          }
           CORS() {
-            const e = c.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000/']
+            const e = c.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
             this.app.use(
-              (0, d.default)({
-                origin: [...e, 'https://genesisproject-six.vercel.app'],
-                credentials: !0,
-              }),
+              (0, d.default)({ credentials: !0, origin: [process.env.FRONT_BASE_URL, ...e] }),
             )
           }
           Logger() {
