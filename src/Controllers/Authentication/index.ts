@@ -90,19 +90,13 @@ class Authentication {
 
           res.setHeader('Access-Control-Allow-Credentials', 'true')
 
-          if (isProduction) {
-            res.cookie('jwt', accessToken, {
-              httpOnly: true,
-              maxAge: 60 * 60 * 24 * 30 * 1000,
-              secure: true,
-              sameSite: 'none',
-            })
-          } else {
-            res.cookie('jwt', accessToken, {
-              httpOnly: true,
-              maxAge: 60 * 60 * 24 * 30 * 1000,
-            })
-          }
+          res.cookie('jwt', accessToken, {
+            httpOnly: true,
+            maxAge: 60 * 60 * 24 * 30 * 1000,
+            secure: isProduction,
+            sameSite: isProduction ? 'none' : undefined,
+          })
+
           res.status(200).json({ userLoggedIn: true })
         } else {
           return res.status(401).json({ error: Errors.NO_AUTH })
@@ -124,7 +118,11 @@ class Authentication {
           process.env.ACCESS_TOKEN_SECRET as string,
           async (accessTokenError: any, decoded: any) => {
             if (accessTokenError) {
-              res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
+              res.clearCookie('jwt', {
+                httpOnly: true,
+                secure: isProduction,
+                sameSite: isProduction ? 'none' : undefined,
+              })
               return res.sendStatus(403)
             }
 
@@ -141,7 +139,11 @@ class Authentication {
             })
 
             if (!user) {
-              res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
+              res.clearCookie('jwt', {
+                httpOnly: true,
+                secure: isProduction,
+                sameSite: isProduction ? 'none' : undefined,
+              })
               return res.sendStatus(403)
             }
 
@@ -159,7 +161,11 @@ class Authentication {
                       userId,
                     },
                   })
-                  res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
+                  res.clearCookie('jwt', {
+                    httpOnly: true,
+                    secure: isProduction,
+                    sameSite: isProduction ? 'none' : undefined,
+                  })
                   return res.sendStatus(403)
                 }
 
@@ -174,6 +180,7 @@ class Authentication {
                   httpOnly: true,
                   maxAge: 60 * 60 * 24 * 30 * 1000,
                   secure: isProduction,
+                  sameSite: isProduction ? 'none' : undefined,
                 })
                 res.status(200).json({ userLoggedIn: true })
               },
@@ -304,14 +311,22 @@ class Authentication {
         })
 
         if (!user) {
-          res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
+          res.clearCookie('jwt', {
+            httpOnly: true,
+            secure: isProduction,
+            sameSite: isProduction ? 'none' : undefined,
+          })
           return res.sendStatus(204)
         }
         await Prisma.userRefreshTokens.delete({
           where: { userId: user.id },
         })
 
-        res.clearCookie('jwt', { httpOnly: true, secure: isProduction })
+        res.clearCookie('jwt', {
+          httpOnly: true,
+          secure: isProduction,
+          sameSite: isProduction ? 'none' : undefined,
+        })
         return res.sendStatus(204)
       } catch (error) {
         res.sendStatus(500)
