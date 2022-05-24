@@ -252,7 +252,7 @@ class Authentication {
 
           await emailSender.send(
             emailSender.TEMPLATES.resetPassword.config(email, {
-              resetPasswordUrl: `${process.env.FRONTEND_URL}/reset-password/${resetToken}`,
+              resetPasswordUrl: `${process.env.FRONT_BASE_URL}/reset-password?token=${resetToken}`,
             }),
           )
         }
@@ -269,7 +269,13 @@ class Authentication {
       const authToken = req.headers.authorization
 
       const schema = Joi.object().keys({
-        password: Joi.string().required(),
+        password: Joi.string()
+          .min(8)
+          .regex(/[a-z]/)
+          .regex(/[A-Z]/)
+          .regex(/[0-9]/)
+          .regex(/[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/)
+          .required(),
       })
 
       const errors = SchemaHelper.validateSchema(schema, req.body)
