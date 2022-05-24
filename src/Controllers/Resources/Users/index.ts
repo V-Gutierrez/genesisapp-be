@@ -56,7 +56,13 @@ class Users {
         phone: Joi.string()
           .regex(/^\+[0-9]{2}\s[0-9]{1,2}\s[0-9]{1,2}\s[0-9]{4}\-[0-9]{4}/)
           .required(),
-        password: Joi.string().min(8),
+        password: Joi.string()
+          .min(8)
+          .regex(/[a-z]/)
+          .regex(/[A-Z]/)
+          .regex(/[0-9]/)
+          .regex(/[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/)
+          .required(),
         birthdate: Joi.string().required(),
       })
 
