@@ -68,64 +68,62 @@
             return r(this, void 0, void 0, function* () {
               this.app.post('/api/auth', (e, t) =>
                 r(this, void 0, void 0, function* () {
-                  if (e.cookies.jwt)
+                  e.cookies.jwt &&
                     f.default.verify(e.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (e) => {
-                      e || t.sendStatus(204)
+                      if (!e) return t.sendStatus(204)
+                      t.clearCookie('jwt', {
+                        httpOnly: !0,
+                        secure: l.default,
+                        sameSite: l.default ? 'none' : void 0,
+                      })
                     })
-                  else
-                    try {
-                      const s = a.default
-                          .object()
-                          .keys({
-                            email: a.default.string().email().required(),
-                            password: a.default.string().required(),
-                          }),
-                        r = d.default.validateSchema(s, e.body)
-                      if (r) return t.status(400).json({ error: r })
-                      const { email: i, password: c } = e.body,
-                        h = yield u.default.user.findFirst({
-                          where: { email: i },
-                          select: {
-                            name: !0,
-                            password: !0,
-                            email: !0,
-                            id: !0,
-                            role: !0,
-                            active: !0,
-                          },
-                        })
-                      if (!h) return t.sendStatus(404)
-                      if (!h.active) return t.status(403).json({ error: 'User is not activated' })
-                      if (!(yield n.default.comparePassword(c, h.password)))
-                        return t.status(401).json({ error: o.Errors.NO_AUTH })
-                      {
-                        const e = f.default.sign(
-                            { email: h.email, role: h.role, id: h.id, name: h.name },
-                            process.env.ACCESS_TOKEN_SECRET,
-                            { expiresIn: '12h' },
-                          ),
-                          s = f.default.sign(
-                            { email: h.email, role: h.role, id: h.id, name: h.name },
-                            process.env.REFRESH_TOKEN_SECRET,
-                            { expiresIn: '30d' },
-                          )
+                  try {
+                    const s = a.default
+                        .object()
+                        .keys({
+                          email: a.default.string().email().required(),
+                          password: a.default.string().required(),
+                        }),
+                      r = d.default.validateSchema(s, e.body)
+                    if (r) return t.status(400).json({ error: r })
+                    const { email: i, password: c } = e.body,
+                      h = yield u.default.user.findFirst({
+                        where: { email: i },
+                        select: { name: !0, password: !0, email: !0, id: !0, role: !0, active: !0 },
+                      })
+                    if (!h) return t.sendStatus(404)
+                    if (!h.active) return t.status(403).json({ error: 'User is not activated' })
+                    if (yield n.default.comparePassword(c, h.password)) {
+                      const e = f.default.sign(
+                          { email: h.email, role: h.role, id: h.id, name: h.name },
+                          process.env.ACCESS_TOKEN_SECRET,
+                          { expiresIn: '12h' },
+                        ),
+                        s = f.default.sign(
+                          { email: h.email, role: h.role, id: h.id, name: h.name },
+                          process.env.REFRESH_TOKEN_SECRET,
+                          { expiresIn: '30d' },
+                        )
+                      return (
                         yield u.default.userRefreshTokens.upsert({
                           where: { userId: h.id },
                           update: { token: s },
                           create: { userId: h.id, token: s },
                         }),
-                          t.setHeader('Access-Control-Allow-Credentials', 'true'),
-                          t.cookie('jwt', e, {
-                            httpOnly: !0,
-                            maxAge: 2592e6,
-                            secure: l.default,
-                            sameSite: l.default ? 'none' : void 0,
-                          }),
-                          t.status(200).json({ userLoggedIn: !0 })
-                      }
-                    } catch (e) {
-                      t.sendStatus(500)
+                        t.setHeader('Access-Control-Allow-Credentials', 'true'),
+                        t.cookie('jwt', e, {
+                          httpOnly: !0,
+                          maxAge: 2592e6,
+                          secure: l.default,
+                          sameSite: l.default ? 'none' : void 0,
+                        }),
+                        t.status(200).json({ userLoggedIn: !0 })
+                      )
                     }
+                    return t.status(401).json({ error: o.Errors.NO_AUTH })
+                  } catch (e) {
+                    t.sendStatus(500)
+                  }
                 }),
               )
             })

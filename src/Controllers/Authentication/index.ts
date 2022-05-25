@@ -27,9 +27,18 @@ class Authentication {
     this.app.post('/api/auth', async (req: Request, res: Response) => {
       if (req.cookies.jwt) {
         jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET as string, (error: any) => {
-          if (!error) res.sendStatus(204)
+          if (!error) {
+            /* Respond 204 to already authenticated user */
+            return res.sendStatus(204)
+          } 
+            /* Clean old token and proceed to auth */
+            res.clearCookie('jwt', {
+              httpOnly: true,
+              secure: isProduction,
+              sameSite: isProduction ? 'none' : undefined,
+            })
+          
         })
-        return
       }
 
       try {
@@ -97,10 +106,10 @@ class Authentication {
             sameSite: isProduction ? 'none' : undefined,
           })
 
-          res.status(200).json({ userLoggedIn: true })
-        } else {
+          return res.status(200).json({ userLoggedIn: true })
+        } 
           return res.status(401).json({ error: Errors.NO_AUTH })
-        }
+        
       } catch (error) {
         res.sendStatus(500)
       }
