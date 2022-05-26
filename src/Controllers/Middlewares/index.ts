@@ -42,8 +42,24 @@ export default class Middlewares {
       try {
         const { jwt: token } = req.cookies
 
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any) => {
+          if (err) return res.sendStatus(403)
+          next()
+        })
+      } catch (error) {
+        res.sendStatus(500)
+      }
+    })
+  }
+
+  static IsAdmin(app: Express) {
+    app.use(async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { jwt: token } = req.cookies
+
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any, decoded: any) => {
           if (err) return res.sendStatus(403)
+          if (decoded.role !== 'ADMIN') return res.sendStatus(401)
           next()
         })
       } catch (error) {
