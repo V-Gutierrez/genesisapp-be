@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.ts",
-    "build": "npx prisma generate && npm run prisma:migrate:deploy",
+    "build": "npm run prisma:migrate:deploy && npx prisma generate",
     "build:dev": "npx prisma generate && npx prisma migrate deploy",
     "build:webpack": "webpack --config webpack.config.js",
     "test": "jest",
