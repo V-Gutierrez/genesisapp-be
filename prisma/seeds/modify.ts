@@ -4,6 +4,8 @@ const prisma = new PrismaClient()
 
 async function main() {
   console.log('Running modify script...')
+
+  await prisma.devotional.deleteMany({})
 }
 
 main()
