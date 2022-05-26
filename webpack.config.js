@@ -23,6 +23,7 @@ module.exports = {
       '@Services': path.resolve(__dirname, 'src/Services/'),
       '@Clients': path.resolve(__dirname, 'src/Clients/'),
       '@Helpers': path.resolve(__dirname, 'src/Helpers/'),
+      '@Types': path.resolve(__dirname, 'src/Types/'),
     },
   },
   module: {

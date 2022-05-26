@@ -2,6 +2,7 @@ import 'dotenv/config'
 
 import express, { Express, NextFunction, Request, Response } from 'express'
 
+import { Decoded } from '@Types/DTO'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import isProduction from '@Helpers/Environment'
@@ -32,8 +33,10 @@ export default class Middlewares {
 
   Logger() {
     this.app.use((req: Request, res: Response, next: NextFunction) => {
-      console.log(`${req.method} ${req.url} --- Origin: ${req.headers.origin}`)
       next()
+      console.log(
+        `${req.method} ${req.url} --- Origin: ${req.headers.origin} - ${res.statusCode} : ${res.statusMessage}`,
+      )
     })
   }
 
@@ -57,11 +60,15 @@ export default class Middlewares {
       try {
         const { jwt: token } = req.cookies
 
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any, decoded: any) => {
-          if (err) return res.sendStatus(403)
-          if (decoded.role !== 'ADMIN') return res.sendStatus(401)
-          next()
-        })
+        jwt.verify(
+          token,
+          process.env.ACCESS_TOKEN_SECRET as string,
+          (err: any, decoded: Decoded) => {
+            if (err) return res.sendStatus(403)
+            if (decoded.role !== 'ADMIN') return res.sendStatus(401)
+            next()
+          },
+        )
       } catch (error) {
         res.sendStatus(500)
       }

@@ -50,67 +50,49 @@ class Users {
 
   async signUp() {
     this.app.post('/api/users', async (req: Request, res: Response) => {
-      const schema = Joi.object().keys({
-        email: Joi.string().email().required(),
-        name: Joi.string().required(),
-        phone: Joi.string()
-          .regex(/^\+[0-9]{2}\s[0-9]{1,2}\s[0-9]{1,2}\s[0-9]{4}\-[0-9]{4}/)
-          .required(),
-        password: Joi.string()
-          .min(8)
-          .regex(/[a-z]/)
-          .regex(/[A-Z]/)
-          .regex(/[0-9]/)
-          .regex(/[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/)
-          .required(),
-        birthdate: Joi.string().required(),
-      })
-
-      const errors = SchemaHelper.validateSchema(schema, req.body)
-
       try {
-        if (errors) {
-          res.status(400).json({ error: errors })
+        const errors = SchemaHelper.validateSchema(SchemaHelper.SIGNUP_SCHEMA, req.body)
+
+        if (errors) return res.status(400).json({ error: errors })
+
+        const { email, name, password, phone, birthdate }: User = req.body
+
+        const user = await Prisma.user.create({
+          data: {
+            email,
+            name,
+            birthdate: new Date(birthdate).toISOString(),
+            password: await Bcrypt.hashPassword(password),
+            phone,
+          },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            createdAt: true,
+            phone: true,
+            password: false,
+          },
+        })
+
+        const token = jwt.sign({ id: user.id }, process.env.ACTIVATION_TOKEN_SECRET as string, {
+          expiresIn: '30d',
+        })
+
+        if (isProduction) {
+          const emailSender = new SendgridClient()
+
+          await emailSender.send(
+            emailSender.TEMPLATES.confirmationEmail.config(user.email, {
+              userFirstName: user.name.split(' ')[0],
+              activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${token}`,
+            }),
+          )
         } else {
-          const { email, name, password, phone, birthdate }: User = req.body
-
-          const user = await Prisma.user.create({
-            data: {
-              email,
-              name,
-              birthdate: new Date(birthdate).toISOString(),
-              password: await Bcrypt.hashPassword(password),
-              phone,
-            },
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              createdAt: true,
-              phone: true,
-              password: false,
-            },
-          })
-
-          const token = jwt.sign({ id: user.id }, process.env.ACTIVATION_TOKEN_SECRET as string, {
-            expiresIn: '30d',
-          })
-
-          if (isProduction) {
-            const emailSender = new SendgridClient()
-
-            await emailSender.send(
-              emailSender.TEMPLATES.confirmationEmail.config(user.email, {
-                userFirstName: user.name.split(' ')[0],
-                activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${token}`,
-              }),
-            )
-          } else {
-            console.log('Activation token for ', email, ' : ', token)
-          }
-
-          res.status(201).json({ message: Success.USER_CREATED, user })
+          console.log('Activation token for ', email, ' : ', token)
         }
+
+        res.status(201).json({ message: Success.USER_CREATED, user })
       } catch (error) {
         if ((error as any).code === 'P2002')
           res.status(409).json({ error: Errors.USER_ALREADY_EXISTS })

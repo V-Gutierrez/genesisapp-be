@@ -58,6 +58,6 @@ model Devotional {
   createdAt DateTime @default(now())
   title     String
   body      String //Probably markdown in the future
-  userId    String?
-  author    User?    @relation(fields: [userId], references: [id])
+  userId    String
+  author    User     @relation(fields: [userId], references: [id])
 }
