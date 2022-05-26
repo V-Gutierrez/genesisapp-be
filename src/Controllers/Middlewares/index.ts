@@ -2,6 +2,7 @@ import 'dotenv/config'
 
 import express, { Express, NextFunction, Request, Response } from 'express'
 
+import CookieHelper from '@Helpers/Cookies'
 import { Decoded } from '@Types/DTO'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
@@ -43,7 +44,7 @@ export default class Middlewares {
   static JWT(app: Express) {
     app.use(async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { jwt: token } = req.cookies
+        const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any) => {
           if (err) return res.sendStatus(403)
@@ -58,7 +59,7 @@ export default class Middlewares {
   static IsAdmin(app: Express) {
     app.use(async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { jwt: token } = req.cookies
+        const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
         jwt.verify(
           token,

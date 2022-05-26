@@ -1,11 +1,11 @@
 import 'dotenv/config'
 
-import { Express, Request, Response } from 'express'
+import { CookieOptions, Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
+import CookieHelper from '@Helpers/Cookies'
 import { Decoded } from '@Types/DTO'
 import { Errors } from '@Helpers/Messages'
-import Joi from 'joi'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import SendgridClient from '@Services/Sendgrid'
@@ -27,7 +27,7 @@ class Authentication {
   async authenticate() {
     this.app.post('/api/auth', async (req: Request, res: Response) => {
       try {
-        const { jwt: currentToken } = req.cookies
+        const { [CookieHelper.AuthCookieDefaultOptions.name]: currentToken } = req.cookies
 
         if (currentToken) {
           jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET as string, (error: any) => {
@@ -36,11 +36,10 @@ class Authentication {
               return res.sendStatus(204)
             }
             /* Clean old token and proceed to auth */
-            res.clearCookie('jwt', {
-              httpOnly: true,
-              secure: isProduction,
-              sameSite: isProduction ? 'none' : undefined,
-            })
+            res.clearCookie(
+              CookieHelper.AuthCookieDefaultOptions.name,
+              CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+            )
           })
         }
 
@@ -95,12 +94,11 @@ class Authentication {
 
           res.setHeader('Access-Control-Allow-Credentials', 'true')
 
-          res.cookie('jwt', accessToken, {
-            httpOnly: true,
-            maxAge: 60 * 60 * 24 * 30 * 1000,
-            secure: isProduction,
-            sameSite: isProduction ? 'none' : undefined,
-          })
+          res.cookie(
+            CookieHelper.AuthCookieDefaultOptions.name,
+            accessToken,
+            CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+          )
 
           return res.status(200).json({ userLoggedIn: true })
         }
@@ -114,7 +112,7 @@ class Authentication {
   async refreshToken() {
     this.app.get('/api/auth', async (req: Request, res: Response) => {
       try {
-        const { jwt: accessToken } = req.cookies
+        const { [CookieHelper.AuthCookieDefaultOptions.name]: accessToken } = req.cookies
 
         // Check Access Token
         jwt.verify(
@@ -122,11 +120,10 @@ class Authentication {
           process.env.ACCESS_TOKEN_SECRET as string,
           async (accessTokenError: any, decoded: Decoded) => {
             if (accessTokenError) {
-              res.clearCookie('jwt', {
-                httpOnly: true,
-                secure: isProduction,
-                sameSite: isProduction ? 'none' : undefined,
-              })
+              res.clearCookie(
+                CookieHelper.AuthCookieDefaultOptions.name,
+                CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+              )
               return res.sendStatus(403)
             }
 
@@ -165,11 +162,10 @@ class Authentication {
                       userId,
                     },
                   })
-                  res.clearCookie('jwt', {
-                    httpOnly: true,
-                    secure: isProduction,
-                    sameSite: isProduction ? 'none' : undefined,
-                  })
+                  res.clearCookie(
+                    CookieHelper.AuthCookieDefaultOptions.name,
+                    CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+                  )
                   return res.sendStatus(403)
                 }
 
@@ -180,12 +176,11 @@ class Authentication {
                 )
 
                 // If valid - Refresh Access Token with new expiration and send in cookie
-                res.cookie('jwt', refreshedAccessToken, {
-                  httpOnly: true,
-                  maxAge: 60 * 60 * 24 * 30 * 1000,
-                  secure: isProduction,
-                  sameSite: isProduction ? 'none' : undefined,
-                })
+                res.cookie(
+                  CookieHelper.AuthCookieDefaultOptions.name,
+                  refreshedAccessToken,
+                  CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+                )
                 res.status(200).json({ userLoggedIn: true })
               },
             )
@@ -299,7 +294,7 @@ class Authentication {
   async logout() {
     this.app.delete('/api/auth', async (req: Request, res: Response) => {
       try {
-        const { jwt: refreshToken } = req.cookies
+        const { [CookieHelper.AuthCookieDefaultOptions.name]: refreshToken } = req.cookies
 
         const user = await Prisma.user.findFirst({
           where: {
@@ -308,22 +303,20 @@ class Authentication {
         })
 
         if (!user) {
-          res.clearCookie('jwt', {
-            httpOnly: true,
-            secure: isProduction,
-            sameSite: isProduction ? 'none' : undefined,
-          })
+          res.clearCookie(
+            CookieHelper.AuthCookieDefaultOptions.name,
+            CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+          )
           return res.sendStatus(204)
         }
         await Prisma.userRefreshTokens.delete({
           where: { userId: user.id },
         })
 
-        res.clearCookie('jwt', {
-          httpOnly: true,
-          secure: isProduction,
-          sameSite: isProduction ? 'none' : undefined,
-        })
+        res.clearCookie(
+          CookieHelper.AuthCookieDefaultOptions.name,
+          CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+        )
         return res.sendStatus(204)
       } catch (error) {
         res.sendStatus(500)
@@ -333,7 +326,9 @@ class Authentication {
 
   async getUserInformation() {
     this.app.get('/api/auth/me', async (req: Request, res: Response) => {
-      const { jwt: accessToken } = req.cookies
+      const { [CookieHelper.AuthCookieDefaultOptions.name]: accessToken } = req.cookies
+
+      if (!accessToken) return res.sendStatus(400)
 
       jwt.verify(
         accessToken,

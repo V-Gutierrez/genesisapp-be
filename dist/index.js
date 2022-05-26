@@ -10,8 +10,8 @@
         var i =
             (this && this.__awaiter) ||
             function (e, t, s, i) {
-              return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+              return new (s || (s = Promise))(function (o, n) {
+                function r(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
@@ -28,30 +28,31 @@
                 function u(e) {
                   var t
                   e.done
-                    ? r(e.value)
+                    ? o(e.value)
                     : ((t = e.value),
                       t instanceof s
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(r, a)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
             },
-          r =
+          o =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
-        const n = r(s(632)),
-          o = s(590),
-          a = r(s(988)),
-          u = r(s(448)),
-          d = r(s(29)),
-          c = r(s(766)),
-          l = r(s(344))
+        const n = o(s(632)),
+          r = o(s(20)),
+          a = s(590),
+          u = o(s(988)),
+          d = o(s(448)),
+          c = o(s(29)),
+          l = o(s(766)),
+          f = o(s(344))
         t.default = class {
           constructor(e) {
             ;(this.app = e),
@@ -68,53 +69,51 @@
               this.app.post('/api/auth', (e, t) =>
                 i(this, void 0, void 0, function* () {
                   try {
-                    const { jwt: s } = e.cookies
+                    const { [r.default.AuthCookieDefaultOptions.name]: s } = e.cookies
                     s &&
-                      l.default.verify(e.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (e) => {
+                      f.default.verify(e.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (e) => {
                         if (!e) return t.sendStatus(204)
-                        t.clearCookie('jwt', {
-                          httpOnly: !0,
-                          secure: c.default,
-                          sameSite: c.default ? 'none' : void 0,
-                        })
+                        t.clearCookie(
+                          r.default.AuthCookieDefaultOptions.name,
+                          r.default.AuthCookieDefaultOptions.config,
+                        )
                       })
-                    const i = u.default.validateSchema(u.default.LOGIN_SCHEMA, e.body)
+                    const i = d.default.validateSchema(d.default.LOGIN_SCHEMA, e.body)
                     if (i) return t.status(400).json({ error: i })
-                    const { email: r, password: d } = e.body,
-                      f = yield a.default.user.findFirst({
-                        where: { email: r },
+                    const { email: o, password: c } = e.body,
+                      l = yield u.default.user.findFirst({
+                        where: { email: o },
                         select: { name: !0, password: !0, email: !0, id: !0, role: !0, active: !0 },
                       })
-                    if (!f) return t.sendStatus(404)
-                    if (!f.active) return t.status(403).json({ error: 'User is not activated' })
-                    if (yield n.default.comparePassword(d, f.password)) {
-                      const e = l.default.sign(
-                          { email: f.email, role: f.role, id: f.id, name: f.name },
+                    if (!l) return t.sendStatus(404)
+                    if (!l.active) return t.status(403).json({ error: 'User is not activated' })
+                    if (yield n.default.comparePassword(c, l.password)) {
+                      const e = f.default.sign(
+                          { email: l.email, role: l.role, id: l.id, name: l.name },
                           process.env.ACCESS_TOKEN_SECRET,
                           { expiresIn: '12h' },
                         ),
-                        s = l.default.sign(
-                          { email: f.email, role: f.role, id: f.id, name: f.name },
+                        s = f.default.sign(
+                          { email: l.email, role: l.role, id: l.id, name: l.name },
                           process.env.REFRESH_TOKEN_SECRET,
                           { expiresIn: '30d' },
                         )
                       return (
-                        yield a.default.userRefreshTokens.upsert({
-                          where: { userId: f.id },
+                        yield u.default.userRefreshTokens.upsert({
+                          where: { userId: l.id },
                           update: { token: s },
-                          create: { userId: f.id, token: s },
+                          create: { userId: l.id, token: s },
                         }),
                         t.setHeader('Access-Control-Allow-Credentials', 'true'),
-                        t.cookie('jwt', e, {
-                          httpOnly: !0,
-                          maxAge: 2592e6,
-                          secure: c.default,
-                          sameSite: c.default ? 'none' : void 0,
-                        }),
+                        t.cookie(
+                          r.default.AuthCookieDefaultOptions.name,
+                          e,
+                          r.default.AuthCookieDefaultOptions.config,
+                        ),
                         t.status(200).json({ userLoggedIn: !0 })
                       )
                     }
-                    return t.status(401).json({ error: o.Errors.NO_AUTH })
+                    return t.status(401).json({ error: a.Errors.NO_AUTH })
                   } catch (e) {
                     t.sendStatus(500)
                   }
@@ -127,56 +126,53 @@
               this.app.get('/api/auth', (e, t) =>
                 i(this, void 0, void 0, function* () {
                   try {
-                    const { jwt: s } = e.cookies
-                    l.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
+                    const { [r.default.AuthCookieDefaultOptions.name]: s } = e.cookies
+                    f.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
                       i(this, void 0, void 0, function* () {
                         if (e)
                           return (
-                            t.clearCookie('jwt', {
-                              httpOnly: !0,
-                              secure: c.default,
-                              sameSite: c.default ? 'none' : void 0,
-                            }),
+                            t.clearCookie(
+                              r.default.AuthCookieDefaultOptions.name,
+                              r.default.AuthCookieDefaultOptions.config,
+                            ),
                             t.sendStatus(403)
                           )
-                        const r = yield a.default.user.findFirst({
+                        const o = yield u.default.user.findFirst({
                           where: { email: s.email },
                           select: { id: !0, email: !0, role: !0, UserRefreshTokens: !0 },
                         })
-                        if (!r)
+                        if (!o)
                           return (
                             t.clearCookie('jwt', {
                               httpOnly: !0,
-                              secure: c.default,
-                              sameSite: c.default ? 'none' : void 0,
+                              secure: l.default,
+                              sameSite: l.default ? 'none' : void 0,
                             }),
                             t.sendStatus(403)
                           )
-                        const { UserRefreshTokens: n, id: o } = r,
-                          [{ token: u }] = n
-                        l.default.verify(u, process.env.REFRESH_TOKEN_SECRET, (e) =>
+                        const { UserRefreshTokens: n, id: a } = o,
+                          [{ token: d }] = n
+                        f.default.verify(d, process.env.REFRESH_TOKEN_SECRET, (e) =>
                           i(this, void 0, void 0, function* () {
                             if (e)
                               return (
-                                yield a.default.userRefreshTokens.delete({ where: { userId: o } }),
-                                t.clearCookie('jwt', {
-                                  httpOnly: !0,
-                                  secure: c.default,
-                                  sameSite: c.default ? 'none' : void 0,
-                                }),
+                                yield u.default.userRefreshTokens.delete({ where: { userId: a } }),
+                                t.clearCookie(
+                                  r.default.AuthCookieDefaultOptions.name,
+                                  r.default.AuthCookieDefaultOptions.config,
+                                ),
                                 t.sendStatus(403)
                               )
-                            const s = l.default.sign(
-                              { email: r.email, role: r.role },
+                            const s = f.default.sign(
+                              { email: o.email, role: o.role },
                               process.env.ACCESS_TOKEN_SECRET,
                               { expiresIn: '12h' },
                             )
-                            t.cookie('jwt', s, {
-                              httpOnly: !0,
-                              maxAge: 2592e6,
-                              secure: c.default,
-                              sameSite: c.default ? 'none' : void 0,
-                            }),
+                            t.cookie(
+                              r.default.AuthCookieDefaultOptions.name,
+                              s,
+                              r.default.AuthCookieDefaultOptions.config,
+                            ),
                               t.status(200).json({ userLoggedIn: !0 })
                           }),
                         )
@@ -196,10 +192,10 @@
                   try {
                     if (!e.headers.authorization) return t.sendStatus(401)
                     const { authorization: s } = e.headers
-                    l.default.verify(s, process.env.ACTIVATION_TOKEN_SECRET, (e, s) =>
+                    f.default.verify(s, process.env.ACTIVATION_TOKEN_SECRET, (e, s) =>
                       i(this, void 0, void 0, function* () {
                         if (e) return t.sendStatus(401)
-                        yield a.default.user.update({ where: { id: s.id }, data: { active: !0 } })
+                        yield u.default.user.update({ where: { id: s.id }, data: { active: !0 } })
                       }),
                     ),
                       t.sendStatus(204)
@@ -215,22 +211,22 @@
               this.app.post('/api/auth/reset-password', (e, t) =>
                 i(this, void 0, void 0, function* () {
                   try {
-                    const s = u.default.validateSchema(u.default.RESET_PASSWORD, e.body)
+                    const s = d.default.validateSchema(d.default.RESET_PASSWORD, e.body)
                     if (s) return t.status(400).json({ error: s })
                     const { email: i } = e.body,
-                      r = yield a.default.user.findFirst({
+                      o = yield u.default.user.findFirst({
                         where: { email: i },
                         select: { email: !0, active: !0 },
                       })
-                    if (!r || !r.active)
+                    if (!o || !o.active)
                       return t.status(200).json({ message: 'Reset password email sent' })
-                    const n = l.default.sign(
+                    const n = f.default.sign(
                       { email: i },
                       process.env.PASSWORD_RESET_TOKEN_SECRET,
                       { expiresIn: '24h' },
                     )
-                    if (c.default) {
-                      const e = new d.default()
+                    if (l.default) {
+                      const e = new c.default()
                       yield e.send(
                         e.TEMPLATES.resetPassword.config(i, {
                           resetPasswordUrl: `${process.env.FRONT_BASE_URL}/reset-password?token=${n}`,
@@ -251,16 +247,16 @@
                 i(this, void 0, void 0, function* () {
                   const s = e.headers.authorization
                   try {
-                    if (u.default.validateSchema(u.default.NEW_PASSWORD, e.body) || !s)
+                    if (d.default.validateSchema(d.default.NEW_PASSWORD, e.body) || !s)
                       return t.sendStatus(400)
-                    const { password: r } = e.body
-                    l.default.verify(s, process.env.PASSWORD_RESET_TOKEN_SECRET, (e, s) =>
+                    const { password: o } = e.body
+                    f.default.verify(s, process.env.PASSWORD_RESET_TOKEN_SECRET, (e, s) =>
                       i(this, void 0, void 0, function* () {
                         return e
                           ? t.sendStatus(401)
-                          : (yield a.default.user.update({
+                          : (yield u.default.user.update({
                               where: { email: s.email },
-                              data: { password: yield n.default.hashPassword(r) },
+                              data: { password: yield n.default.hashPassword(o) },
                             }),
                             t.status(200).json({ message: 'New password successfully set' }))
                       }),
@@ -277,23 +273,21 @@
               this.app.delete('/api/auth', (e, t) =>
                 i(this, void 0, void 0, function* () {
                   try {
-                    const { jwt: s } = e.cookies,
-                      i = yield a.default.user.findFirst({
+                    const { [r.default.AuthCookieDefaultOptions.name]: s } = e.cookies,
+                      i = yield u.default.user.findFirst({
                         where: { UserRefreshTokens: { some: { token: s } } },
                       })
                     return i
-                      ? (yield a.default.userRefreshTokens.delete({ where: { userId: i.id } }),
-                        t.clearCookie('jwt', {
-                          httpOnly: !0,
-                          secure: c.default,
-                          sameSite: c.default ? 'none' : void 0,
-                        }),
+                      ? (yield u.default.userRefreshTokens.delete({ where: { userId: i.id } }),
+                        t.clearCookie(
+                          r.default.AuthCookieDefaultOptions.name,
+                          r.default.AuthCookieDefaultOptions.config,
+                        ),
                         t.sendStatus(204))
-                      : (t.clearCookie('jwt', {
-                          httpOnly: !0,
-                          secure: c.default,
-                          sameSite: c.default ? 'none' : void 0,
-                        }),
+                      : (t.clearCookie(
+                          r.default.AuthCookieDefaultOptions.name,
+                          r.default.AuthCookieDefaultOptions.config,
+                        ),
                         t.sendStatus(204))
                   } catch (e) {
                     t.sendStatus(500)
@@ -306,11 +300,12 @@
             return i(this, void 0, void 0, function* () {
               this.app.get('/api/auth/me', (e, t) =>
                 i(this, void 0, void 0, function* () {
-                  const { jwt: s } = e.cookies
-                  l.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) => {
+                  const { [r.default.AuthCookieDefaultOptions.name]: s } = e.cookies
+                  if (!s) return t.sendStatus(400)
+                  f.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) => {
                     if (e) return t.sendStatus(401)
-                    const { email: i, role: r, id: n, name: o } = s
-                    return t.status(200).json({ email: i, role: r, id: n, name: o })
+                    const { email: i, role: o, id: n, name: r } = s
+                    return t.status(200).json({ email: i, role: o, id: n, name: r })
                   })
                 }),
               )
@@ -322,8 +317,8 @@
         var i =
             (this && this.__awaiter) ||
             function (e, t, s, i) {
-              return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+              return new (s || (s = Promise))(function (o, n) {
+                function r(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
@@ -340,41 +335,42 @@
                 function u(e) {
                   var t
                   e.done
-                    ? r(e.value)
+                    ? o(e.value)
                     : ((t = e.value),
                       t instanceof s
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(r, a)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
             },
-          r =
+          o =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
-        const n = r(s(860)),
-          o = r(s(710)),
-          a = r(s(582)),
-          u = r(s(766)),
-          d = r(s(344))
+        const n = o(s(860)),
+          r = o(s(20)),
+          a = o(s(710)),
+          u = o(s(582)),
+          d = o(s(766)),
+          c = o(s(344))
         t.default = class {
           constructor(e) {
             ;(this.app = e),
               this.CORS(),
               this.Logger(),
               this.app.use(n.default.json()),
-              this.app.use((0, o.default)()),
+              this.app.use((0, a.default)()),
               this.app.use(n.default.urlencoded({ extended: !1 }))
           }
           CORS() {
-            const e = u.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
+            const e = d.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
             this.app.use(
-              (0, a.default)({ credentials: !0, origin: [process.env.FRONT_BASE_URL, ...e] }),
+              (0, u.default)({ credentials: !0, origin: [process.env.FRONT_BASE_URL, ...e] }),
             )
           }
           Logger() {
@@ -389,8 +385,8 @@
             e.use((e, t, s) =>
               i(this, void 0, void 0, function* () {
                 try {
-                  const { jwt: i } = e.cookies
-                  d.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e) => {
+                  const { [r.default.AuthCookieDefaultOptions.name]: i } = e.cookies
+                  c.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e) => {
                     if (e) return t.sendStatus(403)
                     s()
                   })
@@ -404,8 +400,8 @@
             e.use((e, t, s) =>
               i(this, void 0, void 0, function* () {
                 try {
-                  const { jwt: i } = e.cookies
-                  d.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, i) =>
+                  const { [r.default.AuthCookieDefaultOptions.name]: i } = e.cookies
+                  c.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, i) =>
                     e ? t.sendStatus(403) : 'ADMIN' !== i.role ? t.sendStatus(401) : void s(),
                   )
                 } catch (e) {
@@ -420,8 +416,8 @@
         var i =
             (this && this.__awaiter) ||
             function (e, t, s, i) {
-              return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+              return new (s || (s = Promise))(function (o, n) {
+                function r(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
@@ -438,26 +434,27 @@
                 function u(e) {
                   var t
                   e.done
-                    ? r(e.value)
+                    ? o(e.value)
                     : ((t = e.value),
                       t instanceof s
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(r, a)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
             },
-          r =
+          o =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const n = r(s(988)),
-          o = r(s(448)),
-          a = r(s(344))
+        const n = o(s(20)),
+          r = o(s(988)),
+          a = o(s(448)),
+          u = o(s(344))
         t.default = class {
           constructor(e) {
             ;(this.app = e), this.getDevotionals()
@@ -466,7 +463,7 @@
             this.app.get('/api/devotionals', (e, t) =>
               i(this, void 0, void 0, function* () {
                 try {
-                  const e = yield n.default.devotional.findMany()
+                  const e = yield r.default.devotional.findMany()
                   t.status(200).json(e)
                 } catch (e) {
                   t.sendStatus(500)
@@ -478,16 +475,16 @@
             this.app.post('/api/devotionals', (e, t) =>
               i(this, void 0, void 0, function* () {
                 try {
-                  const { jwt: s } = e.cookies,
-                    r = o.default.validateSchema(o.default.DEVOTIONAL_CREATION, e.body)
-                  if (r) return t.status(400).json({ error: r })
-                  const { body: u, title: d } = e.body
-                  a.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
+                  const { [n.default.AuthCookieDefaultOptions.name]: s } = e.cookies,
+                    o = a.default.validateSchema(a.default.DEVOTIONAL_CREATION, e.body)
+                  if (o) return t.status(400).json({ error: o })
+                  const { body: d, title: c } = e.body
+                  u.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
                     i(this, void 0, void 0, function* () {
                       if (e) return t.sendStatus(403)
                       if ('ADMIN' !== s.role) return t.sendStatus(401)
-                      const i = yield n.default.devotional.create({
-                        data: { body: u, title: d, userId: s.id },
+                      const i = yield r.default.devotional.create({
+                        data: { body: d, title: c, userId: s.id },
                       })
                       return t.status(201).json(i)
                     }),
@@ -504,8 +501,8 @@
         var i =
             (this && this.__awaiter) ||
             function (e, t, s, i) {
-              return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+              return new (s || (s = Promise))(function (o, n) {
+                function r(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
@@ -522,24 +519,24 @@
                 function u(e) {
                   var t
                   e.done
-                    ? r(e.value)
+                    ? o(e.value)
                     : ((t = e.value),
                       t instanceof s
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(r, a)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
             },
-          r =
+          o =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const n = r(s(988))
+        const n = o(s(988))
         t.default = class {
           constructor(e) {
             ;(this.app = e), this.getGrowthGroups()
@@ -564,8 +561,8 @@
         var i =
             (this && this.__awaiter) ||
             function (e, t, s, i) {
-              return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+              return new (s || (s = Promise))(function (o, n) {
+                function r(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
@@ -582,31 +579,31 @@
                 function u(e) {
                   var t
                   e.done
-                    ? r(e.value)
+                    ? o(e.value)
                     : ((t = e.value),
                       t instanceof s
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(r, a)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
             },
-          r =
+          o =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
         const n = s(590),
-          o = r(s(632)),
-          a = r(s(488)),
-          u = r(s(988)),
-          d = r(s(448)),
-          c = r(s(29)),
-          l = r(s(766)),
-          f = r(s(344))
+          r = o(s(632)),
+          a = o(s(488)),
+          u = o(s(988)),
+          d = o(s(448)),
+          c = o(s(29)),
+          l = o(s(766)),
+          f = o(s(344))
         t.default = class {
           constructor(e) {
             ;(this.app = e), this.signUp(), a.default.JWT(this.app), this.get()
@@ -639,13 +636,13 @@
                   try {
                     const s = d.default.validateSchema(d.default.SIGNUP_SCHEMA, e.body)
                     if (s) return t.status(400).json({ error: s })
-                    const { email: i, name: r, password: a, phone: h, birthdate: p } = e.body,
+                    const { email: i, name: o, password: a, phone: h, birthdate: p } = e.body,
                       v = yield u.default.user.create({
                         data: {
                           email: i,
-                          name: r,
+                          name: o,
                           birthdate: new Date(p).toISOString(),
-                          password: yield o.default.hashPassword(a),
+                          password: yield r.default.hashPassword(a),
                           phone: h,
                         },
                         select: {
@@ -688,17 +685,17 @@
             return e && e.__esModule ? e : { default: e }
           }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const r = i(s(835)),
+        const o = i(s(835)),
           n = i(s(116)),
-          o = i(s(334)),
+          r = i(s(334)),
           a = i(s(488)),
           u = i(s(785))
         t.default = class {
           constructor(e) {
             ;(this.app = e),
               new a.default(this.app),
-              new r.default(this.app),
               new o.default(this.app),
+              new r.default(this.app),
               new n.default(this.app),
               new u.default(this.app)
           }
@@ -710,20 +707,20 @@
             (Object.create
               ? function (e, t, s, i) {
                   void 0 === i && (i = s)
-                  var r = Object.getOwnPropertyDescriptor(t, s)
-                  ;(r && !('get' in r ? !t.__esModule : r.writable || r.configurable)) ||
-                    (r = {
+                  var o = Object.getOwnPropertyDescriptor(t, s)
+                  ;(o && !('get' in o ? !t.__esModule : o.writable || o.configurable)) ||
+                    (o = {
                       enumerable: !0,
                       get: function () {
                         return t[s]
                       },
                     }),
-                    Object.defineProperty(e, i, r)
+                    Object.defineProperty(e, i, o)
                 }
               : function (e, t, s, i) {
                   void 0 === i && (i = s), (e[i] = t[s])
                 }),
-          r =
+          o =
             (this && this.__setModuleDefault) ||
             (Object.create
               ? function (e, t) {
@@ -740,18 +737,38 @@
               if (null != e)
                 for (var s in e)
                   'default' !== s && Object.prototype.hasOwnProperty.call(e, s) && i(t, e, s)
-              return r(t, e), t
+              return o(t, e), t
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
-        const o = n(s(96))
+        const r = n(s(96))
         t.default = class {
           static hashPassword(e) {
-            return o.hash(e, process.env.BCRYPTSALT)
+            return r.hash(e, process.env.BCRYPTSALT)
           }
           static comparePassword(e, t) {
-            return o.compare(e, t)
+            return r.compare(e, t)
           }
         }
+      },
+      20: function (e, t, s) {
+        var i =
+          (this && this.__importDefault) ||
+          function (e) {
+            return e && e.__esModule ? e : { default: e }
+          }
+        Object.defineProperty(t, '__esModule', { value: !0 })
+        const o = i(s(766))
+        class n {}
+        ;(t.default = n),
+          (n.AuthCookieDefaultOptions = {
+            name: '100038189377123',
+            config: {
+              httpOnly: !0,
+              secure: o.default,
+              sameSite: o.default ? 'none' : void 0,
+              maxAge: 2592e6,
+            },
+          })
       },
       766: (e, t, s) => {
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81), (t.default = !0)
@@ -776,20 +793,20 @@
             (Object.create
               ? function (e, t, s, i) {
                   void 0 === i && (i = s)
-                  var r = Object.getOwnPropertyDescriptor(t, s)
-                  ;(r && !('get' in r ? !t.__esModule : r.writable || r.configurable)) ||
-                    (r = {
+                  var o = Object.getOwnPropertyDescriptor(t, s)
+                  ;(o && !('get' in o ? !t.__esModule : o.writable || o.configurable)) ||
+                    (o = {
                       enumerable: !0,
                       get: function () {
                         return t[s]
                       },
                     }),
-                    Object.defineProperty(e, i, r)
+                    Object.defineProperty(e, i, o)
                 }
               : function (e, t, s, i) {
                   void 0 === i && (i = s), (e[i] = t[s])
                 }),
-          r =
+          o =
             (this && this.__setModuleDefault) ||
             (Object.create
               ? function (e, t) {
@@ -806,16 +823,16 @@
               if (null != e)
                 for (var s in e)
                   'default' !== s && Object.prototype.hasOwnProperty.call(e, s) && i(t, e, s)
-              return r(t, e), t
+              return o(t, e), t
             },
-          o =
+          r =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
         const a = n(s(634)),
-          u = o(s(506))
+          u = r(s(506))
         class d {
           static validateSchema(e, t) {
             const { error: s } = u.default.validate(t, e, { abortEarly: !1, convert: !1 })
@@ -869,8 +886,8 @@
         var i =
             (this && this.__awaiter) ||
             function (e, t, s, i) {
-              return new (s || (s = Promise))(function (r, n) {
-                function o(e) {
+              return new (s || (s = Promise))(function (o, n) {
+                function r(e) {
                   try {
                     u(i.next(e))
                   } catch (e) {
@@ -887,24 +904,24 @@
                 function u(e) {
                   var t
                   e.done
-                    ? r(e.value)
+                    ? o(e.value)
                     : ((t = e.value),
                       t instanceof s
                         ? t
                         : new s(function (e) {
                             e(t)
-                          })).then(o, a)
+                          })).then(r, a)
                 }
                 u((i = i.apply(e, t || [])).next())
               })
             },
-          r =
+          o =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 }), s(81)
-        const n = r(s(139))
+        const n = o(s(139))
         t.default = class {
           constructor() {
             ;(this.TEMPLATES = {
@@ -948,11 +965,11 @@
             return e && e.__esModule ? e : { default: e }
           }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const r = i(s(618)),
+        const o = i(s(618)),
           n = i(s(860))
         new (class {
           constructor(e = (0, n.default)()) {
-            ;(this.app = e), this.app.listen(process.env.PORT || 5e3, () => new r.default(e))
+            ;(this.app = e), this.app.listen(process.env.PORT || 5e3, () => new o.default(e))
           }
         })()
       },
@@ -989,8 +1006,8 @@
     },
     t = {}
   !(function s(i) {
-    var r = t[i]
-    if (void 0 !== r) return r.exports
+    var o = t[i]
+    if (void 0 !== o) return o.exports
     var n = (t[i] = { exports: {} })
     return e[i].call(n.exports, n, n.exports, s), n.exports
   })(607)

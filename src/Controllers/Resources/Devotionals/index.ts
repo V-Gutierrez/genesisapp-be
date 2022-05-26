@@ -1,8 +1,8 @@
-import { Devotional, User } from '@prisma/client'
 import { Express, Request, Response } from 'express'
 
+import CookieHelper from '@Helpers/Cookies'
 import { Decoded } from '@Types/DTO'
-import Joi from 'joi'
+import { Devotional } from '@prisma/client'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import jwt from 'jsonwebtoken'
@@ -27,7 +27,7 @@ class Devotionals {
   createDevotional() {
     this.app.post('/api/devotionals', async (req: Request, res: Response) => {
       try {
-        const { jwt: token } = req.cookies
+        const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
         const errors = SchemaHelper.validateSchema(SchemaHelper.DEVOTIONAL_CREATION, req.body)
 
