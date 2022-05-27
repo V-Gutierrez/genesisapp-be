@@ -15,10 +15,19 @@ class Devotionals {
   getDevotionals() {
     this.app.get('/api/devotionals', async (_req: Request, res: Response) => {
       try {
-        const response: Devotional[] = await Prisma.devotional.findMany()
+        const response: Devotional[] = await Prisma.devotional.findMany({
+          include: {
+            author: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        })
 
         res.status(200).json(response)
       } catch (error) {
+        console.log('🚀 ~ file: index.ts ~ line 32 ~ Devotionals ~ this.app.get ~ error', error)
         res.sendStatus(500)
       }
     })

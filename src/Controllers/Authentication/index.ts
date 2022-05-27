@@ -211,10 +211,10 @@ class Authentication {
               where: { id: decoded.id },
               data: { active: true },
             })
+
+            return res.sendStatus(204)
           },
         )
-
-        res.sendStatus(204)
       } catch (error) {
         res.sendStatus(500)
       }

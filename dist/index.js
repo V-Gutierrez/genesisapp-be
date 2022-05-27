@@ -194,11 +194,15 @@
                     const { authorization: s } = e.headers
                     f.default.verify(s, process.env.ACTIVATION_TOKEN_SECRET, (e, s) =>
                       i(this, void 0, void 0, function* () {
-                        if (e) return t.sendStatus(401)
-                        yield u.default.user.update({ where: { id: s.id }, data: { active: !0 } })
+                        return e
+                          ? t.sendStatus(401)
+                          : (yield u.default.user.update({
+                              where: { id: s.id },
+                              data: { active: !0 },
+                            }),
+                            t.sendStatus(204))
                       }),
-                    ),
-                      t.sendStatus(204)
+                    )
                   } catch (e) {
                     t.sendStatus(500)
                   }
@@ -463,10 +467,16 @@
             this.app.get('/api/devotionals', (e, t) =>
               i(this, void 0, void 0, function* () {
                 try {
-                  const e = yield r.default.devotional.findMany()
+                  const e = yield r.default.devotional.findMany({
+                    include: { author: { select: { name: !0 } } },
+                  })
                   t.status(200).json(e)
                 } catch (e) {
-                  t.sendStatus(500)
+                  console.log(
+                    '🚀 ~ file: index.ts ~ line 32 ~ Devotionals ~ this.app.get ~ error',
+                    e,
+                  ),
+                    t.sendStatus(500)
                 }
               }),
             )
