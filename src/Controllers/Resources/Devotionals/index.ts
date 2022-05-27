@@ -49,6 +49,7 @@ class Devotionals {
                 body,
                 title,
                 userId: decoded.id,
+                slug: title.replace(/\s+/g, '-').toLowerCase(),
               },
             })
 

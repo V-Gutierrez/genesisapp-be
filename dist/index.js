@@ -484,7 +484,12 @@
                       if (e) return t.sendStatus(403)
                       if ('ADMIN' !== s.role) return t.sendStatus(401)
                       const i = yield r.default.devotional.create({
-                        data: { body: d, title: c, userId: s.id },
+                        data: {
+                          body: d,
+                          title: c,
+                          userId: s.id,
+                          slug: c.replace(/\s+/g, '-').toLowerCase(),
+                        },
                       })
                       return t.status(201).json(i)
                     }),
