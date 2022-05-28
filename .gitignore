@@ -3,4 +3,4 @@ build
 .env
 dist/bundle_analysis.html
 dist/stats.json
-prisma/modify.ts
+prisma/execute.ts
