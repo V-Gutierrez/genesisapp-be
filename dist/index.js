@@ -472,11 +472,7 @@
                   })
                   t.status(200).json(e)
                 } catch (e) {
-                  console.log(
-                    '🚀 ~ file: index.ts ~ line 32 ~ Devotionals ~ this.app.get ~ error',
-                    e,
-                  ),
-                    t.sendStatus(500)
+                  t.sendStatus(500)
                 }
               }),
             )
@@ -488,7 +484,7 @@
                   const { [n.default.AuthCookieDefaultOptions.name]: s } = e.cookies,
                     o = a.default.validateSchema(a.default.DEVOTIONAL_CREATION, e.body)
                   if (o) return t.status(400).json({ error: o })
-                  const { body: d, title: c } = e.body
+                  const { body: d, title: c, scheduledTo: l } = e.body
                   u.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
                     i(this, void 0, void 0, function* () {
                       if (e) return t.sendStatus(403)
@@ -497,6 +493,7 @@
                         data: {
                           body: d,
                           title: c,
+                          scheduledTo: l,
                           userId: s.id,
                           slug: c.replace(/\s+/g, '-').toLowerCase(),
                         },
@@ -894,7 +891,11 @@
           })),
           (d.DEVOTIONAL_CREATION = u.default
             .object()
-            .keys({ body: u.default.string().required(), title: u.default.string().required() })),
+            .keys({
+              body: u.default.string().required(),
+              title: u.default.string().required(),
+              scheduledTo: u.default.string().required(),
+            })),
           (t.default = d)
       },
       29: function (e, t, s) {

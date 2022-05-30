@@ -9,6 +9,7 @@ async function main() {
   await prisma.devotional.deleteMany({})
 
   await prisma.growthGroup.createMany({
+    skipDuplicates: true,
     data: [
       {
         name: 'GC H.Yrigoyen',
