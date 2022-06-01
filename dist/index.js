@@ -684,7 +684,7 @@
                     s = yield a.default.devotional.count({
                       where: {
                         scheduledTo: {
-                          lte: (0, r.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
+                          lte: (0, r.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo'),
                         },
                       },
                     }),
