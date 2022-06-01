@@ -26,7 +26,7 @@ class Devotionals {
         const response: Devotional[] = await Prisma.devotional.findMany({
           where: {
             scheduledTo: {
-              lte: zonedTimeToUtc(new Date(Date.now()), 'America/Sao_Paulo'),
+              gte: zonedTimeToUtc(new Date(Date.now()), 'America/Sao_Paulo'),
             },
           },
           orderBy: {
