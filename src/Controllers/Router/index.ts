@@ -12,9 +12,9 @@ export default class RoutesController {
     new Authentication(this.app)
 
     new GrowthGroups(this.app)
-    new Devotionals(this.app)
-
     new Users(this.app)
+
+    new Devotionals(this.app)
     new Stats(this.app)
   }
 }

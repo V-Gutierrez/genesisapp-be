@@ -831,8 +831,8 @@
               new r.default(this.app),
               new i.default(this.app),
               new a.default(this.app),
-              new n.default(this.app),
               new d.default(this.app),
+              new n.default(this.app),
               new u.default(this.app)
           }
         }
