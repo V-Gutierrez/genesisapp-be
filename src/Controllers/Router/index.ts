@@ -3,6 +3,7 @@ import Devotionals from '@Controllers/Resources/Devotionals'
 import { Express } from 'express'
 import GrowthGroups from '@Controllers/Resources/GrowthGroups'
 import Middlewares from '@Controllers/Middlewares'
+import Stats from '@Controllers/Resources/Stats'
 import Users from '@Controllers/Resources/Users'
 
 export default class RoutesController {
@@ -14,5 +15,6 @@ export default class RoutesController {
     new Devotionals(this.app)
 
     new Users(this.app)
+    new Stats(this.app)
   }
 }
