@@ -41,6 +41,7 @@ class SchemaHelper {
   static DEVOTIONAL_CREATION = Joi.object().keys({
     body: Joi.string().required(),
     title: Joi.string().required(),
+    author: Joi.string().required(),
     scheduledTo: Joi.string().required(),
   })
 

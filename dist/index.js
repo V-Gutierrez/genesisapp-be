@@ -445,22 +445,19 @@
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const a = i(s(20)),
-          n = i(s(988)),
-          r = i(s(448)),
-          u = i(s(344)),
-          d = s(465)
+        const a = i(s(988)),
+          n = i(s(448)),
+          r = s(465)
         t.default = class {
           static getDevotionals(e) {
             e.get('/api/devotionals', (e, t) =>
               o(this, void 0, void 0, function* () {
                 try {
-                  const e = yield n.default.devotional.findMany({
+                  const e = yield a.default.devotional.findMany({
                     where: {
-                      scheduledTo: { lte: (0, d.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo') },
+                      scheduledTo: { lte: (0, r.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo') },
                     },
                     orderBy: { scheduledTo: 'desc' },
-                    include: { author: { select: { name: !0 } } },
                   })
                   t.status(200).json(e)
                 } catch (e) {
@@ -474,15 +471,14 @@
               o(this, void 0, void 0, function* () {
                 try {
                   const { slug: s } = e.params,
-                    o = yield n.default.devotional.findFirst({
+                    o = yield a.default.devotional.findFirst({
                       where: {
                         slug: s,
                         scheduledTo: {
-                          lte: (0, d.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
+                          lte: (0, r.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
                         },
                       },
                       orderBy: { scheduledTo: 'desc' },
-                      include: { author: { select: { name: !0 } } },
                     })
                   if (!o) return t.sendStatus(404)
                   t.status(200).json(o)
@@ -496,9 +492,8 @@
             e.get('/api/all-devotionals', (e, t) =>
               o(this, void 0, void 0, function* () {
                 try {
-                  const e = yield n.default.devotional.findMany({
+                  const e = yield a.default.devotional.findMany({
                     orderBy: { scheduledTo: 'desc' },
-                    include: { author: { select: { name: !0 } } },
                   })
                   t.status(200).json(e)
                 } catch (e) {
@@ -511,25 +506,19 @@
             e.post('/api/devotionals', (e, t) =>
               o(this, void 0, void 0, function* () {
                 try {
-                  const { [a.default.AuthCookieDefaultOptions.name]: s } = e.cookies,
-                    i = r.default.validateSchema(r.default.DEVOTIONAL_CREATION, e.body)
-                  if (i) return t.status(400).json({ error: i })
-                  const { body: c, title: l, scheduledTo: f } = e.body
-                  u.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
-                    o(this, void 0, void 0, function* () {
-                      if (e) return t.sendStatus(403)
-                      const o = yield n.default.devotional.create({
-                        data: {
-                          body: c,
-                          title: l,
-                          scheduledTo: (0, d.zonedTimeToUtc)(new Date(f), 'America/Sao_Paulo'),
-                          userId: s.id,
-                          slug: l.replace(/\s+/g, '-').toLowerCase(),
-                        },
-                      })
-                      return t.status(201).json(o)
-                    }),
-                  )
+                  const s = n.default.validateSchema(n.default.DEVOTIONAL_CREATION, e.body)
+                  if (s) return t.status(400).json({ error: s })
+                  const { body: o, title: i, scheduledTo: u, author: d } = e.body,
+                    c = yield a.default.devotional.create({
+                      data: {
+                        body: o,
+                        title: i,
+                        scheduledTo: (0, r.zonedTimeToUtc)(new Date(u), 'America/Sao_Paulo'),
+                        author: d,
+                        slug: i.replace(/\s+/g, '-').toLowerCase(),
+                      },
+                    })
+                  return t.status(201).json(c)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -541,7 +530,7 @@
               o(this, void 0, void 0, function* () {
                 try {
                   const { id: s } = e.params
-                  yield n.default.devotional.delete({ where: { id: s } }), t.sendStatus(204)
+                  yield a.default.devotional.delete({ where: { id: s } }), t.sendStatus(204)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -1000,6 +989,7 @@
             .keys({
               body: u.default.string().required(),
               title: u.default.string().required(),
+              author: u.default.string().required(),
               scheduledTo: u.default.string().required(),
             })),
           (t.default = d)

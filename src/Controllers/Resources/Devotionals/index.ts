@@ -1,12 +1,8 @@
 import { Express, Request, Response } from 'express'
 
-import CookieHelper from '@Helpers/Cookies'
-import { Decoded } from '@Types/DTO'
 import { Devotional } from '@prisma/client'
-import Middlewares from '@Controllers/Middlewares'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
-import jwt from 'jsonwebtoken'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
 class Devotionals {
@@ -21,13 +17,6 @@ class Devotionals {
           },
           orderBy: {
             scheduledTo: 'desc',
-          },
-          include: {
-            author: {
-              select: {
-                name: true,
-              },
-            },
           },
         })
 
@@ -53,13 +42,6 @@ class Devotionals {
           orderBy: {
             scheduledTo: 'desc',
           },
-          include: {
-            author: {
-              select: {
-                name: true,
-              },
-            },
-          },
         })
 
         if (!response) return res.sendStatus(404)
@@ -78,13 +60,6 @@ class Devotionals {
           orderBy: {
             scheduledTo: 'desc',
           },
-          include: {
-            author: {
-              select: {
-                name: true,
-              },
-            },
-          },
         })
 
         res.status(200).json(response)
@@ -97,35 +72,25 @@ class Devotionals {
   static createDevotional(app: Express) {
     app.post('/api/devotionals', async (req: Request, res: Response) => {
       try {
-        const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
-
         const errors = SchemaHelper.validateSchema(SchemaHelper.DEVOTIONAL_CREATION, req.body)
 
         if (errors) {
           return res.status(400).json({ error: errors })
         }
 
-        const { body, title, scheduledTo } = req.body
+        const { body, title, scheduledTo, author } = req.body
 
-        jwt.verify(
-          token,
-          process.env.ACCESS_TOKEN_SECRET as string,
-          async (err: any, decoded: Decoded) => {
-            if (err) return res.sendStatus(403)
-
-            const devotional = await Prisma.devotional.create({
-              data: {
-                body,
-                title,
-                scheduledTo: zonedTimeToUtc(new Date(scheduledTo), 'America/Sao_Paulo'),
-                userId: decoded.id,
-                slug: title.replace(/\s+/g, '-').toLowerCase(),
-              },
-            })
-
-            return res.status(201).json(devotional)
+        const devotional = await Prisma.devotional.create({
+          data: {
+            body,
+            title,
+            scheduledTo: zonedTimeToUtc(new Date(scheduledTo), 'America/Sao_Paulo'),
+            author,
+            slug: title.replace(/\s+/g, '-').toLowerCase(),
           },
-        )
+        })
+
+        return res.status(201).json(devotional)
       } catch (e) {
         res.sendStatus(500)
       }
