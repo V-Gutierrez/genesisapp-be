@@ -5,13 +5,8 @@ import Prisma from '@Clients/Prisma'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
 class Stats {
-  constructor(private readonly app: Express) {
-    Middlewares.IsAdmin(this.app)
-    this.getStats()
-  }
-
-  getStats() {
-    this.app.get('/api/stats', async (_req: Request, res: Response) => {
+  static getStats(app: Express) {
+    app.get('/api/stats', async (_req: Request, res: Response) => {
       try {
         const activeUsers = await Prisma.user.count({
           where: {

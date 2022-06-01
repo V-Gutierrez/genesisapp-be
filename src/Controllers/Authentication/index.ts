@@ -14,18 +14,8 @@ import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 
 class Authentication {
-  constructor(private readonly app: Express) {
-    this.activateNewUser()
-    this.resetPassword()
-    this.authenticate()
-    this.refreshToken()
-    this.logout()
-    this.setNewPassword()
-    this.getUserInformation()
-  }
-
-  async authenticate() {
-    this.app.post('/api/auth', async (req: Request, res: Response) => {
+  static async authenticate(app: Express) {
+    app.post('/api/auth', async (req: Request, res: Response) => {
       try {
         const { [CookieHelper.AuthCookieDefaultOptions.name]: currentToken } = req.cookies
 
@@ -109,8 +99,8 @@ class Authentication {
     })
   }
 
-  async refreshToken() {
-    this.app.get('/api/auth', async (req: Request, res: Response) => {
+  static async refreshToken(app: Express) {
+    app.get('/api/auth', async (req: Request, res: Response) => {
       try {
         const { [CookieHelper.AuthCookieDefaultOptions.name]: accessToken } = req.cookies
 
@@ -192,8 +182,8 @@ class Authentication {
     })
   }
 
-  async activateNewUser() {
-    this.app.post('/api/auth/activate', async (req: Request, res: Response) => {
+  static async activateNewUser(app: Express) {
+    app.post('/api/auth/activate', async (req: Request, res: Response) => {
       try {
         const authToken = req.headers.authorization
 
@@ -221,8 +211,8 @@ class Authentication {
     })
   }
 
-  async resetPassword() {
-    this.app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
+  static async resetPassword(app: Express) {
+    app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
       try {
         const errors = SchemaHelper.validateSchema(SchemaHelper.RESET_PASSWORD, req.body)
         if (errors) return res.status(400).json({ error: errors })
@@ -260,8 +250,8 @@ class Authentication {
     })
   }
 
-  async setNewPassword() {
-    this.app.put('/api/auth/reset-password', async (req: Request, res: Response) => {
+  static async setNewPassword(app: Express) {
+    app.put('/api/auth/reset-password', async (req: Request, res: Response) => {
       const authToken = req.headers.authorization
 
       try {
@@ -291,8 +281,8 @@ class Authentication {
     })
   }
 
-  async logout() {
-    this.app.delete('/api/auth', async (req: Request, res: Response) => {
+  static async logout(app: Express) {
+    app.delete('/api/auth', async (req: Request, res: Response) => {
       try {
         const { [CookieHelper.AuthCookieDefaultOptions.name]: refreshToken } = req.cookies
 
@@ -324,8 +314,8 @@ class Authentication {
     })
   }
 
-  async getUserInformation() {
-    this.app.get('/api/auth/me', async (req: Request, res: Response) => {
+  static async getUserInformation(app: Express) {
+    app.get('/api/auth/me', async (req: Request, res: Response) => {
       const { [CookieHelper.AuthCookieDefaultOptions.name]: accessToken } = req.cookies
 
       if (!accessToken) return res.sendStatus(400)

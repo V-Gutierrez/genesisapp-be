@@ -10,18 +10,8 @@ import jwt from 'jsonwebtoken'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
 class Devotionals {
-  constructor(private readonly app: Express) {
-    this.getDevotionals()
-    this.getDevotionalBySlug()
-
-    Middlewares.IsAdmin(this.app)
-    this.createDevotional()
-    this.getDevotionalsAsAdmin()
-    this.deleteDevocional()
-  }
-
-  getDevotionals() {
-    this.app.get('/api/devotionals', async (_req: Request, res: Response) => {
+  static getDevotionals(app: Express) {
+    app.get('/api/devotionals', async (_req: Request, res: Response) => {
       try {
         const response: Devotional[] = await Prisma.devotional.findMany({
           where: {
@@ -48,8 +38,8 @@ class Devotionals {
     })
   }
 
-  getDevotionalBySlug() {
-    this.app.get('/api/devotionals/:slug', async (req: Request, res: Response) => {
+  static getDevotionalBySlug(app: Express) {
+    app.get('/api/devotionals/:slug', async (req: Request, res: Response) => {
       try {
         const { slug } = req.params
 
@@ -81,8 +71,8 @@ class Devotionals {
     })
   }
 
-  getDevotionalsAsAdmin() {
-    this.app.get('/api/all-devotionals', async (_req: Request, res: Response) => {
+  static getDevotionalsAsAdmin(app: Express) {
+    app.get('/api/all-devotionals', async (_req: Request, res: Response) => {
       try {
         const response: Devotional[] = await Prisma.devotional.findMany({
           orderBy: {
@@ -104,8 +94,8 @@ class Devotionals {
     })
   }
 
-  createDevotional() {
-    this.app.post('/api/devotionals', async (req: Request, res: Response) => {
+  static createDevotional(app: Express) {
+    app.post('/api/devotionals', async (req: Request, res: Response) => {
       try {
         const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
@@ -142,8 +132,8 @@ class Devotionals {
     })
   }
 
-  deleteDevocional() {
-    this.app.delete('/api/devotionals/:id', async (req: Request, res: Response) => {
+  static deleteDevocional(app: Express) {
+    app.delete('/api/devotionals/:id', async (req: Request, res: Response) => {
       try {
         const { id } = req.params
 

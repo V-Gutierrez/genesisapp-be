@@ -9,12 +9,30 @@ import Users from '@Controllers/Resources/Users'
 export default class RoutesController {
   constructor(private readonly app: Express) {
     new Middlewares(this.app)
-    new Authentication(this.app)
 
-    new GrowthGroups(this.app)
-    new Users(this.app)
+    Authentication.authenticate(this.app)
+    Authentication.refreshToken(this.app)
+    Authentication.activateNewUser(this.app)
+    Authentication.resetPassword(this.app)
+    Authentication.setNewPassword(this.app)
+    Authentication.logout(this.app)
+    Authentication.getUserInformation(this.app)
 
-    new Devotionals(this.app)
-    new Stats(this.app)
+    GrowthGroups.getGrowthGroups(this.app)
+    Devotionals.getDevotionals(this.app)
+    Devotionals.getDevotionalBySlug(this.app)
+
+    Users.signUp(this.app)
+
+    /* AUTH ROUTES */
+    Middlewares.JWT(this.app)
+    Users.get(this.app)
+
+    /* ADMIN ROUTES */
+    Middlewares.IsAdmin(this.app)
+    Devotionals.createDevotional(this.app)
+    Devotionals.getDevotionalsAsAdmin(this.app)
+    Devotionals.deleteDevocional(this.app)
+    Stats.getStats(this.app)
   }
 }

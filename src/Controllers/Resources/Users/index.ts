@@ -13,15 +13,8 @@ import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 
 class Users {
-  constructor(private readonly app: Express) {
-    this.signUp()
-
-    Middlewares.JWT(this.app)
-    this.get()
-  }
-
-  async get() {
-    this.app.get('/api/users/:id', async (req: Request, res: Response) => {
+  static async get(app: Express) {
+    app.get('/api/users/:id', async (req: Request, res: Response) => {
       const { id } = req.params
 
       try {
@@ -47,8 +40,8 @@ class Users {
     })
   }
 
-  async signUp() {
-    this.app.post('/api/users', async (req: Request, res: Response) => {
+  static async signUp(app: Express) {
+    app.post('/api/users', async (req: Request, res: Response) => {
       try {
         const errors = SchemaHelper.validateSchema(SchemaHelper.SIGNUP_SCHEMA, req.body)
 
