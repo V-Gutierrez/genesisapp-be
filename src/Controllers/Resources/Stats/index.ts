@@ -22,7 +22,7 @@ class Stats {
         const devotionals = await Prisma.devotional.count({
           where: {
             scheduledTo: {
-              gte: zonedTimeToUtc(new Date(Date.now()), 'America/Sao_Paulo'),
+              lte: zonedTimeToUtc(new Date(Date.now()), 'America/Sao_Paulo'),
             },
           },
         })
