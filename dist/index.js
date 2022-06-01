@@ -670,8 +670,7 @@
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
         const n = i(s(488)),
-          a = i(s(988)),
-          r = s(465)
+          a = i(s(988))
         t.default = class {
           constructor(e) {
             ;(this.app = e), n.default.IsAdmin(this.app), this.getStats()
@@ -681,13 +680,7 @@
               o(this, void 0, void 0, function* () {
                 try {
                   const e = yield a.default.user.count({ where: { active: !0 } }),
-                    s = yield a.default.devotional.count({
-                      where: {
-                        scheduledTo: {
-                          lte: (0, r.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo'),
-                        },
-                      },
-                    }),
+                    s = yield a.default.devotional.count(),
                     o = yield a.default.growthGroup.count()
                   return t.status(200).json({ activeUsers: e, devotionals: s, groups: o })
                 } catch (e) {

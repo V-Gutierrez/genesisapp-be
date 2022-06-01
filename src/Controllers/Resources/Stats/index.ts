@@ -11,7 +11,7 @@ class Stats {
   }
 
   getStats() {
-    this.app.get('/api/stats', async (req: Request, res: Response) => {
+    this.app.get('/api/stats', async (_req: Request, res: Response) => {
       try {
         const activeUsers = await Prisma.user.count({
           where: {
@@ -19,13 +19,7 @@ class Stats {
           },
         })
 
-        const devotionals = await Prisma.devotional.count({
-          where: {
-            scheduledTo: {
-              lte: zonedTimeToUtc(new Date(), 'America/Sao_Paulo'),
-            },
-          },
-        })
+        const devotionals = await Prisma.devotional.count()
         const groups = await Prisma.growthGroup.count()
 
         return res.status(200).json({
