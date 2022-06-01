@@ -477,9 +477,7 @@
                 try {
                   const e = yield r.default.devotional.findMany({
                     where: {
-                      scheduledTo: {
-                        gte: (0, c.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
-                      },
+                      scheduledTo: { lte: (0, c.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo') },
                     },
                     orderBy: { scheduledTo: 'desc' },
                     include: { author: { select: { name: !0 } } },
