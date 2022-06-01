@@ -127,7 +127,7 @@ class Devotionals {
               data: {
                 body,
                 title,
-                scheduledTo: new Date(scheduledTo),
+                scheduledTo: zonedTimeToUtc(new Date(scheduledTo), 'America/Sao_Paulo'),
                 userId: decoded.id,
                 slug: title.replace(/\s+/g, '-').toLowerCase(),
               },

@@ -536,17 +536,17 @@
                   const { [n.default.AuthCookieDefaultOptions.name]: s } = e.cookies,
                     i = u.default.validateSchema(u.default.DEVOTIONAL_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
-                  const { body: a, title: c, scheduledTo: l } = e.body
+                  const { body: a, title: l, scheduledTo: f } = e.body
                   d.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
                     o(this, void 0, void 0, function* () {
                       if (e) return t.sendStatus(403)
                       const o = yield r.default.devotional.create({
                         data: {
                           body: a,
-                          title: c,
-                          scheduledTo: new Date(l),
+                          title: l,
+                          scheduledTo: (0, c.zonedTimeToUtc)(new Date(f), 'America/Sao_Paulo'),
                           userId: s.id,
-                          slug: c.replace(/\s+/g, '-').toLowerCase(),
+                          slug: l.replace(/\s+/g, '-').toLowerCase(),
                         },
                       })
                       return t.status(201).json(o)
