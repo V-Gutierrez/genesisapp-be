@@ -444,21 +444,21 @@
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const a = i(628),
-          n = o(i(832)),
-          r = o(i(488)),
-          u = o(i(988)),
-          d = o(i(448)),
+        const a = o(i(832)),
+          n = o(i(488)),
+          r = o(i(988)),
+          u = o(i(448)),
+          d = i(465),
           l = i(496),
-          c = i(465)
+          c = i(628)
         t.default = class {
           static getDevotionals(e) {
             e.get('/api/devotionals', (e, t) =>
               s(this, void 0, void 0, function* () {
                 try {
-                  const e = yield u.default.devotional.findMany({
+                  const e = yield r.default.devotional.findMany({
                     where: {
-                      scheduledTo: { lte: (0, c.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo') },
+                      scheduledTo: { lte: (0, d.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo') },
                     },
                     orderBy: { scheduledTo: 'desc' },
                   })
@@ -474,11 +474,11 @@
               s(this, void 0, void 0, function* () {
                 try {
                   const { slug: i } = e.params,
-                    s = yield u.default.devotional.findFirst({
+                    s = yield r.default.devotional.findFirst({
                       where: {
                         slug: i,
                         scheduledTo: {
-                          lte: (0, c.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
+                          lte: (0, d.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
                         },
                       },
                       orderBy: { scheduledTo: 'desc' },
@@ -495,7 +495,7 @@
             e.get('/api/all-devotionals', (e, t) =>
               s(this, void 0, void 0, function* () {
                 try {
-                  const e = yield u.default.devotional.findMany({
+                  const e = yield r.default.devotional.findMany({
                     orderBy: { scheduledTo: 'desc' },
                   })
                   t.status(200).json(e)
@@ -506,28 +506,28 @@
             )
           }
           static createDevotional(e) {
-            e.post('/api/devotionals', r.default.SingleFileUpload('coverImage'), (e, t) =>
+            e.post('/api/devotionals', n.default.SingleFileUpload('coverImage'), (e, t) =>
               s(this, void 0, void 0, function* () {
                 try {
-                  const i = d.default.validateSchema(d.default.DEVOTIONAL_CREATION, e.body)
+                  const i = u.default.validateSchema(u.default.DEVOTIONAL_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { body: s, title: o, scheduledTo: r, author: f } = e.body,
-                    h = e.file,
+                  const { body: s, title: o, scheduledTo: n, author: f } = e.body,
+                    { file: h } = e,
                     {
                       url: p,
                       thumbnailUrl: v,
                       fileId: _,
-                    } = yield n.default.uploadFile(
+                    } = yield a.default.uploadFile(
                       h.buffer,
                       (0, l.generateSlug)(o),
-                      a.ImageKitFolders.Devotionals,
+                      c.ImageKitFolders.Devotionals,
                     ),
-                    m = yield u.default.devotional.create({
+                    m = yield r.default.devotional.create({
                       data: {
                         body: s,
                         title: o,
-                        scheduledTo: (0, c.zonedTimeToUtc)(new Date(r), 'America/Sao_Paulo'),
+                        scheduledTo: (0, d.zonedTimeToUtc)(new Date(n), 'America/Sao_Paulo'),
                         author: f,
                         slug: (0, l.generateSlug)(o),
                         coverImage: p,
@@ -547,8 +547,8 @@
               s(this, void 0, void 0, function* () {
                 try {
                   const { id: i } = e.params,
-                    s = yield u.default.devotional.delete({ where: { id: i } })
-                  yield n.default.delete(s.assetId), t.sendStatus(204)
+                    s = yield r.default.devotional.delete({ where: { id: i } })
+                  yield a.default.delete(s.assetId), t.sendStatus(204)
                 } catch (e) {
                   t.sendStatus(500)
                 }
