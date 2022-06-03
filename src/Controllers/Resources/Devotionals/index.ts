@@ -1,9 +1,13 @@
 import { Express, Request, Response } from 'express'
 
 import { Devotional } from '@prisma/client'
+import ImageKitService from '@Services/ImageKitService'
+import Middlewares from '@Controllers/Middlewares'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { zonedTimeToUtc } from 'date-fns-tz'
+import { generateSlug } from "../../../Helpers/Utils"
+import { ImageKitFolders } from "../../../Types/Enum"
 
 class Devotionals {
   static getDevotionals(app: Express) {
@@ -70,31 +74,52 @@ class Devotionals {
   }
 
   static createDevotional(app: Express) {
-    app.post('/api/devotionals', async (req: Request, res: Response) => {
-      try {
-        const errors = SchemaHelper.validateSchema(SchemaHelper.DEVOTIONAL_CREATION, req.body)
+    app.post(
+      '/api/devotionals',
+      Middlewares.SingleFileUpload('coverImage'),
+      async (req: Request, res: Response) => {
+        try {
+          const errors = SchemaHelper.validateSchema(SchemaHelper.DEVOTIONAL_CREATION, req.body)
 
-        if (errors) {
-          return res.status(400).json({ error: errors })
+          if (errors) {
+            return res.status(400).json({ error: errors })
+          }
+          if (!req.file) {
+            return res.status(400).json({ error: 'coverImage is missing' })
+          }
+
+          const { body, title, scheduledTo, author } = req.body
+          const {file} = req
+
+          const {
+            url: coverImage,
+            thumbnailUrl: coverThumbnail,
+            fileId,
+          } = await ImageKitService.uploadFile(
+            file.buffer,
+            generateSlug(title),
+            ImageKitFolders.Devotionals,
+          )
+
+          const devotional = await Prisma.devotional.create({
+            data: {
+              body,
+              title,
+              scheduledTo: zonedTimeToUtc(new Date(scheduledTo), 'America/Sao_Paulo'),
+              author,
+              slug: generateSlug(title),
+              coverImage,
+              coverThumbnail,
+              assetId: fileId,
+            },
+          })
+
+          return res.status(201).json(devotional)
+        } catch (e) {
+          res.sendStatus(500)
         }
-
-        const { body, title, scheduledTo, author } = req.body
-
-        const devotional = await Prisma.devotional.create({
-          data: {
-            body,
-            title,
-            scheduledTo: zonedTimeToUtc(new Date(scheduledTo), 'America/Sao_Paulo'),
-            author,
-            slug: title.replace(/\s+/g, '-').toLowerCase(),
-          },
-        })
-
-        return res.status(201).json(devotional)
-      } catch (e) {
-        res.sendStatus(500)
-      }
-    })
+      },
+    )
   }
 
   static deleteDevocional(app: Express) {
@@ -102,9 +127,11 @@ class Devotionals {
       try {
         const { id } = req.params
 
-        await Prisma.devotional.delete({
+        const deleted = await Prisma.devotional.delete({
           where: { id },
         })
+
+        await ImageKitService.delete(deleted.assetId)
 
         res.sendStatus(204)
       } catch (error) {

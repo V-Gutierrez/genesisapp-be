@@ -45,6 +45,12 @@ class SchemaHelper {
     scheduledTo: Joi.string().required(),
   })
 
+  static FILE_UPLOAD(filename: string) {
+    return Joi.object().keys({
+      [filename]: Joi.required(),
+    })
+  }
+
   static validateSchema(schema: Schema, validationTarget: object) {
     const { error } = Joi.validate(validationTarget, schema, { abortEarly: false, convert: false })
 

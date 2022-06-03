@@ -8,15 +8,17 @@ import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
+import morgan from 'morgan'
+import multer from 'multer'
 
 export default class Middlewares {
   constructor(private readonly app: Express) {
     this.CORS()
-    this.Logger()
 
     this.app.use(express.json())
     this.app.use(cookieParser())
     this.app.use(express.urlencoded({ extended: false }))
+    this.app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
   }
 
   CORS() {
@@ -30,15 +32,6 @@ export default class Middlewares {
         origin: [process.env.FRONT_BASE_URL as string, ...localEnvironments],
       }),
     )
-  }
-
-  Logger() {
-    this.app.use((req: Request, res: Response, next: NextFunction) => {
-      next()
-      console.log(
-        `${req.method} ${req.url} --- Origin: ${req.headers.origin} - ${res.statusCode} : ${res.statusMessage}`,
-      )
-    })
   }
 
   static JWT(app: Express) {
@@ -74,5 +67,9 @@ export default class Middlewares {
         res.sendStatus(500)
       }
     })
+  }
+
+  static SingleFileUpload(formDataKey: string) {
+    return multer().single(formDataKey)
   }
 }

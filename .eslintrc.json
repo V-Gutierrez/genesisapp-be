@@ -24,13 +24,15 @@
     "node/no-unsupported-features/es-syntax": "off",
     "no-process-exit": "off",
     "no-new": "off",
+    "no-shadow": "warn",
     "no-unused-vars": "warn",
     "node/no-missing-import": "off",
     "import/extensions": "off",
     "consistent-return": "off",
     "no-console": "warn",
     "class-methods-use-this": "off",
-    "no-useless-escape": "off"
+    "no-useless-escape": "off",
+    "import/prefer-default-export": "off"
   },
   "settings": {
     "import/resolver": {
