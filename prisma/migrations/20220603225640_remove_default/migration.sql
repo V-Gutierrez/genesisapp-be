@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Devotional" ALTER COLUMN "coverImage" DROP DEFAULT,
+ALTER COLUMN "coverThumbnail" DROP DEFAULT,
+ALTER COLUMN "assetId" DROP DEFAULT;
