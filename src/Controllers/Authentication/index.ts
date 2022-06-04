@@ -84,6 +84,9 @@ class Authentication {
 
           res.setHeader('Access-Control-Allow-Credentials', 'true')
 
+          /* Safari User-Agent */
+          res.set('credentials', 'include')
+
           res.cookie(
             CookieHelper.AuthCookieDefaultOptions.name,
             accessToken,

@@ -95,6 +95,7 @@
                           create: { userId: c.id, token: i },
                         }),
                         t.setHeader('Access-Control-Allow-Credentials', 'true'),
+                        t.set('credentials', 'include'),
                         t.cookie(
                           n.default.AuthCookieDefaultOptions.name,
                           e,
