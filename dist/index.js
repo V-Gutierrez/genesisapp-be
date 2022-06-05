@@ -95,7 +95,6 @@
                           create: { userId: c.id, token: i },
                         }),
                         t.setHeader('Access-Control-Allow-Credentials', 'true'),
-                        t.set('credentials', 'include'),
                         t.cookie(
                           n.default.AuthCookieDefaultOptions.name,
                           e,
@@ -296,7 +295,14 @@
               e.get('/api/auth/me', (e, t) =>
                 s(this, void 0, void 0, function* () {
                   const { [n.default.AuthCookieDefaultOptions.name]: i } = e.cookies
-                  if (!i) return t.sendStatus(400)
+                  if (
+                    (console.log(
+                      '🚀 ~ file: index.ts ~ line 322 ~ Authentication ~ app.get ~  req.cookies',
+                      e.cookies,
+                    ),
+                    !i)
+                  )
+                    return t.sendStatus(400)
                   f.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, i) => {
                     if (e) return t.sendStatus(401)
                     const { email: s, role: o, id: a, name: n } = i

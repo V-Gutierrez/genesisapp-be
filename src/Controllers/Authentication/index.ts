@@ -84,9 +84,6 @@ class Authentication {
 
           res.setHeader('Access-Control-Allow-Credentials', 'true')
 
-          /* Safari User-Agent */
-          res.set('credentials', 'include')
-
           res.cookie(
             CookieHelper.AuthCookieDefaultOptions.name,
             accessToken,
@@ -320,6 +317,10 @@ class Authentication {
   static async getUserInformation(app: Express) {
     app.get('/api/auth/me', async (req: Request, res: Response) => {
       const { [CookieHelper.AuthCookieDefaultOptions.name]: accessToken } = req.cookies
+      console.log(
+        '🚀 ~ file: index.ts ~ line 322 ~ Authentication ~ app.get ~  req.cookies',
+        req.cookies,
+      )
 
       if (!accessToken) return res.sendStatus(400)
 
