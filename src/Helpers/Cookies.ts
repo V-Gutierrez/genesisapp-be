@@ -2,7 +2,7 @@ import isProduction from '@Helpers/Environment'
 
 export default class CookieHelper {
   static AuthCookieDefaultOptions = {
-    name: '100038189377123',
+    name: 'jwt',
     config: {
       httpOnly: true,
       secure: isProduction,

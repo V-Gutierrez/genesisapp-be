@@ -887,7 +887,7 @@
         class a {}
         ;(t.default = a),
           (a.AuthCookieDefaultOptions = {
-            name: '100038189377123',
+            name: 'jwt',
             config: {
               httpOnly: !0,
               secure: o.default,
