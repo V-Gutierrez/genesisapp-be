@@ -51,9 +51,8 @@
           u = o(i(988)),
           d = o(i(448)),
           l = o(i(29)),
-          c = o(i(609)),
-          f = o(i(766)),
-          h = o(i(344))
+          c = o(i(766)),
+          f = o(i(344))
         t.default = class {
           static authenticate(e) {
             return s(this, void 0, void 0, function* () {
@@ -62,7 +61,7 @@
                   try {
                     const { [n.default.AuthCookieDefaultOptions.name]: i } = e.cookies
                     i &&
-                      h.default.verify(e.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (e) => {
+                      f.default.verify(e.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (e) => {
                         if (!e) return t.sendStatus(304)
                         t.clearCookie(
                           n.default.AuthCookieDefaultOptions.name,
@@ -72,35 +71,35 @@
                     const s = d.default.validateSchema(d.default.LOGIN_SCHEMA, e.body)
                     if (s) return t.status(400).json({ error: s })
                     const { email: o, password: l } = e.body,
-                      f = yield u.default.user.findFirst({
+                      c = yield u.default.user.findFirst({
                         where: { email: o },
                         select: { name: !0, password: !0, email: !0, id: !0, role: !0, active: !0 },
                       })
-                    if (!f) return t.sendStatus(404)
-                    if (!f.active) return t.status(403).json({ error: 'User is not activated' })
-                    if (yield a.default.comparePassword(l, f.password)) {
-                      const i = h.default.sign(
-                          { email: f.email, role: f.role, id: f.id, name: f.name },
+                    if (!c) return t.sendStatus(404)
+                    if (!c.active) return t.status(403).json({ error: 'User is not activated' })
+                    if (yield a.default.comparePassword(l, c.password)) {
+                      const e = f.default.sign(
+                          { email: c.email, role: c.role, id: c.id, name: c.name },
                           process.env.ACCESS_TOKEN_SECRET,
                           { expiresIn: '12h' },
                         ),
-                        s = h.default.sign(
-                          { email: f.email, role: f.role, id: f.id, name: f.name },
+                        i = f.default.sign(
+                          { email: c.email, role: c.role, id: c.id, name: c.name },
                           process.env.REFRESH_TOKEN_SECRET,
                           { expiresIn: '30d' },
                         )
                       return (
                         yield u.default.userRefreshTokens.upsert({
-                          where: { userId: f.id },
-                          update: { token: s },
-                          create: { userId: f.id, token: s },
+                          where: { userId: c.id },
+                          update: { token: i },
+                          create: { userId: c.id, token: i },
                         }),
                         t.cookie(
                           n.default.AuthCookieDefaultOptions.name,
-                          i,
+                          e,
                           n.default.AuthCookieDefaultOptions.config,
                         ),
-                        t.status(200).json({ userLoggedIn: !c.default.isAppleDevice(e) || i })
+                        t.status(200).json({ userLoggedIn: !0 })
                       )
                     }
                     return t.status(401).json({ error: r.Errors.NO_AUTH })
@@ -117,7 +116,7 @@
                 s(this, void 0, void 0, function* () {
                   try {
                     const { [n.default.AuthCookieDefaultOptions.name]: i } = e.cookies
-                    h.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, i) =>
+                    f.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, i) =>
                       s(this, void 0, void 0, function* () {
                         if (e)
                           return (
@@ -135,14 +134,14 @@
                           return (
                             t.clearCookie('jwt', {
                               httpOnly: !0,
-                              secure: f.default,
-                              sameSite: f.default ? 'none' : void 0,
+                              secure: c.default,
+                              sameSite: c.default ? 'none' : void 0,
                             }),
                             t.sendStatus(403)
                           )
                         const { UserRefreshTokens: a, id: r } = o,
                           [{ token: d }] = a
-                        h.default.verify(d, process.env.REFRESH_TOKEN_SECRET, (e) =>
+                        f.default.verify(d, process.env.REFRESH_TOKEN_SECRET, (e) =>
                           s(this, void 0, void 0, function* () {
                             if (e)
                               return (
@@ -153,7 +152,7 @@
                                 ),
                                 t.sendStatus(403)
                               )
-                            const i = h.default.sign(
+                            const i = f.default.sign(
                               { email: o.email, role: o.role },
                               process.env.ACCESS_TOKEN_SECRET,
                               { expiresIn: '12h' },
@@ -182,7 +181,7 @@
                   try {
                     if (!e.headers.authorization) return t.sendStatus(401)
                     const { authorization: i } = e.headers
-                    h.default.verify(i, process.env.ACTIVATION_TOKEN_SECRET, (e, i) =>
+                    f.default.verify(i, process.env.ACTIVATION_TOKEN_SECRET, (e, i) =>
                       s(this, void 0, void 0, function* () {
                         return e
                           ? t.sendStatus(401)
@@ -214,12 +213,12 @@
                       })
                     if (!o || !o.active)
                       return t.status(200).json({ message: 'Reset password email sent' })
-                    const a = h.default.sign(
+                    const a = f.default.sign(
                       { email: s },
                       process.env.PASSWORD_RESET_TOKEN_SECRET,
                       { expiresIn: '24h' },
                     )
-                    if (f.default) {
+                    if (c.default) {
                       const e = new l.default()
                       yield e.send(
                         e.TEMPLATES.resetPassword.config(s, {
@@ -244,7 +243,7 @@
                     if (d.default.validateSchema(d.default.NEW_PASSWORD, e.body) || !i)
                       return t.sendStatus(400)
                     const { password: o } = e.body
-                    h.default.verify(i, process.env.PASSWORD_RESET_TOKEN_SECRET, (e, i) =>
+                    f.default.verify(i, process.env.PASSWORD_RESET_TOKEN_SECRET, (e, i) =>
                       s(this, void 0, void 0, function* () {
                         return e
                           ? t.sendStatus(401)
@@ -287,7 +286,7 @@
                 s(this, void 0, void 0, function* () {
                   const { [n.default.AuthCookieDefaultOptions.name]: i } = e.cookies
                   if (!i) return t.sendStatus(400)
-                  h.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, i) => {
+                  f.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, i) => {
                     if (e) return t.sendStatus(401)
                     const { email: s, role: o, id: a, name: n } = i
                     return t.status(200).json({ email: s, role: o, id: a, name: n })
@@ -878,7 +877,12 @@
         ;(t.default = a),
           (a.AuthCookieDefaultOptions = {
             name: 'jwt',
-            config: { secure: o.default, sameSite: o.default ? 'none' : void 0, maxAge: 2592e6 },
+            config: {
+              httpOnly: !0,
+              secure: o.default,
+              sameSite: o.default ? 'none' : void 0,
+              maxAge: 2592e6,
+            },
           })
       },
       766: (e, t, i) => {
@@ -1000,24 +1004,6 @@
               scheduledTo: u.default.string().required(),
             })),
           (t.default = d)
-      },
-      609: function (e, t, i) {
-        var s =
-          (this && this.__importDefault) ||
-          function (e) {
-            return e && e.__esModule ? e : { default: e }
-          }
-        Object.defineProperty(t, '__esModule', { value: !0 })
-        const o = s(i(621))
-        class a {
-          static getOS(e) {
-            return (0, o.default)(e.headers['user-agent']).os.name
-          }
-          static isAppleDevice(e) {
-            return 'iOS' === a.getOS(e) || 'Mac OS' === this.getOS(e)
-          }
-        }
-        t.default = a
       },
       496: (e, t) => {
         Object.defineProperty(t, '__esModule', { value: !0 }),
@@ -1225,9 +1211,6 @@
       },
       634: (e) => {
         e.exports = require('ramda')
-      },
-      621: (e) => {
-        e.exports = require('ua-parser-js')
       },
     },
     t = {}
