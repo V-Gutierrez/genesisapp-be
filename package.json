@@ -40,7 +40,8 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "prisma": "^3.14.0",
-    "ramda": "^0.28.0"
+    "ramda": "^0.28.0",
+    "ua-parser-js": "^1.0.2"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
@@ -54,6 +55,7 @@
     "@types/multer": "^1.4.7",
     "@types/node": "16.11.34",
     "@types/ramda": "^0.28.12",
+    "@types/ua-parser-js": "^0.7.36",
     "@types/uploadcare": "^0.4.1",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",

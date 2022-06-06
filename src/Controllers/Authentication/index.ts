@@ -10,6 +10,7 @@ import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import SendgridClient from '@Services/Sendgrid'
 import { User } from '@prisma/client'
+import UserAgentParser from '@Helpers/UserAgentParser'
 import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 
@@ -82,22 +83,15 @@ class Authentication {
             },
           })
 
-          res.setHeader('Access-Control-Allow-Credentials', 'true')
-          res.setHeader('credentials', 'include')
-          res.setHeader('Access-Control-Allow-Origin', req.headers.origin as string)
-          res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE')
-          res.setHeader(
-            'Access-Control-Allow-Headers',
-            'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
-          )
-
           res.cookie(
             CookieHelper.AuthCookieDefaultOptions.name,
             accessToken,
             CookieHelper.AuthCookieDefaultOptions.config,
           )
 
-          return res.status(200).json({ userLoggedIn: true })
+          return res
+            .status(200)
+            .json({ userLoggedIn: UserAgentParser.isAppleDevice(req) ? accessToken : true })
         }
         return res.status(401).json({ error: Errors.NO_AUTH })
       } catch (error) {

@@ -38,6 +38,11 @@ export default class Middlewares {
     app.use(async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
+        console.log('🚀 ~ file: index.ts ~ line 41 ~ Middlewares ~ app.use ~ token', token)
+        console.log(
+          '🚀 ~ file: index.ts ~ line 41 ~ Middlewares ~ app.use ~ req.cookies',
+          req.cookies,
+        )
 
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any) => {
           if (err) return res.sendStatus(403)
