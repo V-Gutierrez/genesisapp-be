@@ -370,11 +370,11 @@
             this.app.use(
               (0, u.default)({ credentials: !0, origin: [process.env.FRONT_BASE_URL, ...e] }),
             ),
-              this.app.use(function (e, t, s) {
+              this.app.use((e, t, s) => {
                 t.set('credentials', 'include'),
                   t.set('Access-Control-Allow-Credentials', 'true'),
                   t.set('Access-Control-Allow-Origin', e.headers.origin),
-                  t.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE'),
+                  t.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH'),
                   t.set(
                     'Access-Control-Allow-Headers',
                     'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
