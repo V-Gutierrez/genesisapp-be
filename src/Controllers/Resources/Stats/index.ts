@@ -1,8 +1,6 @@
 import { Express, Request, Response } from 'express'
 
-import Middlewares from '@Controllers/Middlewares'
 import Prisma from '@Clients/Prisma'
-import { zonedTimeToUtc } from 'date-fns-tz'
 
 class Stats {
   static getStats(app: Express) {
