@@ -62,7 +62,7 @@
                     const { [n.default.AuthCookieDefaultOptions.name]: i } = e.cookies
                     i &&
                       f.default.verify(e.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (e) => {
-                        if (!e) return t.sendStatus(204)
+                        if (!e) return t.sendStatus(304)
                         t.clearCookie(
                           n.default.AuthCookieDefaultOptions.name,
                           n.default.AuthCookieDefaultOptions.config,

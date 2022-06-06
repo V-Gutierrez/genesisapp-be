@@ -22,8 +22,8 @@ class Authentication {
         if (currentToken) {
           jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET as string, (error: any) => {
             if (!error) {
-              /* Respond 204 to already authenticated user */
-              return res.sendStatus(204)
+              /* Respond 304 to already authenticated user */
+              return res.sendStatus(304)
             }
             /* Clean old token and proceed to auth */
             res.clearCookie(
