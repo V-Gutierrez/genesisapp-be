@@ -351,9 +351,7 @@
               this.app.use(a.default.json()),
               this.app.use((0, r.default)()),
               this.app.use(a.default.urlencoded({ extended: !1 })),
-              this.app.use(
-                (0, c.default)(':method :url :status :res[content-length] - :response-time ms'),
-              )
+              this.app.use((0, c.default)('combined'))
           }
           CORS() {
             const e = d.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
