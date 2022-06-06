@@ -78,12 +78,12 @@
                     if (!c) return t.sendStatus(404)
                     if (!c.active) return t.status(403).json({ error: 'User is not activated' })
                     if (yield a.default.comparePassword(l, c.password)) {
-                      const e = f.default.sign(
+                      const i = f.default.sign(
                           { email: c.email, role: c.role, id: c.id, name: c.name },
                           process.env.ACCESS_TOKEN_SECRET,
                           { expiresIn: '12h' },
                         ),
-                        i = f.default.sign(
+                        s = f.default.sign(
                           { email: c.email, role: c.role, id: c.id, name: c.name },
                           process.env.REFRESH_TOKEN_SECRET,
                           { expiresIn: '30d' },
@@ -91,13 +91,20 @@
                       return (
                         yield u.default.userRefreshTokens.upsert({
                           where: { userId: c.id },
-                          update: { token: i },
-                          create: { userId: c.id, token: i },
+                          update: { token: s },
+                          create: { userId: c.id, token: s },
                         }),
                         t.setHeader('Access-Control-Allow-Credentials', 'true'),
+                        t.setHeader('credentials', 'include'),
+                        t.setHeader('Access-Control-Allow-Origin', e.headers.origin),
+                        t.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE'),
+                        t.setHeader(
+                          'Access-Control-Allow-Headers',
+                          'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
+                        ),
                         t.cookie(
                           n.default.AuthCookieDefaultOptions.name,
-                          e,
+                          i,
                           n.default.AuthCookieDefaultOptions.config,
                         ),
                         t.status(200).json({ userLoggedIn: !0 })
