@@ -1,6 +1,6 @@
 import 'dotenv/config'
 
-import { CookieOptions, Express, Request, Response } from 'express'
+import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
 import CookieHelper from '@Helpers/Cookies'

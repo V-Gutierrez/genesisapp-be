@@ -881,7 +881,7 @@
             config: {
               httpOnly: !0,
               secure: o.default,
-              sameSite: o.default ? 'lax' : void 0,
+              sameSite: o.default ? 'none' : void 0,
               maxAge: 2592e6,
             },
           })
