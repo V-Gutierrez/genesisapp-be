@@ -367,15 +367,10 @@
               s(this, void 0, void 0, function* () {
                 try {
                   const { [n.default.AuthCookieDefaultOptions.name]: s } = e.cookies
-                  console.log('🚀 ~ file: index.ts ~ line 41 ~ Middlewares ~ app.use ~ token', s),
-                    console.log(
-                      '🚀 ~ file: index.ts ~ line 41 ~ Middlewares ~ app.use ~ req.cookies',
-                      e.cookies,
-                    ),
-                    l.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e) => {
-                      if (e) return t.sendStatus(403)
-                      i()
-                    })
+                  l.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e) => {
+                    if (e) return t.sendStatus(403)
+                    i()
+                  })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -883,12 +878,7 @@
         ;(t.default = a),
           (a.AuthCookieDefaultOptions = {
             name: 'jwt',
-            config: {
-              httpOnly: !0,
-              secure: o.default,
-              sameSite: o.default ? 'none' : void 0,
-              maxAge: 2592e6,
-            },
+            config: { secure: o.default, sameSite: o.default ? 'none' : void 0, maxAge: 2592e6 },
           })
       },
       766: (e, t, i) => {
