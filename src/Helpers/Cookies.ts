@@ -1,7 +1,8 @@
+import { CookieHelperOptions } from '@Types/DTO'
 import isProduction from '@Helpers/Environment'
 
 export default class CookieHelper {
-  static AuthCookieDefaultOptions = {
+  static AuthCookieDefaultOptions: CookieHelperOptions = {
     name: 'jwt',
     config: {
       httpOnly: true,

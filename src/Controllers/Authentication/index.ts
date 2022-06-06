@@ -28,7 +28,7 @@ class Authentication {
             /* Clean old token and proceed to auth */
             res.clearCookie(
               CookieHelper.AuthCookieDefaultOptions.name,
-              CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+              CookieHelper.AuthCookieDefaultOptions.config,
             )
           })
         }
@@ -87,7 +87,7 @@ class Authentication {
           res.cookie(
             CookieHelper.AuthCookieDefaultOptions.name,
             accessToken,
-            CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+            CookieHelper.AuthCookieDefaultOptions.config,
           )
 
           return res.status(200).json({ userLoggedIn: true })
@@ -112,7 +112,7 @@ class Authentication {
             if (accessTokenError) {
               res.clearCookie(
                 CookieHelper.AuthCookieDefaultOptions.name,
-                CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+                CookieHelper.AuthCookieDefaultOptions.config,
               )
               return res.sendStatus(403)
             }
@@ -154,7 +154,7 @@ class Authentication {
                   })
                   res.clearCookie(
                     CookieHelper.AuthCookieDefaultOptions.name,
-                    CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+                    CookieHelper.AuthCookieDefaultOptions.config,
                   )
                   return res.sendStatus(403)
                 }
@@ -169,7 +169,7 @@ class Authentication {
                 res.cookie(
                   CookieHelper.AuthCookieDefaultOptions.name,
                   refreshedAccessToken,
-                  CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+                  CookieHelper.AuthCookieDefaultOptions.config,
                 )
                 res.status(200).json({ userLoggedIn: true })
               },
@@ -295,7 +295,7 @@ class Authentication {
         if (!user) {
           res.clearCookie(
             CookieHelper.AuthCookieDefaultOptions.name,
-            CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+            CookieHelper.AuthCookieDefaultOptions.config,
           )
           return res.sendStatus(204)
         }
@@ -305,7 +305,7 @@ class Authentication {
 
         res.clearCookie(
           CookieHelper.AuthCookieDefaultOptions.name,
-          CookieHelper.AuthCookieDefaultOptions.config as CookieOptions,
+          CookieHelper.AuthCookieDefaultOptions.config,
         )
         return res.sendStatus(204)
       } catch (error) {

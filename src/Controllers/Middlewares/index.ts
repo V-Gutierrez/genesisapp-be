@@ -32,18 +32,6 @@ export default class Middlewares {
         origin: [process.env.FRONT_BASE_URL as string, ...localEnvironments],
       }),
     )
-
-    this.app.use((req: Request, res: Response, next: NextFunction) => {
-      res.set('credentials', 'include')
-      res.set('Access-Control-Allow-Credentials', 'true')
-      res.set('Access-Control-Allow-Origin', req.headers.origin)
-      res.set('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH')
-      res.set(
-        'Access-Control-Allow-Headers',
-        'X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept',
-      )
-      next()
-    })
   }
 
   static JWT(app: Express) {
