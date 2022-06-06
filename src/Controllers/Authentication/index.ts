@@ -282,27 +282,8 @@ class Authentication {
   }
 
   static async logout(app: Express) {
-    app.delete('/api/auth', async (req: Request, res: Response) => {
+    app.delete('/api/auth', async (_req: Request, res: Response) => {
       try {
-        const { [CookieHelper.AuthCookieDefaultOptions.name]: refreshToken } = req.cookies
-
-        const user = await Prisma.user.findFirst({
-          where: {
-            UserRefreshTokens: { some: { token: refreshToken } },
-          },
-        })
-
-        if (!user) {
-          res.clearCookie(
-            CookieHelper.AuthCookieDefaultOptions.name,
-            CookieHelper.AuthCookieDefaultOptions.config,
-          )
-          return res.sendStatus(204)
-        }
-        await Prisma.userRefreshTokens.delete({
-          where: { userId: user.id },
-        })
-
         res.clearCookie(
           CookieHelper.AuthCookieDefaultOptions.name,
           CookieHelper.AuthCookieDefaultOptions.config,

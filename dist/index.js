@@ -267,22 +267,13 @@
               e.delete('/api/auth', (e, t) =>
                 s(this, void 0, void 0, function* () {
                   try {
-                    const { [n.default.AuthCookieDefaultOptions.name]: i } = e.cookies,
-                      s = yield u.default.user.findFirst({
-                        where: { UserRefreshTokens: { some: { token: i } } },
-                      })
-                    return s
-                      ? (yield u.default.userRefreshTokens.delete({ where: { userId: s.id } }),
-                        t.clearCookie(
-                          n.default.AuthCookieDefaultOptions.name,
-                          n.default.AuthCookieDefaultOptions.config,
-                        ),
-                        t.sendStatus(204))
-                      : (t.clearCookie(
-                          n.default.AuthCookieDefaultOptions.name,
-                          n.default.AuthCookieDefaultOptions.config,
-                        ),
-                        t.sendStatus(204))
+                    return (
+                      t.clearCookie(
+                        n.default.AuthCookieDefaultOptions.name,
+                        n.default.AuthCookieDefaultOptions.config,
+                      ),
+                      t.sendStatus(204)
+                    )
                   } catch (e) {
                     t.sendStatus(500)
                   }
