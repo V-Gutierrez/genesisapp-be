@@ -364,10 +364,7 @@
           CORS() {
             const e = d.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
             this.app.use(
-              (0, u.default)({
-                credentials: !0,
-                origin: [process.env.FRONT_BASE_URL, process.env.HK_FRONT_BASE_URL, ...e],
-              }),
+              (0, u.default)({ credentials: !0, origin: [process.env.FRONT_BASE_URL, ...e] }),
             )
           }
           static JWT(e) {

@@ -29,11 +29,7 @@ export default class Middlewares {
     this.app.use(
       cors({
         credentials: true,
-        origin: [
-          process.env.FRONT_BASE_URL as string,
-          process.env.HK_FRONT_BASE_URL as string,
-          ...localEnvironments,
-        ],
+        origin: [process.env.FRONT_BASE_URL as string, ...localEnvironments],
       }),
     )
   }
