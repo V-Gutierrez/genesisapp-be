@@ -366,7 +366,7 @@
             this.app.use(
               (0, u.default)({
                 credentials: !0,
-                origin: [process.env.FRONT_BASE_URL, process.env.HEROKU_FRONT_BASE_URL, ...e],
+                origin: [process.env.FRONT_BASE_URL, process.env.HK_FRONT_BASE_URL, ...e],
               }),
             )
           }

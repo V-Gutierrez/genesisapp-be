@@ -31,7 +31,7 @@ export default class Middlewares {
         credentials: true,
         origin: [
           process.env.FRONT_BASE_URL as string,
-          process.env.HEROKU_FRONT_BASE_URL as string,
+          process.env.HK_FRONT_BASE_URL as string,
           ...localEnvironments,
         ],
       }),
