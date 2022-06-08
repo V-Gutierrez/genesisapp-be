@@ -87,3 +87,28 @@ model Event {
   maxSubscriptions Int
   subscriptions    Subscription[]
 }
+
+model ExternalEvent {
+  id               String                  @id @default(uuid())
+  title            String
+  description      String
+  scheduledTo      DateTime                @default(now())
+  createdAt        DateTime                @default(now())
+  lat              Float
+  lng              Float
+  addressInfo      String
+  maxSubscriptions Int
+  subscriptions    ExternalSubscriptions[]
+  coverImage       String
+  coverThumbnail   String
+  assetId          String
+}
+
+model ExternalSubscriptions {
+  id              String         @id @default(uuid())
+  name            String
+  email           String         @unique
+  phone           String         @unique
+  ExternalEvent   ExternalEvent? @relation(fields: [externalEventId], references: [id])
+  externalEventId String?
+}

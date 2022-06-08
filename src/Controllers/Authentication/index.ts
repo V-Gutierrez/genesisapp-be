@@ -21,77 +21,73 @@ class Authentication {
 
         if (currentToken) {
           jwt.verify(req.cookies.jwt, process.env.ACCESS_TOKEN_SECRET as string, (error: any) => {
-            if (!error) {
-              /* Respond 304 to already authenticated user */
-              return res.sendStatus(204)
-            } 
+            if (error) {
               /* Clean old token and proceed to auth */
               res.clearCookie(
                 CookieHelper.AuthCookieDefaultOptions.name,
                 CookieHelper.AuthCookieDefaultOptions.config,
               )
-            
+            }
           })
-        } else {
-          const errors = SchemaHelper.validateSchema(SchemaHelper.LOGIN_SCHEMA, req.body)
-          if (errors) return res.status(400).json({ error: errors })
-
-          const { email, password }: Partial<User> = req.body
-
-          const user = await Prisma.user.findFirst({
-            where: {
-              email,
-            },
-            select: {
-              name: true,
-              password: true,
-              email: true,
-              id: true,
-              role: true,
-              active: true,
-            },
-          })
-
-          if (!user) return res.sendStatus(404)
-          if (!user.active) return res.status(403).json({ error: 'User is not activated' })
-
-          const matchPassword = await Bcrypt.comparePassword(password as string, user.password)
-
-          if (matchPassword) {
-            const accessToken = jwt.sign(
-              { email: user.email, role: user.role, id: user.id, name: user.name },
-              process.env.ACCESS_TOKEN_SECRET as string,
-              { expiresIn: '12h' },
-            )
-            const refreshToken = jwt.sign(
-              { email: user.email, role: user.role, id: user.id, name: user.name },
-              process.env.REFRESH_TOKEN_SECRET as string,
-              { expiresIn: '30d' },
-            )
-
-            await Prisma.userRefreshTokens.upsert({
-              where: {
-                userId: user.id,
-              },
-              update: {
-                token: refreshToken,
-              },
-              create: {
-                userId: user.id,
-                token: refreshToken,
-              },
-            })
-
-            res.cookie(
-              CookieHelper.AuthCookieDefaultOptions.name,
-              accessToken,
-              CookieHelper.AuthCookieDefaultOptions.config,
-            )
-
-            return res.status(200).json({ userLoggedIn: true })
-          }
-          return res.status(401).json({ error: Errors.NO_AUTH })
         }
+        const errors = SchemaHelper.validateSchema(SchemaHelper.LOGIN_SCHEMA, req.body)
+        if (errors) return res.status(400).json({ error: errors })
+
+        const { email, password }: Partial<User> = req.body
+
+        const user = await Prisma.user.findFirst({
+          where: {
+            email,
+          },
+          select: {
+            name: true,
+            password: true,
+            email: true,
+            id: true,
+            role: true,
+            active: true,
+          },
+        })
+
+        if (!user) return res.sendStatus(404)
+        if (!user.active) return res.status(403).json({ error: 'User is not activated' })
+
+        const matchPassword = await Bcrypt.comparePassword(password as string, user.password)
+
+        if (matchPassword) {
+          const accessToken = jwt.sign(
+            { email: user.email, role: user.role, id: user.id, name: user.name },
+            process.env.ACCESS_TOKEN_SECRET as string,
+            { expiresIn: '12h' },
+          )
+          const refreshToken = jwt.sign(
+            { email: user.email, role: user.role, id: user.id, name: user.name },
+            process.env.REFRESH_TOKEN_SECRET as string,
+            { expiresIn: '30d' },
+          )
+
+          await Prisma.userRefreshTokens.upsert({
+            where: {
+              userId: user.id,
+            },
+            update: {
+              token: refreshToken,
+            },
+            create: {
+              userId: user.id,
+              token: refreshToken,
+            },
+          })
+
+          res.cookie(
+            CookieHelper.AuthCookieDefaultOptions.name,
+            accessToken,
+            CookieHelper.AuthCookieDefaultOptions.config,
+          )
+
+          return res.status(200).json({ userLoggedIn: true })
+        }
+        return res.status(401).json({ error: Errors.NO_AUTH })
       } catch (error) {
         res.sendStatus(500)
       }

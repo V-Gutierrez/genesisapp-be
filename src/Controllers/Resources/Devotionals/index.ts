@@ -6,8 +6,8 @@ import Middlewares from '@Controllers/Middlewares'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { zonedTimeToUtc } from 'date-fns-tz'
-import { generateSlug } from "../../../Helpers/Utils"
-import { ImageKitFolders } from "../../../Types/Enum"
+import { generateSlug } from '../../../Helpers/Utils'
+import { ImageKitFolders } from '../../../Types/Enum'
 
 class Devotionals {
   static getDevotionals(app: Express) {
@@ -89,7 +89,7 @@ class Devotionals {
           }
 
           const { body, title, scheduledTo, author } = req.body
-          const {file} = req
+          const { file } = req
 
           const {
             url: coverImage,

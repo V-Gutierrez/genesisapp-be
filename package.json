@@ -39,11 +39,11 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
-    "prisma": "^3.14.0",
     "ramda": "^0.28.0",
     "ua-parser-js": "^1.0.2"
   },
   "devDependencies": {
+    "prisma": "^3.14.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.12",

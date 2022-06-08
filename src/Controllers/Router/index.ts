@@ -1,6 +1,7 @@
 import Authentication from '@Controllers/Authentication'
 import Devotionals from '@Controllers/Resources/Devotionals'
 import { Express } from 'express'
+import ExternalEvent from '@Controllers/Resources/ExternalEvent'
 import GrowthGroups from '@Controllers/Resources/GrowthGroups'
 import Middlewares from '@Controllers/Middlewares'
 import Stats from '@Controllers/Resources/Stats'
@@ -18,18 +19,22 @@ export default class RoutesController {
     Authentication.logout(this.app)
     Authentication.getUserInformation(this.app)
 
+    ExternalEvent.getEvents(this.app)
     GrowthGroups.getGrowthGroups(this.app)
     Devotionals.getDevotionals(this.app)
     Devotionals.getDevotionalBySlug(this.app)
 
     Users.signUp(this.app)
 
-    /* AUTH ROUTES */
     Middlewares.JWT(this.app)
+    /* AUTH ROUTES */
     Users.get(this.app)
 
-    /* ADMIN ROUTES */
     Middlewares.IsAdmin(this.app)
+    /* ADMIN ROUTES */
+    ExternalEvent.createEvent(this.app)
+    ExternalEvent.deleteEvent(this.app)
+
     Devotionals.createDevotional(this.app)
     Devotionals.getDevotionalsAsAdmin(this.app)
     Devotionals.deleteDevocional(this.app)
