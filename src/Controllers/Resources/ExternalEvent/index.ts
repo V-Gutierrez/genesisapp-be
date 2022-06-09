@@ -5,6 +5,7 @@ import ImageKitService from '@Services/ImageKitService'
 import Middlewares from '@Controllers/Middlewares'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
+import Twillio from '@Services/Twillio'
 import { generateSlug } from '@Helpers/Utils'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
@@ -121,6 +122,12 @@ class ExternalEvent {
               externalEventId: externalEvent.id,
             },
           })
+
+          /* ADD SENGRID HERE */
+          Twillio.sendSimpleMessage(
+            `Olá! ${name}, tudo certo com a sua inscrição!\n#savethedate 13/06/2021 às 19 horas no Auditório Belgrano!!\nGênesis Church`,
+            phone,
+          )
 
           return res.status(201).json({ message: 'Subscription successful' })
         }

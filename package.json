@@ -40,10 +40,10 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "ramda": "^0.28.0",
+    "twilio": "^3.77.2",
     "ua-parser-js": "^1.0.2"
   },
   "devDependencies": {
-    "prisma": "^3.14.0",
     "@types/bcrypt": "^5.0.0",
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.12",
@@ -55,6 +55,7 @@
     "@types/multer": "^1.4.7",
     "@types/node": "16.11.34",
     "@types/ramda": "^0.28.12",
+    "@types/twilio": "^3.19.3",
     "@types/ua-parser-js": "^0.7.36",
     "@types/uploadcare": "^0.4.1",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
@@ -72,6 +73,7 @@
     "lint-staged": "^12.4.1",
     "nodemon": "^2.0.16",
     "prettier": "^2.6.2",
+    "prisma": "^3.14.0",
     "ts-loader": "^9.3.0",
     "ts-node": "10.7.0",
     "tsc-alias": "^1.6.7",
