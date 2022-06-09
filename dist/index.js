@@ -432,21 +432,21 @@
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const n = i(628),
-          o = a(i(832)),
-          r = a(i(488)),
-          u = a(i(988)),
-          d = a(i(448)),
+        const n = a(i(832)),
+          o = a(i(488)),
+          r = a(i(988)),
+          u = a(i(448)),
+          d = i(465),
           l = i(496),
-          c = i(465)
+          c = i(628)
         t.default = class {
           static getDevotionals(e) {
             e.get('/api/devotionals', (e, t) =>
               s(this, void 0, void 0, function* () {
                 try {
-                  const e = yield u.default.devotional.findMany({
+                  const e = yield r.default.devotional.findMany({
                     where: {
-                      scheduledTo: { lte: (0, c.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo') },
+                      scheduledTo: { lte: (0, d.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo') },
                     },
                     orderBy: { scheduledTo: 'desc' },
                   })
@@ -462,11 +462,11 @@
               s(this, void 0, void 0, function* () {
                 try {
                   const { slug: i } = e.params,
-                    s = yield u.default.devotional.findFirst({
+                    s = yield r.default.devotional.findFirst({
                       where: {
                         slug: i,
                         scheduledTo: {
-                          lte: (0, c.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
+                          lte: (0, d.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
                         },
                       },
                       orderBy: { scheduledTo: 'desc' },
@@ -483,7 +483,7 @@
             e.get('/api/all-devotionals', (e, t) =>
               s(this, void 0, void 0, function* () {
                 try {
-                  const e = yield u.default.devotional.findMany({
+                  const e = yield r.default.devotional.findMany({
                     orderBy: { scheduledTo: 'desc' },
                   })
                   t.status(200).json(e)
@@ -494,28 +494,28 @@
             )
           }
           static createDevotional(e) {
-            e.post('/api/devotionals', r.default.SingleFileUpload('coverImage'), (e, t) =>
+            e.post('/api/devotionals', o.default.SingleFileUpload('coverImage'), (e, t) =>
               s(this, void 0, void 0, function* () {
                 try {
-                  const i = d.default.validateSchema(d.default.DEVOTIONAL_CREATION, e.body)
+                  const i = u.default.validateSchema(u.default.DEVOTIONAL_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { body: s, title: a, scheduledTo: r, author: f } = e.body,
+                  const { body: s, title: a, scheduledTo: o, author: f } = e.body,
                     { file: h } = e,
                     {
                       url: p,
                       thumbnailUrl: v,
                       fileId: _,
-                    } = yield o.default.uploadFile(
+                    } = yield n.default.uploadFile(
                       h.buffer,
                       (0, l.generateSlug)(a),
-                      n.ImageKitFolders.Devotionals,
+                      c.ImageKitFolders.Devotionals,
                     ),
-                    m = yield u.default.devotional.create({
+                    m = yield r.default.devotional.create({
                       data: {
                         body: s,
                         title: a,
-                        scheduledTo: (0, c.zonedTimeToUtc)(new Date(r), 'America/Sao_Paulo'),
+                        scheduledTo: (0, d.zonedTimeToUtc)(new Date(o), 'America/Sao_Paulo'),
                         author: f,
                         slug: (0, l.generateSlug)(a),
                         coverImage: p,
@@ -535,8 +535,8 @@
               s(this, void 0, void 0, function* () {
                 try {
                   const { id: i } = e.params,
-                    s = yield u.default.devotional.delete({ where: { id: i } })
-                  yield o.default.delete(s.assetId), t.sendStatus(204)
+                    s = yield r.default.devotional.delete({ where: { id: i } })
+                  yield n.default.delete(s.assetId), t.sendStatus(204)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -632,13 +632,14 @@
                       (0, l.generateSlug)(s),
                       n.ImageKitFolders.ExternalEvents,
                     ),
-                    E = yield u.default.externalEvent.create({
+                    g = yield u.default.externalEvent.create({
                       data: {
                         title: s,
                         description: a,
+                        slug: (0, l.generateSlug)(s),
                         scheduledTo: (0, c.zonedTimeToUtc)(new Date(r), 'America/Sao_Paulo'),
-                        lat: Number(f),
-                        lng: Number(h),
+                        lat: 0,
+                        lng: 0,
                         addressInfo: p,
                         maxSubscriptions: Number(v),
                         coverImage: m,
@@ -646,13 +647,9 @@
                         assetId: S,
                       },
                     })
-                  t.status(201).json({ externalEvent: E })
+                  t.status(201).json({ externalEvent: g })
                 } catch (e) {
-                  console.log(
-                    '🚀 ~ file: index.ts ~ line 70 ~ ExternalEvent ~ app.post ~ error',
-                    e,
-                  ),
-                    t.sendStatus(500)
+                  t.sendStatus(500)
                 }
               }),
             )
@@ -688,6 +685,22 @@
                       }),
                       t.status(201).json({ message: 'Subscription successful' }))
                     : t.status(409).json({ message: 'Subscription limit reached' })
+                } catch (e) {
+                  t.sendStatus(500)
+                }
+              }),
+            )
+          }
+          static getEventBySlug(e) {
+            e.get('/api/externalevents/:slug', (e, t) =>
+              s(this, void 0, void 0, function* () {
+                const { slug: i } = e.params
+                try {
+                  const e = yield u.default.externalEvent.findFirst({
+                    where: { slug: i },
+                    include: { subscriptions: !0 },
+                  })
+                  t.status(200).json(e)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -952,7 +965,8 @@
               a.default.setNewPassword(this.app),
               a.default.logout(this.app),
               a.default.getUserInformation(this.app),
-              o.default.getEvents(this.app),
+              o.default.subscribeToExternalEvent(this.app),
+              o.default.getEventBySlug(this.app),
               r.default.getGrowthGroups(this.app),
               n.default.getDevotionals(this.app),
               n.default.getDevotionalBySlug(this.app),
@@ -962,6 +976,7 @@
               u.default.IsAdmin(this.app),
               o.default.createEvent(this.app),
               o.default.deleteEvent(this.app),
+              o.default.getEvents(this.app),
               n.default.createDevotional(this.app),
               n.default.getDevotionalsAsAdmin(this.app),
               n.default.deleteDevocional(this.app),

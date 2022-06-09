@@ -19,7 +19,9 @@ export default class RoutesController {
     Authentication.logout(this.app)
     Authentication.getUserInformation(this.app)
 
-    ExternalEvent.getEvents(this.app)
+    ExternalEvent.subscribeToExternalEvent(this.app)
+    ExternalEvent.getEventBySlug(this.app)
+
     GrowthGroups.getGrowthGroups(this.app)
     Devotionals.getDevotionals(this.app)
     Devotionals.getDevotionalBySlug(this.app)
@@ -34,6 +36,7 @@ export default class RoutesController {
     /* ADMIN ROUTES */
     ExternalEvent.createEvent(this.app)
     ExternalEvent.deleteEvent(this.app)
+    ExternalEvent.getEvents(this.app)
 
     Devotionals.createDevotional(this.app)
     Devotionals.getDevotionalsAsAdmin(this.app)

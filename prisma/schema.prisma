@@ -91,6 +91,7 @@ model Event {
 model ExternalEvent {
   id               String                  @id @default(uuid())
   title            String
+  slug             String
   description      String
   scheduledTo      DateTime                @default(now())
   createdAt        DateTime                @default(now())
@@ -111,4 +112,5 @@ model ExternalSubscriptions {
   phone           String         @unique
   ExternalEvent   ExternalEvent? @relation(fields: [externalEventId], references: [id])
   externalEventId String?
+  createdAt       DateTime       @default(now())
 }

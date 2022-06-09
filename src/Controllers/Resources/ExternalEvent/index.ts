@@ -57,9 +57,10 @@ class ExternalEvent {
             data: {
               title,
               description,
+              slug: generateSlug(title),
               scheduledTo: zonedTimeToUtc(new Date(scheduledTo), 'America/Sao_Paulo'),
-              lat: Number(lat),
-              lng: Number(lng),
+              lat: 0,
+              lng: 0,
               addressInfo,
               maxSubscriptions: Number(maxSubscriptions),
               coverImage,
@@ -70,7 +71,6 @@ class ExternalEvent {
 
           res.status(201).json({ externalEvent })
         } catch (error) {
-          console.log('🚀 ~ file: index.ts ~ line 70 ~ ExternalEvent ~ app.post ~ error', error)
           res.sendStatus(500)
         }
       },
@@ -123,9 +123,27 @@ class ExternalEvent {
           })
 
           return res.status(201).json({ message: 'Subscription successful' })
-        } 
-          return res.status(409).json({ message: 'Subscription limit reached' })
-        
+        }
+        return res.status(409).json({ message: 'Subscription limit reached' })
+      } catch (error) {
+        res.sendStatus(500)
+      }
+    })
+  }
+
+  static getEventBySlug(app: Express) {
+    app.get('/api/externalevents/:slug', async (req: Request, res: Response) => {
+      const { slug } = req.params
+
+      try {
+        const externalEvent = await Prisma.externalEvent.findFirst({
+          where: { slug },
+          include: {
+            subscriptions: true,
+          },
+        })
+
+        res.status(200).json(externalEvent)
       } catch (error) {
         res.sendStatus(500)
       }
