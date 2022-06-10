@@ -589,9 +589,10 @@
           r = n(i(488)),
           u = n(i(988)),
           d = n(i(448)),
-          l = n(i(130)),
-          c = i(496),
-          f = i(465)
+          l = n(i(29)),
+          c = n(i(130)),
+          f = i(496),
+          h = i(465)
         t.default = class {
           static getEvents(e) {
             e.get('/api/externalevents', (e, t) =>
@@ -619,36 +620,36 @@
                       description: n,
                       scheduledTo: r,
                       lat: l,
-                      lng: h,
+                      lng: c,
                       addressInfo: p,
                       maxSubscriptions: v,
                     } = e.body,
                     { file: _ } = e,
                     {
                       url: m,
-                      thumbnailUrl: y,
-                      fileId: S,
+                      thumbnailUrl: g,
+                      fileId: y,
                     } = yield o.default.uploadFile(
                       _.buffer,
-                      (0, c.generateSlug)(s),
+                      (0, f.generateSlug)(s),
                       a.ImageKitFolders.ExternalEvents,
                     ),
-                    g = yield u.default.externalEvent.create({
+                    S = yield u.default.externalEvent.create({
                       data: {
                         title: s,
                         description: n,
-                        slug: (0, c.generateSlug)(s),
-                        scheduledTo: (0, f.zonedTimeToUtc)(new Date(r), 'America/Sao_Paulo'),
+                        slug: (0, f.generateSlug)(s),
+                        scheduledTo: (0, h.zonedTimeToUtc)(new Date(r), 'America/Sao_Paulo'),
                         lat: 0,
                         lng: 0,
                         addressInfo: p,
                         maxSubscriptions: Number(v),
                         coverImage: m,
-                        coverThumbnail: y,
-                        assetId: S,
+                        coverThumbnail: g,
+                        assetId: y,
                       },
                     })
-                  t.status(201).json({ externalEvent: g })
+                  t.status(201).json({ externalEvent: S })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -680,18 +681,27 @@
                       where: { id: o },
                       include: { subscriptions: !0 },
                     })
-                  return r && r.subscriptions.length < r.maxSubscriptions
-                    ? (yield u.default.externalSubscriptions.create({
-                        data: { name: s, email: n, phone: a, externalEventId: r.id },
-                      }),
-                      l.default.sendSimpleMessage(
-                        `Olá! ${s}, tudo certo com a sua inscrição!\n#savethedate 13/06/2021 às 19 horas no Auditório Belgrano!!\nGênesis Church`,
+                  if (r && r.subscriptions.length < r.maxSubscriptions) {
+                    yield u.default.externalSubscriptions.create({
+                      data: { name: s, email: n, phone: a, externalEventId: r.id },
+                    })
+                    const { TEMPLATES: e, send: i } = new l.default()
+                    return (
+                      c.default.sendSimpleMessage(
+                        `\n            Olá, ${s}!\nTudo certo com a sua inscrição para os 13 anos da Gênesis Church!\nSAVE THE DATE: Segunda-feira, 13/06/2022, às 18h no Auditório de Belgrano.\nNos acompanhe também pelo Instagram @genesischurchba\nTe esperamos!\n#13anosgenesis\n            `,
                         a,
                       ),
-                      t.status(201).json({ message: 'Subscription successful' }))
-                    : t.status(409).json({ message: 'Subscription limit reached' })
+                      yield i(e.anniversary.config(n, {})),
+                      t.status(201).json({ message: 'Subscription successful' })
+                    )
+                  }
+                  return t.status(409).json({ message: 'Subscription limit reached' })
                 } catch (e) {
-                  t.sendStatus(500)
+                  console.log(
+                    '🚀 ~ file: index.ts ~ line 144 ~ ExternalEvent ~ app.post ~ error',
+                    e,
+                  ),
+                    t.sendStatus(500)
                 }
               }),
             )
@@ -1322,6 +1332,13 @@
                   subject: 'Alteração de senha',
                   templateId: 'd-03325789ee6f4014858e14ac7cde78e1',
                   dynamicTemplateData: t,
+                }),
+              },
+              anniversary: {
+                config: (e, t) => ({
+                  templateId: 'd-b5cc420efe514a31bef0e658747cf56d',
+                  from: { email: 'suportegenesischurch@gmail.com', name: 'Genesis Church' },
+                  to: e,
                 }),
               },
             }),

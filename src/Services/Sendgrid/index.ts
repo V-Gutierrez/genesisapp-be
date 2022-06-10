@@ -28,6 +28,13 @@ class SendgridClient {
         dynamicTemplateData,
       }),
     },
+    anniversary: {
+      config: (to: string, dynamicTemplateData: {}): MailDataRequired => ({
+        templateId: 'd-b5cc420efe514a31bef0e658747cf56d',
+        from: { email: 'suportegenesischurch@gmail.com', name: 'Genesis Church' },
+        to,
+      }),
+    },
   }
 
   constructor() {

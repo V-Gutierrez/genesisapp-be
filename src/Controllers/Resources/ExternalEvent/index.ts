@@ -5,6 +5,7 @@ import ImageKitService from '@Services/ImageKitService'
 import Middlewares from '@Controllers/Middlewares'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
+import SendgridClient from '@Services/Sendgrid'
 import Twillio from '@Services/Twillio'
 import { generateSlug } from '@Helpers/Utils'
 import { zonedTimeToUtc } from 'date-fns-tz'
@@ -124,15 +125,23 @@ class ExternalEvent {
           })
 
           /* ADD SENGRID HERE */
+
+          const { TEMPLATES, send } = new SendgridClient()
+
           Twillio.sendSimpleMessage(
-            `Olá! ${name}, tudo certo com a sua inscrição!\n#savethedate 13/06/2021 às 19 horas no Auditório Belgrano!!\nGênesis Church`,
+            `
+            Olá, ${name}!\nTudo certo com a sua inscrição para os 13 anos da Gênesis Church!\nSAVE THE DATE: Segunda-feira, 13/06/2022, às 18h no Auditório de Belgrano.\nNos acompanhe também pelo Instagram @genesischurchba\nTe esperamos!\n#13anosgenesis
+            `,
             phone,
           )
+
+          await send(TEMPLATES.anniversary.config(email, {}))
 
           return res.status(201).json({ message: 'Subscription successful' })
         }
         return res.status(409).json({ message: 'Subscription limit reached' })
       } catch (error) {
+        console.log('🚀 ~ file: index.ts ~ line 144 ~ ExternalEvent ~ app.post ~ error', error)
         res.sendStatus(500)
       }
     })
