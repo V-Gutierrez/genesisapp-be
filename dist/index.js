@@ -631,13 +631,13 @@
                     {
                       url: m,
                       thumbnailUrl: S,
-                      fileId: y,
+                      fileId: g,
                     } = yield o.default.uploadFile(
                       _.buffer,
                       (0, f.generateSlug)(s),
                       a.ImageKitFolders.ExternalEvents,
                     ),
-                    g = yield u.default.externalEvent.create({
+                    y = yield u.default.externalEvent.create({
                       data: {
                         title: s,
                         description: n,
@@ -649,10 +649,10 @@
                         maxSubscriptions: Number(v),
                         coverImage: m,
                         coverThumbnail: S,
-                        assetId: y,
+                        assetId: g,
                       },
                     })
-                  t.status(201).json({ externalEvent: g })
+                  t.status(201).json({ externalEvent: y })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -1428,7 +1428,8 @@
                   body: e,
                   to: (0, o.sanitizeUserPhone)(t),
                   messagingServiceSid: d,
-                })
+                }),
+                  console.log('Twillio Service - 200')
               } catch (e) {
                 console.log('Error in Twillio flow')
               }

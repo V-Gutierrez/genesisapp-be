@@ -17,6 +17,8 @@ class Twillio {
         to: sanitizeUserPhone(to),
         messagingServiceSid: MessagingServiceSid,
       })
+
+      console.log('Twillio Service - 200')
     } catch (error) {
       console.log('Error in Twillio flow')
     }
