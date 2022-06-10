@@ -126,7 +126,7 @@ class ExternalEvent {
 
           /* ADD SENGRID HERE */
 
-          const { TEMPLATES, send } = new SendgridClient()
+          const { TEMPLATES, send } = await new SendgridClient()
 
           await Twillio.sendSimpleMessage(
             `Ola, ${name}! Esperamos voce para os 13 anos da Genesis Church! #13anosgenesis`,

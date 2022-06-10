@@ -351,7 +351,7 @@
               this.app.use(a.default.json()),
               this.app.use((0, r.default)()),
               this.app.use(a.default.urlencoded({ extended: !1 })),
-              this.app.use((0, c.default)('combined'))
+              this.app.use((0, c.default)('short'))
           }
           CORS() {
             const e = d.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
@@ -504,13 +504,13 @@
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
                   const { body: s, title: n, scheduledTo: o, author: f } = e.body,
-                    { file: p } = e,
+                    { file: h } = e,
                     {
-                      url: h,
+                      url: p,
                       thumbnailUrl: v,
                       fileId: _,
                     } = yield a.default.uploadFile(
-                      p.buffer,
+                      h.buffer,
                       (0, l.generateSlug)(n),
                       c.ImageKitFolders.Devotionals,
                     ),
@@ -521,7 +521,7 @@
                         scheduledTo: (0, d.zonedTimeToUtc)(new Date(o), 'America/Sao_Paulo'),
                         author: f,
                         slug: (0, l.generateSlug)(n),
-                        coverImage: h,
+                        coverImage: p,
                         coverThumbnail: v,
                         assetId: _,
                       },
@@ -595,7 +595,7 @@
           l = n(i(29)),
           c = n(i(130)),
           f = i(496),
-          p = i(465)
+          h = i(465)
         t.default = class {
           static getEvents(e) {
             e.get('/api/externalevents', (e, t) =>
@@ -624,14 +624,14 @@
                       scheduledTo: r,
                       lat: l,
                       lng: c,
-                      addressInfo: h,
+                      addressInfo: p,
                       maxSubscriptions: v,
                     } = e.body,
                     { file: _ } = e,
                     {
                       url: m,
-                      thumbnailUrl: S,
-                      fileId: y,
+                      thumbnailUrl: y,
+                      fileId: S,
                     } = yield o.default.uploadFile(
                       _.buffer,
                       (0, f.generateSlug)(s),
@@ -642,14 +642,14 @@
                         title: s,
                         description: n,
                         slug: (0, f.generateSlug)(s),
-                        scheduledTo: (0, p.zonedTimeToUtc)(new Date(r), 'America/Sao_Paulo'),
+                        scheduledTo: (0, h.zonedTimeToUtc)(new Date(r), 'America/Sao_Paulo'),
                         lat: 0,
                         lng: 0,
-                        addressInfo: h,
+                        addressInfo: p,
                         maxSubscriptions: Number(v),
                         coverImage: m,
-                        coverThumbnail: S,
-                        assetId: y,
+                        coverThumbnail: y,
+                        assetId: S,
                       },
                     })
                   t.status(201).json({ externalEvent: g })
@@ -688,7 +688,7 @@
                     yield u.default.externalSubscriptions.create({
                       data: { name: s.trim(), email: n, phone: a, externalEventId: r.id },
                     })
-                    const { TEMPLATES: e, send: i } = new l.default()
+                    const { TEMPLATES: e, send: i } = yield new l.default()
                     return (
                       yield c.default.sendSimpleMessage(
                         `Ola, ${s}! Esperamos voce para os 13 anos da Genesis Church! #13anosgenesis`,
@@ -931,14 +931,14 @@
                   try {
                     const i = u.default.validateSchema(u.default.SIGNUP_SCHEMA, e.body)
                     if (i) return t.status(400).json({ error: i })
-                    const { email: s, name: n, password: f, phone: p, birthdate: h } = e.body,
+                    const { email: s, name: n, password: f, phone: h, birthdate: p } = e.body,
                       v = yield r.default.user.create({
                         data: {
                           email: s,
                           name: n,
-                          birthdate: new Date(h).toISOString(),
+                          birthdate: new Date(p).toISOString(),
                           password: yield o.default.hashPassword(f),
-                          phone: p,
+                          phone: h,
                         },
                         select: {
                           id: !0,

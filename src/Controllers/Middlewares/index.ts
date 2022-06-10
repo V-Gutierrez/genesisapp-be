@@ -18,7 +18,7 @@ export default class Middlewares {
     this.app.use(express.json())
     this.app.use(cookieParser())
     this.app.use(express.urlencoded({ extended: false }))
-    this.app.use(morgan('combined'))
+    this.app.use(morgan('short'))
   }
 
   CORS() {
