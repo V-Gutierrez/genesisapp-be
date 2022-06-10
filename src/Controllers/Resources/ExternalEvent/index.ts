@@ -128,10 +128,10 @@ class ExternalEvent {
 
           const { TEMPLATES, send } = new SendgridClient()
 
-          /*   Twillio.sendSimpleMessage(
-            `Olá, ${name}! Tudo certo com a sua inscrição para os 13 anos da Gênesis Church! #13anosgenesis`,
+          Twillio.sendSimpleMessage(
+            `Ola, ${name}! Esperamos voce para os 13 anos da Genesis Church! #13anosgenesis`,
             phone,
-          ) */
+          )
 
           await send(TEMPLATES.anniversary.config(email, {}))
 
