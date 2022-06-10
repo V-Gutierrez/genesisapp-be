@@ -108,8 +108,8 @@ model ExternalEvent {
 model ExternalSubscriptions {
   id              String         @id @default(uuid())
   name            String
-  email           String         @unique
-  phone           String         @unique
+  email           String
+  phone           String
   ExternalEvent   ExternalEvent? @relation(fields: [externalEventId], references: [id])
   externalEventId String?
   createdAt       DateTime       @default(now())
