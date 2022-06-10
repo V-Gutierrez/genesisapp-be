@@ -631,13 +631,13 @@
                     {
                       url: m,
                       thumbnailUrl: S,
-                      fileId: g,
+                      fileId: y,
                     } = yield o.default.uploadFile(
                       _.buffer,
                       (0, f.generateSlug)(s),
                       a.ImageKitFolders.ExternalEvents,
                     ),
-                    y = yield u.default.externalEvent.create({
+                    g = yield u.default.externalEvent.create({
                       data: {
                         title: s,
                         description: n,
@@ -649,10 +649,10 @@
                         maxSubscriptions: Number(v),
                         coverImage: m,
                         coverThumbnail: S,
-                        assetId: g,
+                        assetId: y,
                       },
                     })
-                  t.status(201).json({ externalEvent: y })
+                  t.status(201).json({ externalEvent: g })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -690,7 +690,7 @@
                     })
                     const { TEMPLATES: e, send: i } = new l.default()
                     return (
-                      c.default.sendSimpleMessage(
+                      yield c.default.sendSimpleMessage(
                         `Ola, ${s}! Esperamos voce para os 13 anos da Genesis Church! #13anosgenesis`,
                         a,
                       ),
