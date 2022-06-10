@@ -147,6 +147,22 @@ class ExternalEvent {
     })
   }
 
+  static deleteSubscription(app: Express) {
+    app.delete('/api/externalsubscriptions/:id', async (req: Request, res: Response) => {
+      const { id } = req.params
+
+      try {
+        await Prisma.externalSubscriptions.delete({
+          where: { id },
+        })
+
+        return res.sendStatus(204)
+      } catch (error) {
+        res.sendStatus(500)
+      }
+    })
+  }
+
   static getEventBySlug(app: Express) {
     app.get('/api/externalevents/:slug', async (req: Request, res: Response) => {
       const { slug } = req.params

@@ -627,14 +627,14 @@
                     { file: _ } = e,
                     {
                       url: m,
-                      thumbnailUrl: g,
-                      fileId: y,
+                      thumbnailUrl: S,
+                      fileId: g,
                     } = yield o.default.uploadFile(
                       _.buffer,
                       (0, f.generateSlug)(s),
                       a.ImageKitFolders.ExternalEvents,
                     ),
-                    S = yield u.default.externalEvent.create({
+                    y = yield u.default.externalEvent.create({
                       data: {
                         title: s,
                         description: n,
@@ -645,11 +645,11 @@
                         addressInfo: p,
                         maxSubscriptions: Number(v),
                         coverImage: m,
-                        coverThumbnail: g,
-                        assetId: y,
+                        coverThumbnail: S,
+                        assetId: g,
                       },
                     })
-                  t.status(201).json({ externalEvent: S })
+                  t.status(201).json({ externalEvent: y })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -702,6 +702,21 @@
                     e,
                   ),
                     t.sendStatus(500)
+                }
+              }),
+            )
+          }
+          static deleteSubscription(e) {
+            e.delete('/api/externalsubscriptions/:id', (e, t) =>
+              s(this, void 0, void 0, function* () {
+                const { id: i } = e.params
+                try {
+                  return (
+                    yield u.default.externalSubscriptions.delete({ where: { id: i } }),
+                    t.sendStatus(204)
+                  )
+                } catch (e) {
+                  t.sendStatus(500)
                 }
               }),
             )
@@ -991,6 +1006,7 @@
               u.default.IsAdmin(this.app),
               o.default.createEvent(this.app),
               o.default.deleteEvent(this.app),
+              o.default.deleteSubscription(this.app),
               o.default.getEvents(this.app),
               a.default.createDevotional(this.app),
               a.default.getDevotionalsAsAdmin(this.app),

@@ -36,6 +36,7 @@ export default class RoutesController {
     /* ADMIN ROUTES */
     ExternalEvent.createEvent(this.app)
     ExternalEvent.deleteEvent(this.app)
+    ExternalEvent.deleteSubscription(this.app)
     ExternalEvent.getEvents(this.app)
 
     Devotionals.createDevotional(this.app)
