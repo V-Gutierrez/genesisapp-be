@@ -130,7 +130,7 @@ class ExternalEvent {
 
           Twillio.sendSimpleMessage(
             `
-            Olá, ${name}!\nTudo certo com a sua inscrição para os 13 anos da Gênesis Church!\n#13anosgenesis
+            Olá, ${name}! Tudo certo com a sua inscrição para os 13 anos da Gênesis Church! #13anosgenesis
             `,
             phone,
           )
