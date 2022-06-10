@@ -130,7 +130,7 @@ class ExternalEvent {
 
           Twillio.sendSimpleMessage(
             `
-            Olá, ${name}!\nTudo certo com a sua inscrição para os 13 anos da Gênesis Church!\nSAVE THE DATE: Segunda-feira, 13/06/2022, às 18h no Auditório de Belgrano.\nNos acompanhe também pelo Instagram @genesischurchba\nTe esperamos!\n#13anosgenesis
+            Olá, ${name}! Tudo certo com a sua inscrição para os 13 anos da Gênesis Church!\nSAVE THE DATE: Segunda-feira, 13/06/2022, às 18h no Auditório de Belgrano.\nNos acompanhe também pelo Instagram @genesischurchba\nTe esperamos!\n#13anosgenesis
             `,
             phone,
           )

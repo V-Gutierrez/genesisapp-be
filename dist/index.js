@@ -688,7 +688,7 @@
                     const { TEMPLATES: e, send: i } = new l.default()
                     return (
                       c.default.sendSimpleMessage(
-                        `\n            Olá, ${s}!\nTudo certo com a sua inscrição para os 13 anos da Gênesis Church!\nSAVE THE DATE: Segunda-feira, 13/06/2022, às 18h no Auditório de Belgrano.\nNos acompanhe também pelo Instagram @genesischurchba\nTe esperamos!\n#13anosgenesis\n            `,
+                        `\n            Olá, ${s}! Tudo certo com a sua inscrição para os 13 anos da Gênesis Church!\nSAVE THE DATE: Segunda-feira, 13/06/2022, às 18h no Auditório de Belgrano.\nNos acompanhe também pelo Instagram @genesischurchba\nTe esperamos!\n#13anosgenesis\n            `,
                         a,
                       ),
                       yield i(e.anniversary.config(n, {})),
