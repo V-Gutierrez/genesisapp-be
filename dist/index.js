@@ -688,7 +688,7 @@
                     const { TEMPLATES: e, send: i } = new l.default()
                     return (
                       c.default.sendSimpleMessage(
-                        `\n            Olá, ${s}! Tudo certo com a sua inscrição para os 13 anos da Gênesis Church! #13anosgenesis\n            `,
+                        `Olá, ${s}! Tudo certo com a sua inscrição para os 13 anos da Gênesis Church! #13anosgenesis`,
                         a,
                       ),
                       yield i(e.anniversary.config(n, {})),
