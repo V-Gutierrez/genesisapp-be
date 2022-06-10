@@ -683,7 +683,7 @@
                     })
                   if (r && r.subscriptions.length < r.maxSubscriptions) {
                     yield u.default.externalSubscriptions.create({
-                      data: { name: s, email: n, phone: a, externalEventId: r.id },
+                      data: { name: s.trim(), email: n, phone: a, externalEventId: r.id },
                     })
                     const { TEMPLATES: e, send: i } = new l.default()
                     return (

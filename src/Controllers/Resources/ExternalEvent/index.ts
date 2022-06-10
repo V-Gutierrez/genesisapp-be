@@ -117,7 +117,7 @@ class ExternalEvent {
         if (externalEvent && externalEvent.subscriptions.length < externalEvent.maxSubscriptions) {
           await Prisma.externalSubscriptions.create({
             data: {
-              name,
+              name: name.trim(),
               email,
               phone,
               externalEventId: externalEvent.id,
