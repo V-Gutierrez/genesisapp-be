@@ -49,7 +49,7 @@ class SendgridClient {
 
       console.log('Sendgrid Service - 200')
     } catch (error) {
-      throw new Error('Error in Sendgrid flow')
+      console.log('Error in Sendgrid flow')
     }
   }
 }

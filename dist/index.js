@@ -691,6 +691,7 @@
                         `\n            Olá, ${s}! Tudo certo com a sua inscrição para os 13 anos da Gênesis Church! #13anosgenesis\n            `,
                         a,
                       ),
+                      yield i(e.anniversary.config(n, {})),
                       t.status(201).json({ message: 'Subscription successful' })
                     )
                   }
@@ -1365,7 +1366,7 @@
               try {
                 yield a.default.send(t), console.log('Sendgrid Service - 200')
               } catch (e) {
-                throw new Error('Error in Sendgrid flow')
+                console.log('Error in Sendgrid flow')
               }
             })
           }
