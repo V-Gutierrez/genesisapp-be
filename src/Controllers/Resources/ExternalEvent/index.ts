@@ -139,7 +139,7 @@ class ExternalEvent {
         }
         return res.status(409).json({ message: 'Subscription limit reached' })
       } catch (error) {
-        console.log('🚀 ~ file: index.ts ~ line 144 ~ ExternalEvent ~ app.post ~ error', error)
+        console.log('Subscription Error: ', error)
         res.sendStatus(500)
       }
     })

@@ -630,8 +630,8 @@
                     { file: _ } = e,
                     {
                       url: m,
-                      thumbnailUrl: y,
-                      fileId: S,
+                      thumbnailUrl: S,
+                      fileId: y,
                     } = yield o.default.uploadFile(
                       _.buffer,
                       (0, f.generateSlug)(s),
@@ -648,8 +648,8 @@
                         addressInfo: p,
                         maxSubscriptions: Number(v),
                         coverImage: m,
-                        coverThumbnail: y,
-                        assetId: S,
+                        coverThumbnail: S,
+                        assetId: y,
                       },
                     })
                   t.status(201).json({ externalEvent: g })
@@ -700,11 +700,7 @@
                   }
                   return t.status(409).json({ message: 'Subscription limit reached' })
                 } catch (e) {
-                  console.log(
-                    '🚀 ~ file: index.ts ~ line 144 ~ ExternalEvent ~ app.post ~ error',
-                    e,
-                  ),
-                    t.sendStatus(500)
+                  console.log('Subscription Error: ', e), t.sendStatus(500)
                 }
               }),
             )
