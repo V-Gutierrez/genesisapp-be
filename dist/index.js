@@ -691,7 +691,6 @@
                         `\n            Olá, ${s}! Tudo certo com a sua inscrição para os 13 anos da Gênesis Church! #13anosgenesis\n            `,
                         a,
                       ),
-                      yield i(e.anniversary.config(n, {})),
                       t.status(201).json({ message: 'Subscription successful' })
                     )
                   }

@@ -134,8 +134,8 @@ class ExternalEvent {
             `,
             phone,
           )
-
-          await send(TEMPLATES.anniversary.config(email, {}))
+          /*
+          await send(TEMPLATES.anniversary.config(email, {})) */
 
           return res.status(201).json({ message: 'Subscription successful' })
         }
