@@ -1,7 +1,7 @@
 import 'dotenv/config'
 
+import Formatter from '@Helpers/Formatter'
 import TwillioClient from 'twilio'
-import { sanitizeUserPhone } from '@Helpers/Utils'
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID
 const authToken = process.env.TWILIO_AUTH_TOKEN
@@ -14,7 +14,7 @@ class Twillio {
     try {
       await TwillioInstance.messages.create({
         body,
-        to: sanitizeUserPhone(to),
+        to: Formatter.sanitizeUserPhone(to),
         messagingServiceSid: MessagingServiceSid,
       })
 
@@ -26,5 +26,3 @@ class Twillio {
 }
 
 export default Twillio
-
-/* https://docs.sendgrid.com/for-developers/sending-email/scheduling-parameters#send-at */

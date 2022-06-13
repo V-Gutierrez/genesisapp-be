@@ -1,12 +1,12 @@
 import { Express, Request, Response } from 'express'
 
 import { Devotional } from '@prisma/client'
+import Formatter from '@Helpers/Formatter'
 import ImageKitService from '@Services/ImageKitService'
 import Middlewares from '@Controllers/Middlewares'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { zonedTimeToUtc } from 'date-fns-tz'
-import { generateSlug } from '../../../Helpers/Utils'
 import { ImageKitFolders } from '../../../Types/Enum'
 
 class Devotionals {
@@ -97,7 +97,7 @@ class Devotionals {
             fileId,
           } = await ImageKitService.uploadFile(
             file.buffer,
-            generateSlug(title),
+            Formatter.generateSlug(title),
             ImageKitFolders.Devotionals,
           )
 
@@ -107,7 +107,7 @@ class Devotionals {
               title,
               scheduledTo: zonedTimeToUtc(new Date(scheduledTo), 'America/Sao_Paulo'),
               author,
-              slug: generateSlug(title),
+              slug: Formatter.generateSlug(title),
               coverImage,
               coverThumbnail,
               assetId: fileId,

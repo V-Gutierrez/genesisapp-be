@@ -29,11 +29,7 @@ export default class Middlewares {
     this.app.use(
       cors({
         credentials: true,
-        origin: [
-          process.env.FRONT_BASE_URL as string,
-          'https://genesischurch.vercel.app',
-          ...localEnvironments,
-        ],
+        origin: [process.env.FRONT_BASE_URL as string, ...localEnvironments],
       }),
     )
   }

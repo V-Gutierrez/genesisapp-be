@@ -11,7 +11,6 @@ class Stats {
             active: true,
           },
         })
-
         const devotionals = await Prisma.devotional.count()
         const groups = await Prisma.growthGroup.count()
 

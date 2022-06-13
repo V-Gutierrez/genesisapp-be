@@ -4,6 +4,7 @@ import { Errors, Success } from '@Helpers/Messages'
 import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
+import Formatter from '@Helpers/Formatter'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import SendgridClient from '@Services/Sendgrid'
@@ -50,7 +51,7 @@ class Users {
 
         const user = await Prisma.user.create({
           data: {
-            email,
+            email: Formatter.sanitizeEmail(email),
             name,
             birthdate: new Date(birthdate).toISOString(),
             password: await Bcrypt.hashPassword(password),
@@ -70,18 +71,14 @@ class Users {
           expiresIn: '30d',
         })
 
-        if (isProduction) {
-          const emailSender = new SendgridClient()
+        const emailSender = new SendgridClient()
 
-          await emailSender.send(
-            emailSender.TEMPLATES.confirmationEmail.config(user.email, {
-              userFirstName: user.name.split(' ')[0],
-              activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${token}`,
-            }),
-          )
-        } else {
-          console.log('Activation token for ', email, ' : ', token)
-        }
+        await emailSender.send(
+          emailSender.TEMPLATES.confirmationEmail.config(user.email, {
+            userFirstName: Formatter.getUserFirstName(user.name),
+            activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${token}`,
+          }),
+        )
 
         res.status(201).json({ message: Success.USER_CREATED, user })
       } catch (error) {

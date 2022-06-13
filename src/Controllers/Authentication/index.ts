@@ -1,11 +1,11 @@
 import 'dotenv/config'
 
+import { Errors, Success } from '@Helpers/Messages'
 import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
 import CookieHelper from '@Helpers/Cookies'
 import { Decoded } from '@Types/DTO'
-import { Errors } from '@Helpers/Messages'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import SendgridClient from '@Services/Sendgrid'
@@ -30,6 +30,7 @@ class Authentication {
             }
           })
         }
+
         const errors = SchemaHelper.validateSchema(SchemaHelper.LOGIN_SCHEMA, req.body)
         if (errors) return res.status(400).json({ error: errors })
 
@@ -50,7 +51,7 @@ class Authentication {
         })
 
         if (!user) return res.sendStatus(404)
-        if (!user.active) return res.status(403).json({ error: 'User is not activated' })
+        if (!user.active) return res.status(403).json({ error: Errors.USER_NOT_ACTIVE })
 
         const matchPassword = await Bcrypt.comparePassword(password as string, user.password)
 
@@ -221,7 +222,7 @@ class Authentication {
 
         // False 200 status
         if (!user || !user.active)
-          return res.status(200).json({ message: 'Reset password email sent' })
+          return res.status(200).json({ message: Success.RESET_EMAIL_SEND })
         // False 200 status
 
         const resetToken = jwt.sign({ email }, process.env.PASSWORD_RESET_TOKEN_SECRET as string, {
@@ -238,7 +239,7 @@ class Authentication {
           )
         }
 
-        res.status(200).json({ message: 'Reset password email sent' })
+        return res.status(200).json({ message: Success.RESET_EMAIL_SEND })
       } catch (error) {
         res.sendStatus(500)
       }
@@ -267,7 +268,7 @@ class Authentication {
                 password: await Bcrypt.hashPassword(password),
               },
             })
-            return res.status(200).json({ message: 'New password successfully set' })
+            return res.status(200).json({ message: Success.NEW_PASSWORD_SET })
           },
         )
       } catch (error) {
