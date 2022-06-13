@@ -168,12 +168,9 @@ class ExternalEvent {
       try {
         const externalEvent = await Prisma.externalEvent.findFirst({
           where: { slug },
-          include: {
-            subscriptions: true,
-          },
         })
 
-        res.status(200).json(externalEvent)
+        res.status(200).json({ ...externalEvent })
       } catch (error) {
         res.sendStatus(500)
       }

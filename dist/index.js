@@ -725,11 +725,8 @@
               s(this, void 0, void 0, function* () {
                 const { slug: i } = e.params
                 try {
-                  const e = yield u.default.externalEvent.findFirst({
-                    where: { slug: i },
-                    include: { subscriptions: !0 },
-                  })
-                  t.status(200).json(e)
+                  const e = yield u.default.externalEvent.findFirst({ where: { slug: i } })
+                  t.status(200).json(Object.assign({}, e))
                 } catch (e) {
                   t.sendStatus(500)
                 }
