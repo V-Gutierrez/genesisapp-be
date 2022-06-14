@@ -419,11 +419,11 @@
         Object.defineProperty(t, '__esModule', { value: !0 })
         const s = i(362),
           a = n(i(721)),
-          r = i(628),
-          u = n(i(832)),
-          d = n(i(488)),
-          c = n(i(448)),
-          l = i(465)
+          r = n(i(832)),
+          u = n(i(488)),
+          d = n(i(448)),
+          c = i(465),
+          l = i(628)
         t.default = class {
           static getDevotionals(e) {
             e.get('/api/devotionals', (e, t) =>
@@ -464,27 +464,27 @@
             )
           }
           static createDevotional(e) {
-            e.post('/api/devotionals', d.default.SingleFileUpload('coverImage'), (e, t) =>
+            e.post('/api/devotionals', u.default.SingleFileUpload('coverImage'), (e, t) =>
               o(this, void 0, void 0, function* () {
                 try {
-                  const i = c.default.validateSchema(c.default.DEVOTIONAL_CREATION, e.body)
+                  const i = d.default.validateSchema(d.default.DEVOTIONAL_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { body: o, title: n, scheduledTo: d, author: f } = e.body,
+                  const { body: o, title: n, scheduledTo: u, author: f } = e.body,
                     { file: h } = e,
                     {
                       url: v,
                       thumbnailUrl: p,
                       fileId: _,
-                    } = yield u.default.uploadFile(
+                    } = yield r.default.uploadFile(
                       h.buffer,
                       a.default.generateSlug(n),
-                      r.ImageKitFolders.Devotionals,
+                      l.ImageKitFolders.Devotionals,
                     ),
                     m = yield s.DevotionalModel.create({
                       body: o,
                       title: n,
-                      scheduledTo: (0, l.zonedTimeToUtc)(new Date(d), 'America/Sao_Paulo'),
+                      scheduledTo: (0, c.zonedTimeToUtc)(new Date(u), 'America/Sao_Paulo'),
                       author: f,
                       slug: a.default.generateSlug(n),
                       coverImage: v,
@@ -504,7 +504,7 @@
                 try {
                   const { id: i } = e.params,
                     o = yield s.DevotionalModel.deleteById(i)
-                  yield u.default.delete(o.assetId), t.sendStatus(204)
+                  yield r.default.delete(o.assetId), t.sendStatus(204)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -718,44 +718,6 @@
                 }),
               )
             })
-          }
-        }
-      },
-      618: function (e, t, i) {
-        var o =
-          (this && this.__importDefault) ||
-          function (e) {
-            return e && e.__esModule ? e : { default: e }
-          }
-        Object.defineProperty(t, '__esModule', { value: !0 })
-        const n = o(i(835)),
-          s = o(i(116)),
-          a = o(i(334)),
-          r = o(i(488)),
-          u = o(i(673)),
-          d = o(i(785))
-        t.default = class {
-          constructor(e) {
-            ;(this.app = e),
-              new r.default(this.app),
-              n.default.authenticate(this.app),
-              n.default.refreshToken(this.app),
-              n.default.activateNewUser(this.app),
-              n.default.resetPassword(this.app),
-              n.default.setNewPassword(this.app),
-              n.default.logout(this.app),
-              n.default.getUserInformation(this.app),
-              a.default.getGrowthGroups(this.app),
-              s.default.getDevotionals(this.app),
-              s.default.getDevotionalBySlug(this.app),
-              d.default.signUp(this.app),
-              r.default.JWT(this.app),
-              d.default.get(this.app),
-              r.default.IsAdmin(this.app),
-              s.default.createDevotional(this.app),
-              s.default.getDevotionalsAsAdmin(this.app),
-              s.default.deleteDevocional(this.app),
-              u.default.getStats(this.app)
           }
         }
       },
@@ -1241,6 +1203,44 @@
           }
         }
       },
+      894: function (e, t, i) {
+        var o =
+          (this && this.__importDefault) ||
+          function (e) {
+            return e && e.__esModule ? e : { default: e }
+          }
+        Object.defineProperty(t, '__esModule', { value: !0 })
+        const n = o(i(835)),
+          s = o(i(116)),
+          a = o(i(334)),
+          r = o(i(488)),
+          u = o(i(673)),
+          d = o(i(785))
+        t.default = class {
+          constructor(e) {
+            ;(this.app = e),
+              new r.default(this.app),
+              n.default.authenticate(this.app),
+              n.default.refreshToken(this.app),
+              n.default.activateNewUser(this.app),
+              n.default.resetPassword(this.app),
+              n.default.setNewPassword(this.app),
+              n.default.logout(this.app),
+              n.default.getUserInformation(this.app),
+              a.default.getGrowthGroups(this.app),
+              s.default.getDevotionals(this.app),
+              s.default.getDevotionalBySlug(this.app),
+              d.default.signUp(this.app),
+              r.default.JWT(this.app),
+              d.default.get(this.app),
+              r.default.IsAdmin(this.app),
+              s.default.createDevotional(this.app),
+              s.default.getDevotionalsAsAdmin(this.app),
+              s.default.deleteDevocional(this.app),
+              u.default.getStats(this.app)
+          }
+        }
+      },
       832: function (e, t, i) {
         var o =
             (this && this.__awaiter) ||
@@ -1402,7 +1402,7 @@
             return e && e.__esModule ? e : { default: e }
           }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const n = o(i(618)),
+        const n = o(i(894)),
           s = o(i(860))
         new (class {
           constructor(e = (0, s.default)()) {
