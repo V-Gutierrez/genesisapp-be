@@ -5,11 +5,10 @@ import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
 import Formatter from '@Helpers/Formatter'
-import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import SendgridClient from '@Services/Sendgrid'
 import { User } from '@prisma/client'
-import isProduction from '@Helpers/Environment'
+import { UserModel } from '@Models/Users'
 import jwt from 'jsonwebtoken'
 
 class Users {
@@ -20,16 +19,7 @@ class Users {
       try {
         if (!id) res.status(401).json({ error: Errors.INVALID_OR_MISSING_ID })
         else {
-          const user = await Prisma.user.findFirst({
-            where: { id },
-            select: {
-              id: true,
-              email: true,
-              name: true,
-              createdAt: true,
-              birthdate: true,
-            },
-          })
+          const user = await UserModel.getUserById(id)
 
           if (!user) res.status(404).json({ error: Errors.USER_NOT_FOUND })
           if (user) res.status(200).json(user)
@@ -49,22 +39,12 @@ class Users {
 
         const { email, name, password, phone, birthdate }: User = req.body
 
-        const user = await Prisma.user.create({
-          data: {
-            email: Formatter.sanitizeEmail(email),
-            name,
-            birthdate: new Date(birthdate).toISOString(),
-            password: await Bcrypt.hashPassword(password),
-            phone,
-          },
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            createdAt: true,
-            phone: true,
-            password: false,
-          },
+        const user = await UserModel.create({
+          email: Formatter.sanitizeEmail(email),
+          name,
+          birthdate: new Date(birthdate).toISOString(),
+          password: await Bcrypt.hashPassword(password),
+          phone,
         })
 
         const token = jwt.sign({ id: user.id }, process.env.ACTIVATION_TOKEN_SECRET as string, {

@@ -50,9 +50,10 @@
           r = n(i(20)),
           u = n(i(988)),
           d = n(i(448)),
-          l = n(i(29)),
-          c = n(i(766)),
-          f = n(i(344))
+          c = n(i(29)),
+          l = i(686),
+          f = n(i(766)),
+          h = n(i(344))
         t.default = class {
           static authenticate(e) {
             return o(this, void 0, void 0, function* () {
@@ -61,7 +62,7 @@
                   try {
                     const { [r.default.AuthCookieDefaultOptions.name]: i } = e.cookies
                     i &&
-                      f.default.verify(e.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (e) => {
+                      h.default.verify(e.cookies.jwt, process.env.ACCESS_TOKEN_SECRET, (e) => {
                         e &&
                           t.clearCookie(
                             r.default.AuthCookieDefaultOptions.name,
@@ -70,29 +71,26 @@
                       })
                     const o = d.default.validateSchema(d.default.LOGIN_SCHEMA, e.body)
                     if (o) return t.status(400).json({ error: o })
-                    const { email: n, password: l } = e.body,
-                      c = yield u.default.user.findFirst({
-                        where: { email: n },
-                        select: { name: !0, password: !0, email: !0, id: !0, role: !0, active: !0 },
-                      })
-                    if (!c) return t.sendStatus(404)
-                    if (!c.active) return t.status(403).json({ error: s.Errors.USER_NOT_ACTIVE })
-                    if (yield a.default.comparePassword(l, c.password)) {
-                      const e = f.default.sign(
-                          { email: c.email, role: c.role, id: c.id, name: c.name },
+                    const { email: n, password: c } = e.body,
+                      f = yield l.UserModel.getUserByEmail(n)
+                    if (!f) return t.sendStatus(404)
+                    if (!f.active) return t.status(403).json({ error: s.Errors.USER_NOT_ACTIVE })
+                    if (yield a.default.comparePassword(c, f.password)) {
+                      const e = h.default.sign(
+                          { email: f.email, role: f.role, id: f.id, name: f.name },
                           process.env.ACCESS_TOKEN_SECRET,
                           { expiresIn: '12h' },
                         ),
-                        i = f.default.sign(
-                          { email: c.email, role: c.role, id: c.id, name: c.name },
+                        i = h.default.sign(
+                          { email: f.email, role: f.role, id: f.id, name: f.name },
                           process.env.REFRESH_TOKEN_SECRET,
                           { expiresIn: '30d' },
                         )
                       return (
                         yield u.default.userRefreshTokens.upsert({
-                          where: { userId: c.id },
+                          where: { userId: f.id },
                           update: { token: i },
-                          create: { userId: c.id, token: i },
+                          create: { userId: f.id, token: i },
                         }),
                         t.cookie(
                           r.default.AuthCookieDefaultOptions.name,
@@ -116,7 +114,7 @@
                 o(this, void 0, void 0, function* () {
                   try {
                     const { [r.default.AuthCookieDefaultOptions.name]: i } = e.cookies
-                    f.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, i) =>
+                    h.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, i) =>
                       o(this, void 0, void 0, function* () {
                         if (e)
                           return (
@@ -126,22 +124,19 @@
                             ),
                             t.sendStatus(403)
                           )
-                        const n = yield u.default.user.findFirst({
-                          where: { email: i.email },
-                          select: { id: !0, email: !0, role: !0, UserRefreshTokens: !0 },
-                        })
+                        const n = yield l.UserModel.getUserByDecodedEmail(i.email)
                         if (!n)
                           return (
                             t.clearCookie('jwt', {
                               httpOnly: !0,
-                              secure: c.default,
-                              sameSite: c.default ? 'none' : void 0,
+                              secure: f.default,
+                              sameSite: f.default ? 'none' : void 0,
                             }),
                             t.sendStatus(403)
                           )
                         const { UserRefreshTokens: s, id: a } = n,
                           [{ token: d }] = s
-                        f.default.verify(d, process.env.REFRESH_TOKEN_SECRET, (e) =>
+                        h.default.verify(d, process.env.REFRESH_TOKEN_SECRET, (e) =>
                           o(this, void 0, void 0, function* () {
                             if (e)
                               return (
@@ -152,7 +147,7 @@
                                 ),
                                 t.sendStatus(403)
                               )
-                            const i = f.default.sign(
+                            const i = h.default.sign(
                               { email: n.email, role: n.role },
                               process.env.ACCESS_TOKEN_SECRET,
                               { expiresIn: '12h' },
@@ -181,15 +176,11 @@
                   try {
                     if (!e.headers.authorization) return t.sendStatus(401)
                     const { authorization: i } = e.headers
-                    f.default.verify(i, process.env.ACTIVATION_TOKEN_SECRET, (e, i) =>
+                    h.default.verify(i, process.env.ACTIVATION_TOKEN_SECRET, (e, i) =>
                       o(this, void 0, void 0, function* () {
                         return e
                           ? t.sendStatus(401)
-                          : (yield u.default.user.update({
-                              where: { id: i.id },
-                              data: { active: !0 },
-                            }),
-                            t.sendStatus(204))
+                          : (yield l.UserModel.activateUserById(i.id), t.sendStatus(204))
                       }),
                     )
                   } catch (e) {
@@ -207,19 +198,16 @@
                     const i = d.default.validateSchema(d.default.RESET_PASSWORD, e.body)
                     if (i) return t.status(400).json({ error: i })
                     const { email: o } = e.body,
-                      n = yield u.default.user.findFirst({
-                        where: { email: o },
-                        select: { email: !0, active: !0 },
-                      })
+                      n = yield l.UserModel.getUserByEmail(o)
                     if (!n || !n.active)
                       return t.status(200).json({ message: s.Success.RESET_EMAIL_SEND })
-                    const a = f.default.sign(
+                    const a = h.default.sign(
                       { email: o },
                       process.env.PASSWORD_RESET_TOKEN_SECRET,
                       { expiresIn: '24h' },
                     )
-                    if (c.default) {
-                      const e = new l.default()
+                    if (f.default) {
+                      const e = new c.default()
                       yield e.send(
                         e.TEMPLATES.resetPassword.config(o, {
                           resetPasswordUrl: `${process.env.FRONT_BASE_URL}/reset-password?token=${a}`,
@@ -243,14 +231,11 @@
                     if (d.default.validateSchema(d.default.NEW_PASSWORD, e.body) || !i)
                       return t.sendStatus(400)
                     const { password: n } = e.body
-                    f.default.verify(i, process.env.PASSWORD_RESET_TOKEN_SECRET, (e, i) =>
+                    h.default.verify(i, process.env.PASSWORD_RESET_TOKEN_SECRET, (e, i) =>
                       o(this, void 0, void 0, function* () {
                         return e
                           ? t.sendStatus(401)
-                          : (yield u.default.user.update({
-                              where: { email: i.email },
-                              data: { password: yield a.default.hashPassword(n) },
-                            }),
+                          : (yield l.UserModel.setUserPasswordByEmail(i.email, n),
                             t.status(200).json({ message: s.Success.NEW_PASSWORD_SET }))
                       }),
                     )
@@ -286,7 +271,7 @@
                 o(this, void 0, void 0, function* () {
                   const { [r.default.AuthCookieDefaultOptions.name]: i } = e.cookies
                   if (!i) return t.sendStatus(400)
-                  f.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, i) => {
+                  h.default.verify(i, process.env.ACCESS_TOKEN_SECRET, (e, i) => {
                     if (e) return t.sendStatus(401)
                     const { email: o, role: n, id: s, name: a } = i
                     return t.status(200).json({ email: o, role: n, id: s, name: a })
@@ -341,8 +326,8 @@
           r = n(i(710)),
           u = n(i(582)),
           d = n(i(766)),
-          l = n(i(344)),
-          c = n(i(470)),
+          c = n(i(344)),
+          l = n(i(470)),
           f = n(i(738))
         t.default = class {
           constructor(e) {
@@ -351,7 +336,7 @@
               this.app.use(s.default.json()),
               this.app.use((0, r.default)()),
               this.app.use(s.default.urlencoded({ extended: !1 })),
-              this.app.use((0, c.default)('short'))
+              this.app.use((0, l.default)('short'))
           }
           CORS() {
             const e = d.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
@@ -364,7 +349,7 @@
               o(this, void 0, void 0, function* () {
                 try {
                   const { [a.default.AuthCookieDefaultOptions.name]: o } = e.cookies
-                  l.default.verify(o, process.env.ACCESS_TOKEN_SECRET, (e) => {
+                  c.default.verify(o, process.env.ACCESS_TOKEN_SECRET, (e) => {
                     if (e) return t.sendStatus(403)
                     i()
                   })
@@ -379,7 +364,7 @@
               o(this, void 0, void 0, function* () {
                 try {
                   const { [a.default.AuthCookieDefaultOptions.name]: o } = e.cookies
-                  l.default.verify(o, process.env.ACCESS_TOKEN_SECRET, (e, o) =>
+                  c.default.verify(o, process.env.ACCESS_TOKEN_SECRET, (e, o) =>
                     e ? t.sendStatus(403) : 'ADMIN' !== o.role ? t.sendStatus(401) : void i(),
                   )
                 } catch (e) {
@@ -434,11 +419,11 @@
         Object.defineProperty(t, '__esModule', { value: !0 })
         const s = i(362),
           a = n(i(721)),
-          r = n(i(832)),
-          u = n(i(488)),
-          d = n(i(448)),
-          l = i(465),
-          c = i(628)
+          r = i(628),
+          u = n(i(832)),
+          d = n(i(488)),
+          c = n(i(448)),
+          l = i(465)
         t.default = class {
           static getDevotionals(e) {
             e.get('/api/devotionals', (e, t) =>
@@ -479,31 +464,31 @@
             )
           }
           static createDevotional(e) {
-            e.post('/api/devotionals', u.default.SingleFileUpload('coverImage'), (e, t) =>
+            e.post('/api/devotionals', d.default.SingleFileUpload('coverImage'), (e, t) =>
               o(this, void 0, void 0, function* () {
                 try {
-                  const i = d.default.validateSchema(d.default.DEVOTIONAL_CREATION, e.body)
+                  const i = c.default.validateSchema(c.default.DEVOTIONAL_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { body: o, title: n, scheduledTo: u, author: f } = e.body,
+                  const { body: o, title: n, scheduledTo: d, author: f } = e.body,
                     { file: h } = e,
                     {
-                      url: p,
-                      thumbnailUrl: v,
+                      url: v,
+                      thumbnailUrl: p,
                       fileId: _,
-                    } = yield r.default.uploadFile(
+                    } = yield u.default.uploadFile(
                       h.buffer,
                       a.default.generateSlug(n),
-                      c.ImageKitFolders.Devotionals,
+                      r.ImageKitFolders.Devotionals,
                     ),
                     m = yield s.DevotionalModel.create({
                       body: o,
                       title: n,
-                      scheduledTo: (0, l.zonedTimeToUtc)(new Date(u), 'America/Sao_Paulo'),
+                      scheduledTo: (0, l.zonedTimeToUtc)(new Date(d), 'America/Sao_Paulo'),
                       author: f,
                       slug: a.default.generateSlug(n),
-                      coverImage: p,
-                      coverThumbnail: v,
+                      coverImage: v,
+                      coverThumbnail: p,
                       assetId: _,
                     })
                   return t.status(201).json(m)
@@ -519,7 +504,7 @@
                 try {
                   const { id: i } = e.params,
                     o = yield s.DevotionalModel.deleteById(i)
-                  yield r.default.delete(o.assetId), t.sendStatus(204)
+                  yield u.default.delete(o.assetId), t.sendStatus(204)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -582,53 +567,50 @@
       },
       673: function (e, t, i) {
         var o =
-            (this && this.__awaiter) ||
-            function (e, t, i, o) {
-              return new (i || (i = Promise))(function (n, s) {
-                function a(e) {
-                  try {
-                    u(o.next(e))
-                  } catch (e) {
-                    s(e)
-                  }
+          (this && this.__awaiter) ||
+          function (e, t, i, o) {
+            return new (i || (i = Promise))(function (n, s) {
+              function a(e) {
+                try {
+                  u(o.next(e))
+                } catch (e) {
+                  s(e)
                 }
-                function r(e) {
-                  try {
-                    u(o.throw(e))
-                  } catch (e) {
-                    s(e)
-                  }
+              }
+              function r(e) {
+                try {
+                  u(o.throw(e))
+                } catch (e) {
+                  s(e)
                 }
-                function u(e) {
-                  var t
-                  e.done
-                    ? n(e.value)
-                    : ((t = e.value),
-                      t instanceof i
-                        ? t
-                        : new i(function (e) {
-                            e(t)
-                          })).then(a, r)
-                }
-                u((o = o.apply(e, t || [])).next())
-              })
-            },
-          n =
-            (this && this.__importDefault) ||
-            function (e) {
-              return e && e.__esModule ? e : { default: e }
-            }
+              }
+              function u(e) {
+                var t
+                e.done
+                  ? n(e.value)
+                  : ((t = e.value),
+                    t instanceof i
+                      ? t
+                      : new i(function (e) {
+                          e(t)
+                        })).then(a, r)
+              }
+              u((o = o.apply(e, t || [])).next())
+            })
+          }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const s = n(i(988))
+        const n = i(454)
         t.default = class {
           static getStats(e) {
             e.get('/api/stats', (e, t) =>
               o(this, void 0, void 0, function* () {
                 try {
-                  const e = yield s.default.user.count({ where: { active: !0 } }),
-                    i = yield s.default.devotional.count(),
-                    o = yield s.default.growthGroup.count()
-                  return t.status(200).json({ activeUsers: e, devotionals: i, groups: o })
+                  const {
+                    devotionals: e,
+                    activeUsers: i,
+                    growthGroups: o,
+                  } = yield n.StatsModel.getStats()
+                  return t.status(200).json({ activeUsers: i, devotionals: e, growthGroups: o })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -679,10 +661,10 @@
         const s = i(590),
           a = n(i(632)),
           r = n(i(721)),
-          u = n(i(988)),
-          d = n(i(448)),
-          l = n(i(29)),
-          c = n(i(344))
+          u = n(i(448)),
+          d = n(i(29)),
+          c = i(686),
+          l = n(i(344))
         t.default = class {
           static get(e) {
             return o(this, void 0, void 0, function* () {
@@ -691,10 +673,7 @@
                   const { id: i } = e.params
                   try {
                     if (i) {
-                      const e = yield u.default.user.findFirst({
-                        where: { id: i },
-                        select: { id: !0, email: !0, name: !0, createdAt: !0, birthdate: !0 },
-                      })
+                      const e = yield c.UserModel.getUserById(i)
                       e || t.status(404).json({ error: s.Errors.USER_NOT_FOUND }),
                         e && t.status(200).json(e)
                     } else t.status(401).json({ error: s.Errors.INVALID_OR_MISSING_ID })
@@ -710,37 +689,27 @@
               e.post('/api/users', (e, t) =>
                 o(this, void 0, void 0, function* () {
                   try {
-                    const i = d.default.validateSchema(d.default.SIGNUP_SCHEMA, e.body)
+                    const i = u.default.validateSchema(u.default.SIGNUP_SCHEMA, e.body)
                     if (i) return t.status(400).json({ error: i })
-                    const { email: o, name: n, password: f, phone: h, birthdate: p } = e.body,
-                      v = yield u.default.user.create({
-                        data: {
-                          email: r.default.sanitizeEmail(o),
-                          name: n,
-                          birthdate: new Date(p).toISOString(),
-                          password: yield a.default.hashPassword(f),
-                          phone: h,
-                        },
-                        select: {
-                          id: !0,
-                          email: !0,
-                          name: !0,
-                          createdAt: !0,
-                          phone: !0,
-                          password: !1,
-                        },
+                    const { email: o, name: n, password: f, phone: h, birthdate: v } = e.body,
+                      p = yield c.UserModel.create({
+                        email: r.default.sanitizeEmail(o),
+                        name: n,
+                        birthdate: new Date(v).toISOString(),
+                        password: yield a.default.hashPassword(f),
+                        phone: h,
                       }),
-                      _ = c.default.sign({ id: v.id }, process.env.ACTIVATION_TOKEN_SECRET, {
+                      _ = l.default.sign({ id: p.id }, process.env.ACTIVATION_TOKEN_SECRET, {
                         expiresIn: '30d',
                       }),
-                      m = new l.default()
+                      m = new d.default()
                     yield m.send(
-                      m.TEMPLATES.confirmationEmail.config(v.email, {
-                        userFirstName: r.default.getUserFirstName(v.name),
+                      m.TEMPLATES.confirmationEmail.config(p.email, {
+                        userFirstName: r.default.getUserFirstName(p.name),
                         activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${_}`,
                       }),
                     ),
-                      t.status(201).json({ message: s.Success.USER_CREATED, user: v })
+                      t.status(201).json({ message: s.Success.USER_CREATED, user: p })
                   } catch (e) {
                     'P2002' === e.code
                       ? t.status(409).json({ error: s.Errors.USER_ALREADY_EXISTS })
@@ -1119,6 +1088,155 @@
           static getAll() {
             return o(this, void 0, void 0, function* () {
               return s.default.growthGroup.findMany()
+            })
+          }
+        }
+      },
+      454: function (e, t, i) {
+        var o =
+            (this && this.__awaiter) ||
+            function (e, t, i, o) {
+              return new (i || (i = Promise))(function (n, s) {
+                function a(e) {
+                  try {
+                    u(o.next(e))
+                  } catch (e) {
+                    s(e)
+                  }
+                }
+                function r(e) {
+                  try {
+                    u(o.throw(e))
+                  } catch (e) {
+                    s(e)
+                  }
+                }
+                function u(e) {
+                  var t
+                  e.done
+                    ? n(e.value)
+                    : ((t = e.value),
+                      t instanceof i
+                        ? t
+                        : new i(function (e) {
+                            e(t)
+                          })).then(a, r)
+                }
+                u((o = o.apply(e, t || [])).next())
+              })
+            },
+          n =
+            (this && this.__importDefault) ||
+            function (e) {
+              return e && e.__esModule ? e : { default: e }
+            }
+        Object.defineProperty(t, '__esModule', { value: !0 }), (t.StatsModel = void 0)
+        const s = n(i(988))
+        t.StatsModel = class {
+          static getStats() {
+            return o(this, void 0, void 0, function* () {
+              const e = [
+                  s.default.user.count({ where: { active: !0 } }),
+                  s.default.devotional.count(),
+                  s.default.growthGroup.count(),
+                ],
+                [t, i, o] = yield Promise.all(e)
+              return { activeUsers: t, devotionals: i, growthGroups: o }
+            })
+          }
+        }
+      },
+      686: function (e, t, i) {
+        var o =
+            (this && this.__awaiter) ||
+            function (e, t, i, o) {
+              return new (i || (i = Promise))(function (n, s) {
+                function a(e) {
+                  try {
+                    u(o.next(e))
+                  } catch (e) {
+                    s(e)
+                  }
+                }
+                function r(e) {
+                  try {
+                    u(o.throw(e))
+                  } catch (e) {
+                    s(e)
+                  }
+                }
+                function u(e) {
+                  var t
+                  e.done
+                    ? n(e.value)
+                    : ((t = e.value),
+                      t instanceof i
+                        ? t
+                        : new i(function (e) {
+                            e(t)
+                          })).then(a, r)
+                }
+                u((o = o.apply(e, t || [])).next())
+              })
+            },
+          n =
+            (this && this.__importDefault) ||
+            function (e) {
+              return e && e.__esModule ? e : { default: e }
+            }
+        Object.defineProperty(t, '__esModule', { value: !0 }), (t.UserModel = void 0)
+        const s = n(i(632)),
+          a = n(i(988))
+        t.UserModel = class {
+          static getUserById(e) {
+            return o(this, void 0, void 0, function* () {
+              return a.default.user.findFirst({
+                where: { id: e },
+                select: { id: !0, email: !0, name: !0, createdAt: !0, birthdate: !0 },
+              })
+            })
+          }
+          static create(e) {
+            return o(this, void 0, void 0, function* () {
+              return a.default.user.create({
+                data: Object.assign({}, e),
+                select: { id: !0, email: !0, name: !0, createdAt: !0, phone: !0, password: !1 },
+              })
+            })
+          }
+          static getUserByEmail(e) {
+            return o(this, void 0, void 0, function* () {
+              return a.default.user.findFirst({
+                where: { email: e },
+                select: { name: !0, password: !0, email: !0, id: !0, role: !0, active: !0 },
+              })
+            })
+          }
+          static getUserByDecodedEmail(e) {
+            return o(this, void 0, void 0, function* () {
+              return a.default.user.findFirst({
+                where: { email: e },
+                select: { id: !0, email: !0, role: !0, UserRefreshTokens: !0 },
+              })
+            })
+          }
+          static activateUserById(e) {
+            return o(this, void 0, void 0, function* () {
+              yield a.default.user.update({ where: { id: e }, data: { active: !0 } })
+            })
+          }
+          static getActiveUserByEmail(e) {
+            return a.default.user.findFirst({
+              where: { email: e },
+              select: { email: !0, active: !0 },
+            })
+          }
+          static setUserPasswordByEmail(e, t) {
+            return o(this, void 0, void 0, function* () {
+              yield a.default.user.update({
+                where: { email: e },
+                data: { password: yield s.default.hashPassword(t) },
+              })
             })
           }
         }
