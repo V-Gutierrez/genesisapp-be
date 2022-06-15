@@ -68,6 +68,18 @@ class Users {
       }
     })
   }
+
+  static async getAllUsersAsAdmin(app: Express) {
+    app.get('/api/users', async (_: Request, res: Response) => {
+      try {
+        const users = await UserModel.getAll()
+
+        res.status(200).json(users)
+      } catch (error) {
+        res.sendStatus(500)
+      }
+    })
+  }
 }
 
 export default Users

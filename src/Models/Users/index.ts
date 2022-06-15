@@ -16,6 +16,20 @@ export class UserModel {
     })
   }
 
+  static async getAll() {
+    return Prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        createdAt: true,
+        birthdate: true,
+        phone: true,
+        active: true,
+      },
+    })
+  }
+
   static async create(args: UserCreationProps) {
     return Prisma.user.create({
       data: {

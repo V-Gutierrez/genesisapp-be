@@ -31,6 +31,7 @@ export default class RoutesController {
     Middlewares.IsAdmin(this.app)
     /* ADMIN ROUTES */
 
+    Users.getAllUsersAsAdmin(this.app)
     Devotionals.createDevotional(this.app)
     Devotionals.getDevotionalsAsAdmin(this.app)
     Devotionals.deleteDevocional(this.app)

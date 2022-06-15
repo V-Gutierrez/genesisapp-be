@@ -719,6 +719,20 @@
               )
             })
           }
+          static getAllUsersAsAdmin(e) {
+            return o(this, void 0, void 0, function* () {
+              e.get('/api/users', (e, t) =>
+                o(this, void 0, void 0, function* () {
+                  try {
+                    const e = yield c.UserModel.getAll()
+                    t.status(200).json(e)
+                  } catch (e) {
+                    t.sendStatus(500)
+                  }
+                }),
+              )
+            })
+          }
         }
       },
       632: function (e, t, i) {
@@ -1158,6 +1172,21 @@
               })
             })
           }
+          static getAll() {
+            return o(this, void 0, void 0, function* () {
+              return a.default.user.findMany({
+                select: {
+                  id: !0,
+                  email: !0,
+                  name: !0,
+                  createdAt: !0,
+                  birthdate: !0,
+                  phone: !0,
+                  active: !0,
+                },
+              })
+            })
+          }
           static create(e) {
             return o(this, void 0, void 0, function* () {
               return a.default.user.create({
@@ -1234,6 +1263,7 @@
               r.default.JWT(this.app),
               d.default.get(this.app),
               r.default.IsAdmin(this.app),
+              d.default.getAllUsersAsAdmin(this.app),
               s.default.createDevotional(this.app),
               s.default.getDevotionalsAsAdmin(this.app),
               s.default.deleteDevocional(this.app),
