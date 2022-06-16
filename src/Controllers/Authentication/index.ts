@@ -1,15 +1,16 @@
 import 'dotenv/config'
 
+import { Errors, Success } from '@Helpers/Messages'
 import { Express, Request, Response } from 'express'
 
 import Bcrypt from '@Helpers/Bcrypt'
 import CookieHelper from '@Helpers/Cookies'
 import { Decoded } from '@Types/DTO'
-import { Errors } from '@Helpers/Messages'
 import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import SendgridClient from '@Services/Sendgrid'
 import { User } from '@prisma/client'
+import { UserModel } from '@Models/Users'
 import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 
@@ -30,29 +31,18 @@ class Authentication {
             }
           })
         }
+
         const errors = SchemaHelper.validateSchema(SchemaHelper.LOGIN_SCHEMA, req.body)
         if (errors) return res.status(400).json({ error: errors })
 
-        const { email, password }: Partial<User> = req.body
+        const { email, password }: User = req.body
 
-        const user = await Prisma.user.findFirst({
-          where: {
-            email,
-          },
-          select: {
-            name: true,
-            password: true,
-            email: true,
-            id: true,
-            role: true,
-            active: true,
-          },
-        })
+        const user = await UserModel.getUserByEmail(email)
 
         if (!user) return res.sendStatus(404)
-        if (!user.active) return res.status(403).json({ error: 'User is not activated' })
+        if (!user.active) return res.status(403).json({ error: Errors.USER_NOT_ACTIVE })
 
-        const matchPassword = await Bcrypt.comparePassword(password as string, user.password)
+        const matchPassword = await Bcrypt.comparePassword(password, user.password)
 
         if (matchPassword) {
           const accessToken = jwt.sign(
@@ -112,17 +102,7 @@ class Authentication {
               return res.sendStatus(403)
             }
 
-            const user = await Prisma.user.findFirst({
-              where: {
-                email: decoded.email,
-              },
-              select: {
-                id: true,
-                email: true,
-                role: true,
-                UserRefreshTokens: true,
-              },
-            })
+            const user = await UserModel.getUserByDecodedEmail(decoded.email)
 
             if (!user) {
               res.clearCookie('jwt', {
@@ -192,10 +172,7 @@ class Authentication {
           async (error: any, decoded: Decoded) => {
             if (error) return res.sendStatus(401)
 
-            await Prisma.user.update({
-              where: { id: decoded.id },
-              data: { active: true },
-            })
+            await UserModel.activateUserById(decoded.id)
 
             return res.sendStatus(204)
           },
@@ -214,14 +191,11 @@ class Authentication {
 
         const { email } = req.body
 
-        const user = await Prisma.user.findFirst({
-          where: { email },
-          select: { email: true, active: true },
-        })
+        const user = await UserModel.getUserByEmail(email)
 
         // False 200 status
         if (!user || !user.active)
-          return res.status(200).json({ message: 'Reset password email sent' })
+          return res.status(200).json({ message: Success.RESET_EMAIL_SEND })
         // False 200 status
 
         const resetToken = jwt.sign({ email }, process.env.PASSWORD_RESET_TOKEN_SECRET as string, {
@@ -238,7 +212,7 @@ class Authentication {
           )
         }
 
-        res.status(200).json({ message: 'Reset password email sent' })
+        return res.status(200).json({ message: Success.RESET_EMAIL_SEND })
       } catch (error) {
         res.sendStatus(500)
       }
@@ -261,13 +235,9 @@ class Authentication {
           async (error: any, decoded: Decoded) => {
             if (error) return res.sendStatus(401)
 
-            await Prisma.user.update({
-              where: { email: decoded.email },
-              data: {
-                password: await Bcrypt.hashPassword(password),
-              },
-            })
-            return res.status(200).json({ message: 'New password successfully set' })
+            await UserModel.setUserPasswordByEmail(decoded.email, password)
+
+            return res.status(200).json({ message: Success.NEW_PASSWORD_SET })
           },
         )
       } catch (error) {

@@ -16,7 +16,7 @@
     "prisma:seed": "npx prisma db seed",
     "prisma:modify": "ts-node --transpile-only prisma/seeds/execute.ts",
     "prisma:migrate:deploy": "npx prisma migrate deploy",
-    "start": "node dist/index.js",
+    "start": "pm2-runtime start ecosystem.config.js --env production",
     "deploy": "git push heroku main"
   },
   "author": "",
@@ -24,7 +24,6 @@
   "dependencies": {
     "@prisma/client": "^3.14.0",
     "@sendgrid/mail": "^7.7.0",
-    "@types/morgan": "^1.9.3",
     "@uploadcare/upload-client": "^3.1.1",
     "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
@@ -39,6 +38,7 @@
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
+    "pm2": "^5.2.0",
     "ramda": "^0.28.0",
     "twilio": "^3.77.2",
     "ua-parser-js": "^1.0.2"
@@ -48,6 +48,7 @@
     "@types/cookie-parser": "^1.4.3",
     "@types/cors": "^2.8.12",
     "@types/date-fns": "^2.6.0",
+    "@types/morgan": "^1.9.3",
     "@types/dotenv": "^8.2.0",
     "@types/express": "4.17.13",
     "@types/joi": "^13.0.8",

@@ -1,4 +1,4 @@
-import RoutesController from '@Controllers/Router'
+import RoutesController from 'src/Router'
 import express from 'express'
 
 class Server {

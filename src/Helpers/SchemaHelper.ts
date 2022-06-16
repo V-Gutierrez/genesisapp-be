@@ -45,22 +45,6 @@ class SchemaHelper {
     scheduledTo: Joi.string().required(),
   })
 
-  static EXTERNAL_EVENT_CREATION = Joi.object().keys({
-    title: Joi.string().required(),
-    description: Joi.string().required(),
-    scheduledTo: Joi.string().required(),
-    lat: Joi.required(),
-    lng: Joi.required(),
-    addressInfo: Joi.string().required(),
-    maxSubscriptions: Joi.required(),
-  })
-
-  static EXTERNAL_EVENT_SUBSCRIPTION = Joi.object().keys({
-    name: Joi.string().required(),
-    email: Joi.string().email().required(),
-    phone: Joi.string(),
-  })
-
   static validateSchema(schema: Schema, validationTarget: object) {
     const { error } = Joi.validate(validationTarget, schema, { abortEarly: false, convert: false })
 

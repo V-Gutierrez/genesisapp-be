@@ -1,28 +1,19 @@
 import { Express, Request, Response } from 'express'
 
 import { Devotional } from '@prisma/client'
+import { DevotionalModel } from '@Models/Devotional'
+import Formatter from '@Helpers/Formatter'
 import ImageKitService from '@Services/ImageKitService'
 import Middlewares from '@Controllers/Middlewares'
-import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { zonedTimeToUtc } from 'date-fns-tz'
-import { generateSlug } from '../../../Helpers/Utils'
 import { ImageKitFolders } from '../../../Types/Enum'
 
 class Devotionals {
   static getDevotionals(app: Express) {
     app.get('/api/devotionals', async (_req: Request, res: Response) => {
       try {
-        const response: Devotional[] = await Prisma.devotional.findMany({
-          where: {
-            scheduledTo: {
-              lte: zonedTimeToUtc(new Date(), 'America/Sao_Paulo'),
-            },
-          },
-          orderBy: {
-            scheduledTo: 'desc',
-          },
-        })
+        const response: Devotional[] = await DevotionalModel.getReleasedDevotionals()
 
         res.status(200).json(response)
       } catch (error) {
@@ -36,17 +27,7 @@ class Devotionals {
       try {
         const { slug } = req.params
 
-        const response: Devotional | null = await Prisma.devotional.findFirst({
-          where: {
-            slug,
-            scheduledTo: {
-              lte: zonedTimeToUtc(new Date(Date.now()), 'America/Sao_Paulo'),
-            },
-          },
-          orderBy: {
-            scheduledTo: 'desc',
-          },
-        })
+        const response: Devotional | null = await DevotionalModel.getBySlug(slug)
 
         if (!response) return res.sendStatus(404)
 
@@ -60,11 +41,7 @@ class Devotionals {
   static getDevotionalsAsAdmin(app: Express) {
     app.get('/api/all-devotionals', async (_req: Request, res: Response) => {
       try {
-        const response: Devotional[] = await Prisma.devotional.findMany({
-          orderBy: {
-            scheduledTo: 'desc',
-          },
-        })
+        const response: Devotional[] = await DevotionalModel.getAll()
 
         res.status(200).json(response)
       } catch (error) {
@@ -97,21 +74,19 @@ class Devotionals {
             fileId,
           } = await ImageKitService.uploadFile(
             file.buffer,
-            generateSlug(title),
+            Formatter.generateSlug(title),
             ImageKitFolders.Devotionals,
           )
 
-          const devotional = await Prisma.devotional.create({
-            data: {
-              body,
-              title,
-              scheduledTo: zonedTimeToUtc(new Date(scheduledTo), 'America/Sao_Paulo'),
-              author,
-              slug: generateSlug(title),
-              coverImage,
-              coverThumbnail,
-              assetId: fileId,
-            },
+          const devotional = await DevotionalModel.create({
+            body,
+            title,
+            scheduledTo: zonedTimeToUtc(new Date(scheduledTo), 'America/Sao_Paulo'),
+            author,
+            slug: Formatter.generateSlug(title),
+            coverImage,
+            coverThumbnail,
+            assetId: fileId,
           })
 
           return res.status(201).json(devotional)
@@ -127,9 +102,7 @@ class Devotionals {
       try {
         const { id } = req.params
 
-        const deleted = await Prisma.devotional.delete({
-          where: { id },
-        })
+        const deleted = await DevotionalModel.deleteById(id)
 
         await ImageKitService.delete(deleted.assetId)
 
