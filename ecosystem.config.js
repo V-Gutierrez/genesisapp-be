@@ -3,7 +3,7 @@ module.exports = {
     {
       name: `genesis-backend`,
       script: './dist/index.js',
-      instances: 'max',
+      instances: '4',
       exec_mode: 'cluster',
       env: {
         NODE_ENV: 'localhost',
