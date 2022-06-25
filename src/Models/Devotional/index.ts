@@ -2,8 +2,8 @@ import { DevotionalCreationProps } from '@Models/Devotional/types'
 import Prisma from '@Clients/Prisma'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
-export class DevotionalModel {
-  static async getReleasedDevotionals() {
+class DevotionalModel {
+  async getReleasedDevotionals() {
     return Prisma.devotional.findMany({
       where: {
         scheduledTo: {
@@ -16,7 +16,7 @@ export class DevotionalModel {
     })
   }
 
-  static async getBySlug(slug: string) {
+  async getBySlug(slug: string) {
     return Prisma.devotional.findFirst({
       where: {
         slug,
@@ -30,7 +30,7 @@ export class DevotionalModel {
     })
   }
 
-  static async getAll() {
+  async getAll() {
     return Prisma.devotional.findMany({
       orderBy: {
         scheduledTo: 'desc',
@@ -38,7 +38,8 @@ export class DevotionalModel {
     })
   }
 
-  static async create(args: DevotionalCreationProps) {
+  async create(args: DevotionalCreationProps) {
+    /* TODO: parse reading time */
     return Prisma.devotional.create({
       data: {
         ...args,
@@ -46,9 +47,11 @@ export class DevotionalModel {
     })
   }
 
-  static async deleteById(id: string) {
+  async deleteById(id: string) {
     return Prisma.devotional.delete({
       where: { id },
     })
   }
 }
+
+export default new DevotionalModel()

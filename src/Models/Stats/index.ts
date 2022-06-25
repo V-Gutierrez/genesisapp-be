@@ -1,7 +1,7 @@
 import Prisma from '@Clients/Prisma'
 
-export class StatsModel {
-  static async getStats() {
+class StatsModel {
+  async getStats() {
     const promises = [
       Prisma.user.count({
         where: {
@@ -21,3 +21,5 @@ export class StatsModel {
     }
   }
 }
+
+export default new StatsModel()

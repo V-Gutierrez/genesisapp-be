@@ -1,7 +1,7 @@
 import { Express, Request, Response } from 'express'
 
 import { Devotional } from '@prisma/client'
-import { DevotionalModel } from '@Models/Devotional'
+import DevotionalModel from '@Models/Devotional'
 import Formatter from '@Helpers/Formatter'
 import ImageKitService from '@Services/ImageKitService'
 import Middlewares from '@Controllers/Middlewares'

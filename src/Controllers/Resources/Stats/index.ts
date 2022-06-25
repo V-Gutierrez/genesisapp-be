@@ -1,6 +1,6 @@
 import { Express, Request, Response } from 'express'
 
-import { StatsModel } from '@Models/Stats'
+import StatsModel from '@Models/Stats'
 
 class Stats {
   static getStats(app: Express) {

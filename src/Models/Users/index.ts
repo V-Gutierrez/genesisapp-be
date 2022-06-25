@@ -2,8 +2,8 @@ import Bcrypt from '@Helpers/Bcrypt'
 import Prisma from '@Clients/Prisma'
 import { UserCreationProps } from '@Models/Users/types'
 
-export class UserModel {
-  static async getUserById(id: string) {
+class UserModel {
+  async getUserById(id: string) {
     return Prisma.user.findFirst({
       where: { id },
       select: {
@@ -16,7 +16,7 @@ export class UserModel {
     })
   }
 
-  static async getAll() {
+  async getAll() {
     return Prisma.user.findMany({
       select: {
         id: true,
@@ -30,7 +30,7 @@ export class UserModel {
     })
   }
 
-  static async create(args: UserCreationProps) {
+  async create(args: UserCreationProps) {
     return Prisma.user.create({
       data: {
         ...args,
@@ -46,7 +46,7 @@ export class UserModel {
     })
   }
 
-  static async getUserByEmail(email: string) {
+  async getUserByEmail(email: string) {
     return Prisma.user.findFirst({
       where: {
         email,
@@ -62,7 +62,7 @@ export class UserModel {
     })
   }
 
-  static async getUserByDecodedEmail(decodedEmail: string) {
+  async getUserByDecodedEmail(decodedEmail: string) {
     return Prisma.user.findFirst({
       where: {
         email: decodedEmail,
@@ -76,21 +76,21 @@ export class UserModel {
     })
   }
 
-  static async activateUserById(id: string) {
+  async activateUserById(id: string) {
     await Prisma.user.update({
       where: { id },
       data: { active: true },
     })
   }
 
-  static getActiveUserByEmail(email: string) {
+  getActiveUserByEmail(email: string) {
     return Prisma.user.findFirst({
       where: { email },
       select: { email: true, active: true },
     })
   }
 
-  static async setUserPasswordByEmail(email: string, password: string) {
+  async setUserPasswordByEmail(email: string, password: string) {
     await Prisma.user.update({
       where: { email },
       data: {
@@ -99,3 +99,5 @@ export class UserModel {
     })
   }
 }
+
+export default new UserModel()

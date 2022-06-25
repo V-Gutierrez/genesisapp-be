@@ -1,7 +1,7 @@
 import { Express, Request, Response } from 'express'
 
 import { GrowthGroup } from '@prisma/client'
-import { GrowthGroupsModel } from '@Models/GrowthGroups'
+import GrowthGroupsModel from '@Models/GrowthGroups'
 
 class GrowthGroups {
   static async getGrowthGroups(app: Express) {

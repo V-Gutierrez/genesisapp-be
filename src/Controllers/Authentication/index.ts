@@ -10,7 +10,7 @@ import Prisma from '@Clients/Prisma'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import SendgridClient from '@Services/Sendgrid'
 import { User } from '@prisma/client'
-import { UserModel } from '@Models/Users'
+import UserModel from '@Models/Users'
 import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 

@@ -8,7 +8,7 @@ import Formatter from '@Helpers/Formatter'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import SendgridClient from '@Services/Sendgrid'
 import { User } from '@prisma/client'
-import { UserModel } from '@Models/Users'
+import UserModel from '@Models/Users'
 import jwt from 'jsonwebtoken'
 
 class Users {
