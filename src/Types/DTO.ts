@@ -10,4 +10,5 @@ export type CookieHelperOptions = { name: string; config: CookieOptions }
 export interface ImageSet extends GIS.ImageInfo {
   smartCropped: string
   thumbnail: string
+  minimalThumbnail: string
 }

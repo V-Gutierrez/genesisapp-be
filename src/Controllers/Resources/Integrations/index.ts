@@ -4,11 +4,12 @@ import GooglePhotosScraper from '@Services/GooglePhotosScrapper'
 
 class Integrations {
   static getGooglePhotosAlbumPhotos(app: Express) {
-    app.get('/api/integrations/googlephotos/:albumUrl', async (req: Request, res: Response) => {
+    app.get('/api/integrations/googlephotos', async (req: Request, res: Response) => {
       try {
-        const { albumUrl } = req.params
+        const { albumUrl } = req.query
 
-        const photos = await GooglePhotosScraper.fetchImagesByAlbumUrl(albumUrl)
+        const photos = await GooglePhotosScraper.fetchImagesByAlbumUrl(albumUrl as string)
+
         return res.status(200).json(photos)
       } catch (error) {
         res.sendStatus(500)

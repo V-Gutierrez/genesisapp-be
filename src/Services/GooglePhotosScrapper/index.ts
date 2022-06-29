@@ -8,6 +8,7 @@ class GooglePhotosScrapper {
       ...image,
       smartCropped: `${image.url}=p`,
       thumbnail: `${image.url}=s400-p`,
+      minimalThumbnail: `${image.url}=s100-p`,
     }))
   }
 

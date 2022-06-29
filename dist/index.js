@@ -612,10 +612,10 @@
         const a = o(i(230))
         t.default = class {
           static getGooglePhotosAlbumPhotos(e) {
-            e.get('/api/integrations/googlephotos/:albumUrl', (e, t) =>
+            e.get('/api/integrations/googlephotos', (e, t) =>
               n(this, void 0, void 0, function* () {
                 try {
-                  const { albumUrl: i } = e.params,
+                  const { albumUrl: i } = e.query,
                     n = yield a.default.fetchImagesByAlbumUrl(i)
                   return t.status(200).json(n)
                 } catch (e) {
@@ -1417,6 +1417,7 @@
               Object.assign(Object.assign({}, e), {
                 smartCropped: `${e.url}=p`,
                 thumbnail: `${e.url}=s400-p`,
+                minimalThumbnail: `${e.url}=s100-p`,
               }),
             )
           }
