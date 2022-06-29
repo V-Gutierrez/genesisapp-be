@@ -3,19 +3,29 @@ import 'dotenv/config'
 import Formatter from '@Helpers/Formatter'
 import TwillioClient from 'twilio'
 
-const accountSid = process.env.TWILIO_ACCOUNT_SID
-const authToken = process.env.TWILIO_AUTH_TOKEN
-const MessagingServiceSid = process.env.TWILLIO_MESSAGING_SERVICE_SID
-
-const TwillioInstance = TwillioClient(accountSid, authToken)
-
 class Twillio {
-  static async sendSimpleMessage(body: string, to: string) {
+  private accountSid: string
+
+  private authToken: string
+
+  private messagingServiceSid: string
+
+  private TwillioInstance: TwillioClient.Twilio
+
+  constructor() {
+    this.accountSid = process.env.TWILIO_ACCOUNT_SID as string
+    this.authToken = process.env.TWILIO_AUTH_TOKEN as string
+    this.messagingServiceSid = process.env.TWILLIO_MESSAGING_SERVICE_SID as string
+
+    this.TwillioInstance = TwillioClient(this.accountSid, this.authToken)
+  }
+
+  async sendSimpleMessage(body: string, to: string) {
     try {
-      await TwillioInstance.messages.create({
+      await this.TwillioInstance.messages.create({
         body,
         to: Formatter.sanitizeUserPhone(to),
-        messagingServiceSid: MessagingServiceSid,
+        messagingServiceSid: this.messagingServiceSid,
       })
 
       console.log('Twillio Service - 200')
@@ -25,4 +35,4 @@ class Twillio {
   }
 }
 
-export default Twillio
+export default new Twillio()
