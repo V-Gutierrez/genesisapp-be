@@ -2,6 +2,7 @@ import Authentication from '@Controllers/Authentication'
 import Devotionals from '@Controllers/Resources/Devotionals'
 import { Express } from 'express'
 import GrowthGroups from '@Controllers/Resources/GrowthGroups'
+import Integrations from '@Controllers/Resources/Integrations'
 import Middlewares from '@Controllers/Middlewares'
 import Stats from '@Controllers/Resources/Stats'
 import Users from '@Controllers/Resources/Users'
@@ -21,6 +22,8 @@ export default class RoutesController {
     GrowthGroups.getGrowthGroups(this.app)
     Devotionals.getDevotionals(this.app)
     Devotionals.getDevotionalBySlug(this.app)
+
+    Integrations.getGooglePhotosAlbumPhotos(this.app)
 
     Users.signUp(this.app)
 

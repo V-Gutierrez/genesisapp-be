@@ -5,10 +5,10 @@ import { ImageSet } from '@Types/DTO'
 class GooglePhotosScrapper {
   private parseImageOptmizations(Images: GIS.ImageInfo[]): ImageSet[] {
     return Images.map((image) => ({
-        ...image,
-        smartCropped: `${image.url}=p`,
-        thumbnail: `${image.url}=s400-p`,
-      }))
+      ...image,
+      smartCropped: `${image.url}=p`,
+      thumbnail: `${image.url}=s400-p`,
+    }))
   }
 
   async fetchImagesByAlbumUrl(albumUrl: string): Promise<ImageSet[]> {
