@@ -7,8 +7,9 @@ export type Decoded = Pick<User, 'id' | 'email' | 'name' | 'role'> | any
 
 export type CookieHelperOptions = { name: string; config: CookieOptions }
 
-export interface ImageSet extends GIS.ImageInfo {
+export interface GooglePhotosImageSet extends GIS.ImageInfo {
   smartCropped: string
   thumbnail: string
   minimalThumbnail: string
+  highQuality: string
 }

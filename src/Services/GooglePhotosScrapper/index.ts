@@ -1,18 +1,19 @@
 import * as GIS from 'google-photos-album-image-url-fetch'
 
-import { ImageSet } from '@Types/DTO'
+import { GooglePhotosImageSet } from '@Types/DTO'
 
 class GooglePhotosScrapper {
-  private parseImageOptmizations(Images: GIS.ImageInfo[]): ImageSet[] {
+  private parseImageOptmizations(Images: GIS.ImageInfo[]): GooglePhotosImageSet[] {
     return Images.map((image) => ({
       ...image,
       smartCropped: `${image.url}=p`,
       thumbnail: `${image.url}=s400-p`,
       minimalThumbnail: `${image.url}=s100-p`,
+      highQuality: `${image.url}=s3920`,
     }))
   }
 
-  async fetchImagesByAlbumUrl(albumUrl: string): Promise<ImageSet[]> {
+  async fetchImagesByAlbumUrl(albumUrl: string): Promise<GooglePhotosImageSet[]> {
     try {
       const result = await GIS.fetchImageUrls(albumUrl)
 

@@ -1418,6 +1418,7 @@
                 smartCropped: `${e.url}=p`,
                 thumbnail: `${e.url}=s400-p`,
                 minimalThumbnail: `${e.url}=s100-p`,
+                highQuality: `${e.url}=s3920`,
               }),
             )
           }
