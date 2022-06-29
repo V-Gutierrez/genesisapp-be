@@ -18,18 +18,25 @@ export default class ImageKitService {
     fileName: string,
     folder: ImageKitFolders,
   ): Promise<UploadResponse> {
-    const Instance = await ImageKitService.InitializeInstance()
+    try {
+      const Instance = await ImageKitService.InitializeInstance()
 
-    return Instance.upload({
-      file,
-      fileName,
-      folder,
-    })
+      return Instance.upload({
+        file,
+        fileName,
+        folder,
+      })
+    } catch (error) {
+      throw new Error('Error in ImageKitService')
+    }
   }
 
   static async delete(fileId: string): Promise<void> {
-    const Instance = await ImageKitService.InitializeInstance()
-
-    await Instance.deleteFile(fileId)
+    try {
+      const Instance = await ImageKitService.InitializeInstance()
+      await Instance.deleteFile(fileId)
+    } catch (error) {
+      throw new Error('Error in ImageKitService')
+    }
   }
 }

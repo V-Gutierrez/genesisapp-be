@@ -29,7 +29,7 @@ class SendgridClient {
       }),
     },
     anniversary: {
-      config: (to: string, dynamicTemplateData: {}): MailDataRequired => ({
+      config: (to: string): MailDataRequired => ({
         templateId: 'd-b5cc420efe514a31bef0e658747cf56d',
         from: { email: 'suportegenesischurch@gmail.com', name: 'Genesis Church' },
         to,
@@ -46,10 +46,8 @@ class SendgridClient {
 
     try {
       await SendgridMail.send(msg)
-
-      console.log('Sendgrid Service - 200')
     } catch (error) {
-      console.log('Error in Sendgrid flow')
+      throw new Error('Error in Sendgrid flow')
     }
   }
 }

@@ -4,13 +4,13 @@ import Formatter from '@Helpers/Formatter'
 import TwillioClient from 'twilio'
 
 class Twillio {
-  private accountSid: string
+  private readonly accountSid: string
 
-  private authToken: string
+  private readonly authToken: string
 
-  private messagingServiceSid: string
+  private readonly messagingServiceSid: string
 
-  private TwillioInstance: TwillioClient.Twilio
+  private readonly TwillioInstance: TwillioClient.Twilio
 
   constructor() {
     this.accountSid = process.env.TWILIO_ACCOUNT_SID as string
@@ -27,10 +27,8 @@ class Twillio {
         to: Formatter.sanitizeUserPhone(to),
         messagingServiceSid: this.messagingServiceSid,
       })
-
-      console.log('Twillio Service - 200')
     } catch (error) {
-      console.log('Error in Twillio flow')
+      throw new Error('Error in TwillioService')
     }
   }
 }
