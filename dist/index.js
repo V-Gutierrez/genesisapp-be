@@ -374,7 +374,7 @@
             )
           }
           static SingleFileUpload(e) {
-            return (0, f.default)().single(e)
+            return (0, f.default)({ limits: { fileSize: 2e6 } }).single(e)
           }
         }
       },
