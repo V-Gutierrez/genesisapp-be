@@ -1,5 +1,6 @@
 import { DevotionalCreationProps } from '@Models/Devotional/types'
 import Prisma from '@Clients/Prisma'
+import { readingTime } from 'reading-time-estimator'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
 class DevotionalModel {
@@ -38,11 +39,13 @@ class DevotionalModel {
     })
   }
 
-  async create(args: DevotionalCreationProps) {
-    /* TODO: parse reading time */
+  async create(args: Omit<DevotionalCreationProps, 'readingTimeInMinutes'>) {
+    const readingTimeInMinutes = readingTime(args.body, 200).minutes
+
     return Prisma.devotional.create({
       data: {
         ...args,
+        readingTimeInMinutes,
       },
     })
   }

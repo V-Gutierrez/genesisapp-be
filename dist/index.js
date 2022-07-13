@@ -1044,13 +1044,14 @@
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
         const a = o(i(988)),
-          s = i(465)
+          s = i(285),
+          r = i(465)
         t.default = new (class {
           getReleasedDevotionals() {
             return n(this, void 0, void 0, function* () {
               return a.default.devotional.findMany({
                 where: {
-                  scheduledTo: { lte: (0, s.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo') },
+                  scheduledTo: { lte: (0, r.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo') },
                 },
                 orderBy: { scheduledTo: 'desc' },
               })
@@ -1062,7 +1063,7 @@
                 where: {
                   slug: e,
                   scheduledTo: {
-                    lte: (0, s.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
+                    lte: (0, r.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
                   },
                 },
                 orderBy: { scheduledTo: 'desc' },
@@ -1076,7 +1077,10 @@
           }
           create(e) {
             return n(this, void 0, void 0, function* () {
-              return a.default.devotional.create({ data: Object.assign({}, e) })
+              const t = (0, s.readingTime)(e.body, 200).minutes
+              return a.default.devotional.create({
+                data: Object.assign(Object.assign({}, e), { readingTimeInMinutes: t }),
+              })
             })
           }
           deleteById(e) {
@@ -1655,6 +1659,9 @@
       },
       634: (e) => {
         e.exports = require('ramda')
+      },
+      285: (e) => {
+        e.exports = require('reading-time-estimator')
       },
     },
     t = {}
