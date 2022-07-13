@@ -28,7 +28,7 @@ model User {
   updatedAt         DateTime            @default(now())
   UserRefreshTokens UserRefreshTokens[]
   active            Boolean             @default(false)
-  Subscriptions     Subscription[]
+  devotionalId      String?
 }
 
 model UserRefreshTokens {
@@ -65,26 +65,6 @@ model Devotional {
   coverThumbnail       String
   assetId              String
   readingTimeInMinutes Int      @default(0)
-}
-
-model Subscription {
-  id          String  @id @default(uuid())
-  title       String
-  eventId     String?
-  userId      String
-  participant User    @relation(fields: [userId], references: [id])
-  Event       Event?  @relation(fields: [eventId], references: [id])
-}
-
-model Event {
-  id               String         @id @default(uuid())
-  title            String
-  description      String
-  scheduledTo      DateTime       @default(now())
-  createdAt        DateTime       @default(now())
-  lat              Float
-  lng              Float
-  addressInfo      String
-  maxSubscriptions Int
-  subscriptions    Subscription[]
+  likes                Int      @default(0)
+  views                Int      @default(0)
 }

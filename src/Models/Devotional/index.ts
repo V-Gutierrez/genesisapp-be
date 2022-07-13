@@ -39,12 +39,12 @@ class DevotionalModel {
     })
   }
 
-  async create(args: Omit<DevotionalCreationProps, 'readingTimeInMinutes'>) {
-    const readingTimeInMinutes = readingTime(args.body, 200).minutes
+  async create(creationData: DevotionalCreationProps) {
+    const readingTimeInMinutes = readingTime(creationData.body, 200).minutes
 
     return Prisma.devotional.create({
       data: {
-        ...args,
+        ...creationData,
         readingTimeInMinutes,
       },
     })
@@ -53,6 +53,17 @@ class DevotionalModel {
   async deleteById(id: string) {
     return Prisma.devotional.delete({
       where: { id },
+    })
+  }
+
+  async addView(slug: string) {
+    return Prisma.devotional.update({
+      where: { slug },
+      data: {
+        views: {
+          increment: 1,
+        },
+      },
     })
   }
 }

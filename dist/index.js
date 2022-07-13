@@ -1088,6 +1088,14 @@
               return a.default.devotional.delete({ where: { id: e } })
             })
           }
+          addView(e) {
+            return n(this, void 0, void 0, function* () {
+              return a.default.devotional.update({
+                where: { slug: e },
+                data: { views: { increment: 1 } },
+              })
+            })
+          }
         })()
       },
       882: function (e, t, i) {
