@@ -1,3 +1,4 @@
+import { Devotional } from '@prisma/client'
 import { DevotionalCreationProps } from '@Models/Devotional/types'
 import Prisma from '@Clients/Prisma'
 import { readingTime } from 'reading-time-estimator'
@@ -21,6 +22,20 @@ class DevotionalModel {
     return Prisma.devotional.findFirst({
       where: {
         slug,
+        scheduledTo: {
+          lte: zonedTimeToUtc(new Date(Date.now()), 'America/Sao_Paulo'),
+        },
+      },
+      orderBy: {
+        scheduledTo: 'desc',
+      },
+    })
+  }
+
+  async getById(id: string) {
+    return Prisma.devotional.findFirst({
+      where: {
+        id,
         scheduledTo: {
           lte: zonedTimeToUtc(new Date(Date.now()), 'America/Sao_Paulo'),
         },
@@ -62,6 +77,30 @@ class DevotionalModel {
       data: {
         views: {
           increment: 1,
+        },
+      },
+    })
+  }
+
+  async addLike(id: string) {
+    return Prisma.devotional.update({
+      where: { id },
+      data: {
+        likes: {
+          increment: 1,
+        },
+      },
+    })
+  }
+
+  async removeLike(id: string) {
+    const { likes } = (await this.getById(id)) as Devotional
+
+    return Prisma.devotional.update({
+      where: { id },
+      data: {
+        likes: {
+          decrement: likes > 0 ? 1 : 0,
         },
       },
     })

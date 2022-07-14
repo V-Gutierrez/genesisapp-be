@@ -30,6 +30,7 @@ export default class RoutesController {
     Middlewares.JWT(this.app)
     /* AUTH ROUTES */
     Users.get(this.app)
+    Devotionals.likeDevotional(this.app)
 
     Middlewares.IsAdmin(this.app)
     /* ADMIN ROUTES */

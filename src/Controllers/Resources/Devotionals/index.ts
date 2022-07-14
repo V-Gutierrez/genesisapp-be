@@ -1,11 +1,15 @@
 import { Express, Request, Response } from 'express'
 
+import CookieHelper from '@Helpers/Cookies'
+import { Decoded } from '@Types/DTO'
 import { Devotional } from '@prisma/client'
+import DevotionalLikesModel from '@Models/Devotional/DevotionalLikes'
 import DevotionalModel from '@Models/Devotional'
 import Formatter from '@Helpers/Formatter'
 import ImageKitService from '@Services/ImageKitService'
 import Middlewares from '@Controllers/Middlewares'
 import SchemaHelper from '@Helpers/SchemaHelper'
+import jwt from 'jsonwebtoken'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { ImageKitFolders } from '../../../Types/Enum'
 
@@ -26,12 +30,26 @@ class Devotionals {
     app.get('/api/devotionals/:slug', async (req: Request, res: Response) => {
       try {
         const { slug } = req.params
+        const { [CookieHelper.AuthCookieDefaultOptions.name]: accessToken } = req.cookies
 
         const response: Devotional | null = await DevotionalModel.getBySlug(slug)
 
         if (!response) return res.sendStatus(404)
+        
+          jwt.verify(
+            accessToken,
+            process.env.ACCESS_TOKEN_SECRET as string,
+            async (err: any, decoded: Decoded) => {
+              if (err) return res.status(200).json(response)
 
-        res.status(200).json(response)
+              const { id } = decoded
+              const userLiked = await DevotionalLikesModel.getDevotionalUserLike(id, response.id)
+
+              await DevotionalModel.addView(slug)
+              return res.status(200).json({ ...response, userLiked })
+            },
+          )
+        
       } catch (error) {
         res.sendStatus(500)
       }
@@ -107,6 +125,37 @@ class Devotionals {
         await ImageKitService.delete(deleted.assetId)
 
         res.sendStatus(204)
+      } catch (error) {
+        res.sendStatus(500)
+      }
+    })
+  }
+
+  static likeDevotional(app: Express) {
+    app.put('/api/devotionals/:id', async (req: Request, res: Response) => {
+      try {
+        const { id } = req.params
+        const { [CookieHelper.AuthCookieDefaultOptions.name]: accessToken } = req.cookies
+
+        jwt.verify(
+          accessToken,
+          process.env.ACCESS_TOKEN_SECRET as string,
+          async (err: any, decoded: Decoded) => {
+            if (err) return res.sendStatus(401)
+
+            const { id: userId } = decoded
+
+            const liked = await DevotionalLikesModel.getDevotionalUserLike(userId, id)
+
+            if (liked) {
+              await DevotionalLikesModel.removeLike(id, userId)
+            } else {
+              await DevotionalLikesModel.addLike(id, userId)
+            }
+
+            return res.sendStatus(201)
+          },
+        )
       } catch (error) {
         res.sendStatus(500)
       }
