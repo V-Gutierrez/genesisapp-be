@@ -1112,29 +1112,51 @@
               return o(t, e), t
             },
           a =
+            (this && this.__rest) ||
+            function (e, t) {
+              var i = {}
+              for (var n in e)
+                Object.prototype.hasOwnProperty.call(e, n) && t.indexOf(n) < 0 && (i[n] = e[n])
+              if (null != e && 'function' == typeof Object.getOwnPropertySymbols) {
+                var o = 0
+                for (n = Object.getOwnPropertySymbols(e); o < n.length; o++)
+                  t.indexOf(n[o]) < 0 &&
+                    Object.prototype.propertyIsEnumerable.call(e, n[o]) &&
+                    (i[n[o]] = e[n[o]])
+              }
+              return i
+            },
+          r =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const r = s(i(634)),
-          u = a(i(506))
-        class d {
+        const u = s(i(634)),
+          d = r(i(506))
+        class l {
           static validateSchema(e, t) {
-            const { error: i } = u.default.validate(t, e, { abortEarly: !1, convert: !1 })
-            if (!i || !i.details) return
-            const n = i.details.map(({ message: e, path: t }) => ({ [t.join('.')]: e }))
-            return r.mergeAll(n)
+            var i
+            let n = t
+            if (null === (i = null == t ? void 0 : t.body) || void 0 === i ? void 0 : i.user) {
+              const e = t.body,
+                { user: i } = e
+              n = a(e, ['user'])
+            }
+            const { error: o } = d.default.validate(t, e, { abortEarly: !1, convert: !1 })
+            if (!o || !o.details) return
+            const s = o.details.map(({ message: e, path: t }) => ({ [t.join('.')]: e }))
+            return u.mergeAll(s)
           }
         }
-        ;(d.SIGNUP_SCHEMA = u.default.object().keys({
-          email: u.default.string().email().required(),
-          name: u.default.string().required(),
-          phone: u.default
+        ;(l.SIGNUP_SCHEMA = d.default.object().keys({
+          email: d.default.string().email().required(),
+          name: d.default.string().required(),
+          phone: d.default
             .string()
             .regex(/^\+[0-9]{2}\s[0-9]{1,2}\s[0-9]{1,2}\s[0-9]{4}\-[0-9]{4}/)
             .required(),
-          password: u.default
+          password: d.default
             .string()
             .min(8)
             .regex(/[a-z]/)
@@ -1142,19 +1164,19 @@
             .regex(/[0-9]/)
             .regex(/[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/)
             .required(),
-          birthdate: u.default.string().required(),
+          birthdate: d.default.string().required(),
         })),
-          (d.LOGIN_SCHEMA = u.default
+          (l.LOGIN_SCHEMA = d.default
             .object()
             .keys({
-              email: u.default.string().email().required(),
-              password: u.default.string().required(),
+              email: d.default.string().email().required(),
+              password: d.default.string().required(),
             })),
-          (d.RESET_PASSWORD = u.default
+          (l.RESET_PASSWORD = d.default
             .object()
-            .keys({ email: u.default.string().email().required() })),
-          (d.NEW_PASSWORD = u.default.object().keys({
-            password: u.default
+            .keys({ email: d.default.string().email().required() })),
+          (l.NEW_PASSWORD = d.default.object().keys({
+            password: d.default
               .string()
               .min(8)
               .regex(/[a-z]/)
@@ -1163,22 +1185,22 @@
               .regex(/[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/)
               .required(),
           })),
-          (d.DEVOTIONAL_CREATION = u.default
+          (l.DEVOTIONAL_CREATION = d.default
             .object()
             .keys({
-              body: u.default.string().required(),
-              title: u.default.string().required(),
-              author: u.default.string().required(),
-              scheduledTo: u.default.string().required(),
+              body: d.default.string().required(),
+              title: d.default.string().required(),
+              author: d.default.string().required(),
+              scheduledTo: d.default.string().required(),
             })),
-          (d.NEWS_CREATION = u.default
+          (l.NEWS_CREATION = d.default
             .object()
             .keys({
-              title: u.default.string().required(),
-              body: u.default.string().required(),
-              scheduledTo: u.default.string().required(),
+              title: d.default.string().required(),
+              body: d.default.string().required(),
+              scheduledTo: d.default.string().required(),
             })),
-          (t.default = d)
+          (t.default = l)
       },
       362: function (e, t, i) {
         var n =
