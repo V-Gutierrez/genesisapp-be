@@ -1,7 +1,7 @@
-import { Devotional } from '@prisma/client'
-import { DevotionalCreationProps } from '@Models/Devotional/types'
 import Prisma from '@Clients/Prisma'
+import { Prisma as PrismaType } from '@prisma/client'
 import { readingTime } from 'reading-time-estimator'
+import { where } from 'ramda'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
 class DevotionalModel {
@@ -29,6 +29,10 @@ class DevotionalModel {
       orderBy: {
         scheduledTo: 'desc',
       },
+      include: {
+        DevotionalLikes: true,
+        DevotionalViews: true,
+      },
     })
   }
 
@@ -54,12 +58,12 @@ class DevotionalModel {
     })
   }
 
-  async create(creationData: DevotionalCreationProps) {
-    const readingTimeInMinutes = readingTime(creationData.body, 200).minutes
+  async create(data: PrismaType.DevotionalCreateInput) {
+    const readingTimeInMinutes = readingTime(data.body, 200).minutes
 
     return Prisma.devotional.create({
       data: {
-        ...creationData,
+        ...data,
         readingTimeInMinutes,
       },
     })
@@ -71,39 +75,59 @@ class DevotionalModel {
     })
   }
 
-  async addView(slug: string) {
-    return Prisma.devotional.update({
-      where: { slug },
-      data: {
-        views: {
-          increment: 1,
+  async like(id: string, userId: string) {
+    try {
+      const like = await Prisma.devotionalLikes.findFirst({
+        where: {
+          userId,
         },
-      },
-    })
+      })
+
+      if (like) {
+        await Prisma.devotionalLikes.delete({
+          where: {
+            userId_devotionalId: {
+              devotionalId: id,
+              userId,
+            },
+          },
+        })
+      } else {
+        return Prisma.devotionalLikes.create({
+          data: {
+            devotionalId: id,
+            userId,
+          },
+        })
+      }
+    } catch (error) {
+      console.log(error)
+    }
   }
 
-  async addLike(id: string) {
-    return Prisma.devotional.update({
-      where: { id },
-      data: {
-        likes: {
-          increment: 1,
-        },
-      },
-    })
-  }
+  async view(id: string, userId?: string) {
+    try {
+      if (!userId) return
 
-  async removeLike(id: string) {
-    const { likes } = (await this.getById(id)) as Devotional
-
-    return Prisma.devotional.update({
-      where: { id },
-      data: {
-        likes: {
-          decrement: likes > 0 ? 1 : 0,
+      return Prisma.devotionalViews.upsert({
+        create: {
+          devotionalId: id,
+          userId,
         },
-      },
-    })
+        where: {
+          userId_devotionalId: {
+            devotionalId: id,
+            userId,
+          },
+        },
+        update: {
+          devotionalId: id,
+          userId,
+        },
+      })
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
 

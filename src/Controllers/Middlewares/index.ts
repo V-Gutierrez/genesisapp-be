@@ -19,6 +19,7 @@ export default class Middlewares {
     this.app.use(cookieParser())
     this.app.use(express.urlencoded({ extended: false }))
     this.app.use(morgan('short'))
+    this.UserContext(this.app)
   }
 
   CORS() {
@@ -34,15 +35,40 @@ export default class Middlewares {
     )
   }
 
+  UserContext(app: Express) {
+    app.use(async (req: Request, res: Response, next: NextFunction) => {
+      try {
+        const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
+
+        jwt.verify(
+          token,
+          process.env.ACCESS_TOKEN_SECRET as string,
+          (err: any, decoded: Decoded) => {
+            if (err) req.body.user = null
+            else req.body.user = decoded
+
+            next()
+          },
+        )
+      } catch (error) {
+        res.sendStatus(500)
+      }
+    })
+  }
+
   static JWT(app: Express) {
     app.use(async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any) => {
-          if (err) return res.sendStatus(403)
-          next()
-        })
+        jwt.verify(
+          token,
+          process.env.ACCESS_TOKEN_SECRET as string,
+          (err: any, decoded: Decoded) => {
+            if (err) return res.sendStatus(403)
+            next()
+          },
+        )
       } catch (error) {
         res.sendStatus(500)
       }

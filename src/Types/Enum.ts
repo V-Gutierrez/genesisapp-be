@@ -1,4 +1,4 @@
 export enum ImageKitFolders {
   Devotionals = 'devotionals',
-  ExternalEvents = 'externalevents',
+  News = 'news',
 }

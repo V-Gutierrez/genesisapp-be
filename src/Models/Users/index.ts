@@ -1,6 +1,6 @@
 import Bcrypt from '@Helpers/Bcrypt'
 import Prisma from '@Clients/Prisma'
-import { UserCreationProps } from '@Models/Users/types'
+import { Prisma as PrismaType } from '@prisma/client'
 
 class UserModel {
   async getUserById(id: string) {
@@ -30,11 +30,9 @@ class UserModel {
     })
   }
 
-  async create(args: UserCreationProps) {
+  async create(data: PrismaType.UserCreateInput) {
     return Prisma.user.create({
-      data: {
-        ...args,
-      },
+      data,
       select: {
         id: true,
         email: true,

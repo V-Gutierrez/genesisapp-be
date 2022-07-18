@@ -12,7 +12,7 @@
     "prepare": "husky install",
     "prisma:generate": "npx prisma generate",
     "prisma:studio": "npx prisma studio",
-    "prisma:migrate": "npx prisma migrate dev",
+    "prisma:migrate:dev": "npx prisma migrate dev",
     "prisma:seed": "npx prisma db seed",
     "prisma:modify": "ts-node --transpile-only prisma/seeds/execute.ts",
     "prisma:migrate:deploy": "npx prisma migrate deploy",

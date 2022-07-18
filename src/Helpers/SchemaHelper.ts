@@ -45,6 +45,12 @@ class SchemaHelper {
     scheduledTo: Joi.string().required(),
   })
 
+  static NEWS_CREATION = Joi.object().keys({
+    title: Joi.string().required(),
+    body: Joi.string().required(),
+    scheduledTo: Joi.string().required(),
+  })
+
   static validateSchema(schema: Schema, validationTarget: object) {
     const { error } = Joi.validate(validationTarget, schema, { abortEarly: false, convert: false })
 

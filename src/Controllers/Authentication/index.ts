@@ -266,17 +266,9 @@ class Authentication {
 
       if (!accessToken) return res.sendStatus(400)
 
-      jwt.verify(
-        accessToken,
-        process.env.ACCESS_TOKEN_SECRET as string,
-        (err: any, decoded: Decoded) => {
-          if (err) return res.sendStatus(401)
+      const { email, role, id, name } = req.body.user
 
-          const { email, role, id, name } = decoded
-
-          return res.status(200).json({ email, role, id, name })
-        },
-      )
+      return res.status(200).json({ email, role, id, name })
     })
   }
 }
