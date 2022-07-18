@@ -106,7 +106,7 @@ class News {
 
         if (!response) return res.sendStatus(404)
 
-        await NewsModel.view(response.id, userId || Formatter.generateHashFromString(req.ip))
+        await NewsModel.view(response.id, userId)
         return res.status(200).json(response)
       } catch (error) {
         res.sendStatus(500)

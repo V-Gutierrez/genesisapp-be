@@ -15,7 +15,7 @@ class Formatter {
   static getUserFirstName = (name: string) => name.split(' ')[0]
 
   static generateHashFromString = (str: string) =>
-    crypto.createHash('sha256').update(str).digest('hex')
+    crypto.createHash('md5', { outputLength: 16 }).update(str).digest('hex')
 }
 
 export default Formatter

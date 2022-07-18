@@ -77,7 +77,7 @@ model DevotionalLikes {
   devotional   Devotional @relation(fields: [devotionalId], references: [id])
   devotionalId String
   User         User       @relation(fields: [userId], references: [id])
-  userId       String     @default(uuid()) //Wont relate to any user but will count outsider view
+  userId       String //Wont relate to any user but will count outsider view
 
   @@id([userId, devotionalId])
 }
@@ -86,7 +86,7 @@ model DevotionalViews {
   devotional   Devotional @relation(fields: [devotionalId], references: [id])
   devotionalId String
   User         User       @relation(fields: [userId], references: [id])
-  userId       String     @default(uuid()) //Wont relate to any user but will count outsider view
+  userId       String //Wont relate to any user but will count outsider view
 
   @@id([userId, devotionalId])
 }
@@ -109,7 +109,7 @@ model NewsLikes {
   news   News   @relation(fields: [newsId], references: [id])
   newsId String
   User   User   @relation(fields: [userId], references: [id])
-  userId String @default(uuid())
+  userId String
 
   @@id([userId, newsId])
 }
@@ -118,7 +118,7 @@ model NewsViews {
   news   News   @relation(fields: [newsId], references: [id])
   newsId String
   User   User   @relation(fields: [userId], references: [id])
-  userId String @default(uuid())
+  userId String
 
   @@id([userId, newsId])
 }
