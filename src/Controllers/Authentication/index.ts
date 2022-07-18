@@ -262,13 +262,13 @@ class Authentication {
 
   static async getUserInformation(app: Express) {
     app.get('/api/auth/me', async (req: Request, res: Response) => {
-      const { [CookieHelper.AuthCookieDefaultOptions.name]: accessToken } = req.cookies
+      try {
+        const { email, role, id, name } = req.body.user
 
-      if (!accessToken) return res.sendStatus(400)
-
-      const { email, role, id, name } = req.body.user
-
-      return res.status(200).json({ email, role, id, name })
+        return res.status(200).json({ email, role, id, name })
+      } catch (error) {
+        return res.sendStatus(500)
+      }
     })
   }
 }

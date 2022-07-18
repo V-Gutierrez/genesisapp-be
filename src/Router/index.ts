@@ -28,16 +28,16 @@ export default class RoutesController {
 
     Users.signUp(this.app)
     Integrations.getGooglePhotosAlbumPhotos(this.app)
-    Authentication.getUserInformation(this.app)
 
-    /* AUTH ROUTES */
     Middlewares.JWT(this.app)
+    /* AUTH ROUTES */
+    Authentication.getUserInformation(this.app)
     Users.get(this.app)
     Devotionals.like(this.app)
     /* AUTH ROUTES */
 
-    /* ADMIN ROUTES */
     Middlewares.IsAdmin(this.app)
+    /* ADMIN ROUTES */
     News.createNews(this.app)
     News.deleteNews(this.app)
     News.getNewsAsAdmin(this.app)

@@ -269,10 +269,12 @@
             return n(this, void 0, void 0, function* () {
               e.get('/api/auth/me', (e, t) =>
                 n(this, void 0, void 0, function* () {
-                  const { [r.default.AuthCookieDefaultOptions.name]: i } = e.cookies
-                  if (!i) return t.sendStatus(400)
-                  const { email: n, role: o, id: s, name: a } = e.body.user
-                  return t.status(200).json({ email: n, role: o, id: s, name: a })
+                  try {
+                    const { email: i, role: n, id: o, name: s } = e.body.user
+                    return t.status(200).json({ email: i, role: n, id: o, name: s })
+                  } catch (e) {
+                    return t.sendStatus(500)
+                  }
                 }),
               )
             })
@@ -361,7 +363,7 @@
               n(this, void 0, void 0, function* () {
                 try {
                   const { [a.default.AuthCookieDefaultOptions.name]: n } = e.cookies
-                  l.default.verify(n, process.env.ACCESS_TOKEN_SECRET, (e, n) => {
+                  l.default.verify(n, process.env.ACCESS_TOKEN_SECRET, (e) => {
                     if (e) return t.sendStatus(403)
                     i()
                   })
@@ -431,11 +433,11 @@
         Object.defineProperty(t, '__esModule', { value: !0 })
         const s = o(i(362)),
           a = o(i(721)),
-          r = i(628),
-          u = o(i(832)),
-          d = o(i(488)),
-          l = o(i(448)),
-          c = i(465)
+          r = o(i(832)),
+          u = o(i(488)),
+          d = o(i(448)),
+          l = i(465),
+          c = i(628)
         t.default = class {
           static getDevotionals(e) {
             e.get('/api/devotionals', (e, t) =>
@@ -480,34 +482,34 @@
             )
           }
           static createDevotional(e) {
-            e.post('/api/devotionals', d.default.SingleFileUpload('coverImage'), (e, t) =>
+            e.post('/api/devotionals', u.default.SingleFileUpload('coverImage'), (e, t) =>
               n(this, void 0, void 0, function* () {
                 try {
-                  const i = l.default.validateSchema(l.default.DEVOTIONAL_CREATION, e.body)
+                  const i = d.default.validateSchema(d.default.DEVOTIONAL_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { body: n, title: o, scheduledTo: d, author: f } = e.body,
+                  const { body: n, title: o, scheduledTo: u, author: f } = e.body,
                     { file: h } = e,
                     {
                       url: v,
                       thumbnailUrl: p,
                       fileId: _,
-                    } = yield u.default.uploadFile(
+                    } = yield r.default.uploadFile(
                       h.buffer,
                       a.default.generateSlug(o),
-                      r.ImageKitFolders.Devotionals,
+                      c.ImageKitFolders.Devotionals,
                     ),
-                    m = yield s.default.create({
+                    y = yield s.default.create({
                       body: n,
                       title: o,
-                      scheduledTo: (0, c.zonedTimeToUtc)(new Date(d), 'America/Sao_Paulo'),
+                      scheduledTo: (0, l.zonedTimeToUtc)(new Date(u), 'America/Sao_Paulo'),
                       author: f,
                       slug: a.default.generateSlug(o),
                       coverImage: v,
                       coverThumbnail: p,
                       assetId: _,
                     })
-                  return t.status(201).json(m)
+                  return t.status(201).json(y)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -520,7 +522,7 @@
                 try {
                   const { id: i } = e.params,
                     n = yield s.default.deleteById(i)
-                  yield u.default.delete(n.assetId), t.sendStatus(204)
+                  yield r.default.delete(n.assetId), t.sendStatus(204)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -935,9 +937,9 @@
                       _ = c.default.sign({ id: p.id }, process.env.ACTIVATION_TOKEN_SECRET, {
                         expiresIn: '30d',
                       }),
-                      m = new d.default()
-                    yield m.send(
-                      m.TEMPLATES.confirmationEmail.config(p.email, {
+                      y = new d.default()
+                    yield y.send(
+                      y.TEMPLATES.confirmationEmail.config(p.email, {
                         userFirstName: r.default.getUserFirstName(p.name),
                         activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${_}`,
                       }),
@@ -1658,8 +1660,8 @@
               d.default.getNewsBySlug(this.app),
               c.default.signUp(this.app),
               r.default.getGooglePhotosAlbumPhotos(this.app),
-              o.default.getUserInformation(this.app),
               u.default.JWT(this.app),
+              o.default.getUserInformation(this.app),
               c.default.get(this.app),
               s.default.like(this.app),
               u.default.IsAdmin(this.app),

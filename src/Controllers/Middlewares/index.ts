@@ -61,14 +61,10 @@ export default class Middlewares {
       try {
         const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
-        jwt.verify(
-          token,
-          process.env.ACCESS_TOKEN_SECRET as string,
-          (err: any, decoded: Decoded) => {
-            if (err) return res.sendStatus(403)
-            next()
-          },
-        )
+        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any) => {
+          if (err) return res.sendStatus(403)
+          next()
+        })
       } catch (error) {
         res.sendStatus(500)
       }
