@@ -80,6 +80,7 @@ class DevotionalModel {
       const like = await Prisma.devotionalLikes.findFirst({
         where: {
           userId,
+          devotionalId: id,
         },
       })
 

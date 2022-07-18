@@ -463,7 +463,8 @@
                     ? (yield s.default.view(a.id, o), t.status(200).json(a))
                     : t.sendStatus(404)
                 } catch (e) {
-                  t.sendStatus(500)
+                  console.log('🚀 ~ file: index.ts ~ line 38 ~ Devotionals ~ app.get ~ error', e),
+                    t.sendStatus(500)
                 }
               }),
             )
@@ -535,7 +536,7 @@
                 try {
                   const { id: n } = e.params,
                     { id: o } = null !== (i = e.cookies.user) && void 0 !== i ? i : {}
-                  yield s.default.like(n, o), t.sendStatus(200)
+                  yield s.default.like(n, o), t.sendStatus(204)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -1288,7 +1289,11 @@
           like(e, t) {
             return n(this, void 0, void 0, function* () {
               try {
-                if (!(yield s.default.devotionalLikes.findFirst({ where: { userId: t } })))
+                if (
+                  !(yield s.default.devotionalLikes.findFirst({
+                    where: { userId: t, devotionalId: e },
+                  }))
+                )
                   return s.default.devotionalLikes.create({ data: { devotionalId: e, userId: t } })
                 yield s.default.devotionalLikes.delete({
                   where: { userId_devotionalId: { devotionalId: e, userId: t } },
