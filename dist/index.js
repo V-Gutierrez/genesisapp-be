@@ -458,9 +458,10 @@
                 try {
                   const { slug: n } = e.params,
                     { id: o } = null !== (i = e.cookies.user) && void 0 !== i ? i : {},
-                    a = yield s.default.getBySlug(n)
-                  return a
-                    ? (yield s.default.view(a.id, o), t.status(200).json(a))
+                    r = yield s.default.getBySlug(n)
+                  return r
+                    ? (yield s.default.view(r.id, o || a.default.generateHashFromString(e.ip)),
+                      t.status(200).json(r))
                     : t.sendStatus(404)
                 } catch (e) {
                   t.sendStatus(500)
@@ -782,9 +783,10 @@
                 try {
                   const { slug: n } = e.params,
                     { id: o } = null !== (i = e.cookies.user) && void 0 !== i ? i : {},
-                    s = yield d.default.getBySlug(n)
-                  return s
-                    ? (yield d.default.view(s.id, o), t.status(200).json(s))
+                    a = yield d.default.getBySlug(n)
+                  return a
+                    ? (yield d.default.view(a.id, o || s.default.generateHashFromString(e.ip)),
+                      t.status(200).json(a))
                     : t.sendStatus(404)
                 } catch (e) {
                   t.sendStatus(500)
@@ -1041,19 +1043,27 @@
       766: (e, t, i) => {
         Object.defineProperty(t, '__esModule', { value: !0 }), i(81), (t.default = !0)
       },
-      721: (e, t) => {
+      721: function (e, t, i) {
+        var n =
+          (this && this.__importDefault) ||
+          function (e) {
+            return e && e.__esModule ? e : { default: e }
+          }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        class i {}
-        ;(i.generateSlug = (e) =>
+        const o = n(i(113))
+        class s {}
+        ;(s.generateSlug = (e) =>
           e
             .trim()
             .replace(/\s+/g, '-')
             .replace(/[^\w-]+/g, '')
             .toLowerCase()),
-          (i.sanitizeUserPhone = (e) => e.replace(/\s/gi, '').replace('-', '').trim()),
-          (i.sanitizeEmail = (e) => e.replace(/\s/gi, '').trim().toLocaleLowerCase()),
-          (i.getUserFirstName = (e) => e.split(' ')[0]),
-          (t.default = i)
+          (s.sanitizeUserPhone = (e) => e.replace(/\s/gi, '').replace('-', '').trim()),
+          (s.sanitizeEmail = (e) => e.replace(/\s/gi, '').trim().toLocaleLowerCase()),
+          (s.getUserFirstName = (e) => e.split(' ')[0]),
+          (s.generateHashFromString = (e) =>
+            o.default.createHash('sha256').update(e).digest('hex')),
+          (t.default = s)
       },
       590: (e, t) => {
         Object.defineProperty(t, '__esModule', { value: !0 }),
@@ -1994,6 +2004,9 @@
       },
       285: (e) => {
         e.exports = require('reading-time-estimator')
+      },
+      113: (e) => {
+        e.exports = require('crypto')
       },
     },
     t = {}
