@@ -44,8 +44,8 @@ export default class Middlewares {
           token,
           process.env.ACCESS_TOKEN_SECRET as string,
           (err: any, decoded: Decoded) => {
-            if (err) req.body.user = null
-            else req.body.user = decoded
+            if (err) req.cookies.user = null
+            else req.cookies.user = decoded
 
             next()
           },

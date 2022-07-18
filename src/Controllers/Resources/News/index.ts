@@ -100,7 +100,8 @@ class News {
     app.get('/api/news/:slug', async (req: Request, res: Response) => {
       try {
         const { slug } = req.params
-        const { id: userId } = req.body.user ?? {}
+        const { id: userId } = req.cookies.user ?? {}
+
         const response = await NewsModel.getBySlug(slug)
 
         if (!response) return res.sendStatus(404)

@@ -270,7 +270,7 @@
               e.get('/api/auth/me', (e, t) =>
                 n(this, void 0, void 0, function* () {
                   try {
-                    const { email: i, role: n, id: o, name: s } = e.body.user
+                    const { email: i, role: n, id: o, name: s } = e.cookies.user
                     return t.status(200).json({ email: i, role: n, id: o, name: s })
                   } catch (e) {
                     return t.sendStatus(500)
@@ -350,7 +350,7 @@
                 try {
                   const { [a.default.AuthCookieDefaultOptions.name]: t } = e.cookies
                   l.default.verify(t, process.env.ACCESS_TOKEN_SECRET, (t, n) => {
-                    ;(e.body.user = t ? null : n), i()
+                    ;(e.cookies.user = t ? null : n), i()
                   })
                 } catch (e) {
                   t.sendStatus(500)
@@ -433,11 +433,11 @@
         Object.defineProperty(t, '__esModule', { value: !0 })
         const s = o(i(362)),
           a = o(i(721)),
-          r = o(i(832)),
-          u = o(i(488)),
-          d = o(i(448)),
-          l = i(465),
-          c = i(628)
+          r = i(628),
+          u = o(i(832)),
+          d = o(i(488)),
+          l = o(i(448)),
+          c = i(465)
         t.default = class {
           static getDevotionals(e) {
             e.get('/api/devotionals', (e, t) =>
@@ -457,14 +457,13 @@
                 var i
                 try {
                   const { slug: n } = e.params,
-                    { id: o } = null !== (i = e.body.user) && void 0 !== i ? i : {},
+                    { id: o } = null !== (i = e.cookies.user) && void 0 !== i ? i : {},
                     a = yield s.default.getBySlug(n)
                   return a
                     ? (yield s.default.view(a.id, o), t.status(200).json(a))
                     : t.sendStatus(404)
                 } catch (e) {
-                  console.log('🚀 ~ file: index.ts ~ line 39 ~ Devotionals ~ app.get ~ error', e),
-                    t.sendStatus(500)
+                  t.sendStatus(500)
                 }
               }),
             )
@@ -482,34 +481,34 @@
             )
           }
           static createDevotional(e) {
-            e.post('/api/devotionals', u.default.SingleFileUpload('coverImage'), (e, t) =>
+            e.post('/api/devotionals', d.default.SingleFileUpload('coverImage'), (e, t) =>
               n(this, void 0, void 0, function* () {
                 try {
-                  const i = d.default.validateSchema(d.default.DEVOTIONAL_CREATION, e.body)
+                  const i = l.default.validateSchema(l.default.DEVOTIONAL_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { body: n, title: o, scheduledTo: u, author: f } = e.body,
+                  const { body: n, title: o, scheduledTo: d, author: f } = e.body,
                     { file: h } = e,
                     {
                       url: v,
                       thumbnailUrl: p,
                       fileId: _,
-                    } = yield r.default.uploadFile(
+                    } = yield u.default.uploadFile(
                       h.buffer,
                       a.default.generateSlug(o),
-                      c.ImageKitFolders.Devotionals,
+                      r.ImageKitFolders.Devotionals,
                     ),
-                    y = yield s.default.create({
+                    m = yield s.default.create({
                       body: n,
                       title: o,
-                      scheduledTo: (0, l.zonedTimeToUtc)(new Date(u), 'America/Sao_Paulo'),
+                      scheduledTo: (0, c.zonedTimeToUtc)(new Date(d), 'America/Sao_Paulo'),
                       author: f,
                       slug: a.default.generateSlug(o),
                       coverImage: v,
                       coverThumbnail: p,
                       assetId: _,
                     })
-                  return t.status(201).json(y)
+                  return t.status(201).json(m)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -522,7 +521,7 @@
                 try {
                   const { id: i } = e.params,
                     n = yield s.default.deleteById(i)
-                  yield r.default.delete(n.assetId), t.sendStatus(204)
+                  yield u.default.delete(n.assetId), t.sendStatus(204)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -535,7 +534,7 @@
                 var i
                 try {
                   const { id: n } = e.params,
-                    { id: o } = null !== (i = e.body.user) && void 0 !== i ? i : {}
+                    { id: o } = null !== (i = e.cookies.user) && void 0 !== i ? i : {}
                   yield s.default.like(n, o), t.sendStatus(200)
                 } catch (e) {
                   t.sendStatus(500)
@@ -782,7 +781,7 @@
                 var i
                 try {
                   const { slug: n } = e.params,
-                    { id: o } = null !== (i = e.body.user) && void 0 !== i ? i : {},
+                    { id: o } = null !== (i = e.cookies.user) && void 0 !== i ? i : {},
                     s = yield d.default.getBySlug(n)
                   return s
                     ? (yield d.default.view(s.id, o), t.status(200).json(s))
@@ -937,9 +936,9 @@
                       _ = c.default.sign({ id: p.id }, process.env.ACTIVATION_TOKEN_SECRET, {
                         expiresIn: '30d',
                       }),
-                      y = new d.default()
-                    yield y.send(
-                      y.TEMPLATES.confirmationEmail.config(p.email, {
+                      m = new d.default()
+                    yield m.send(
+                      m.TEMPLATES.confirmationEmail.config(p.email, {
                         userFirstName: r.default.getUserFirstName(p.name),
                         activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${_}`,
                       }),
@@ -1112,51 +1111,29 @@
               return o(t, e), t
             },
           a =
-            (this && this.__rest) ||
-            function (e, t) {
-              var i = {}
-              for (var n in e)
-                Object.prototype.hasOwnProperty.call(e, n) && t.indexOf(n) < 0 && (i[n] = e[n])
-              if (null != e && 'function' == typeof Object.getOwnPropertySymbols) {
-                var o = 0
-                for (n = Object.getOwnPropertySymbols(e); o < n.length; o++)
-                  t.indexOf(n[o]) < 0 &&
-                    Object.prototype.propertyIsEnumerable.call(e, n[o]) &&
-                    (i[n[o]] = e[n[o]])
-              }
-              return i
-            },
-          r =
             (this && this.__importDefault) ||
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const u = s(i(634)),
-          d = r(i(506))
-        class l {
+        const r = s(i(634)),
+          u = a(i(506))
+        class d {
           static validateSchema(e, t) {
-            var i
-            let n = t
-            if (null === (i = null == t ? void 0 : t.body) || void 0 === i ? void 0 : i.user) {
-              const e = t.body,
-                { user: i } = e
-              n = a(e, ['user'])
-            }
-            const { error: o } = d.default.validate(t, e, { abortEarly: !1, convert: !1 })
-            if (!o || !o.details) return
-            const s = o.details.map(({ message: e, path: t }) => ({ [t.join('.')]: e }))
-            return u.mergeAll(s)
+            const { error: i } = u.default.validate(t, e, { abortEarly: !1, convert: !1 })
+            if (!i || !i.details) return
+            const n = i.details.map(({ message: e, path: t }) => ({ [t.join('.')]: e }))
+            return r.mergeAll(n)
           }
         }
-        ;(l.SIGNUP_SCHEMA = d.default.object().keys({
-          email: d.default.string().email().required(),
-          name: d.default.string().required(),
-          phone: d.default
+        ;(d.SIGNUP_SCHEMA = u.default.object().keys({
+          email: u.default.string().email().required(),
+          name: u.default.string().required(),
+          phone: u.default
             .string()
             .regex(/^\+[0-9]{2}\s[0-9]{1,2}\s[0-9]{1,2}\s[0-9]{4}\-[0-9]{4}/)
             .required(),
-          password: d.default
+          password: u.default
             .string()
             .min(8)
             .regex(/[a-z]/)
@@ -1164,19 +1141,19 @@
             .regex(/[0-9]/)
             .regex(/[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/)
             .required(),
-          birthdate: d.default.string().required(),
+          birthdate: u.default.string().required(),
         })),
-          (l.LOGIN_SCHEMA = d.default
+          (d.LOGIN_SCHEMA = u.default
             .object()
             .keys({
-              email: d.default.string().email().required(),
-              password: d.default.string().required(),
+              email: u.default.string().email().required(),
+              password: u.default.string().required(),
             })),
-          (l.RESET_PASSWORD = d.default
+          (d.RESET_PASSWORD = u.default
             .object()
-            .keys({ email: d.default.string().email().required() })),
-          (l.NEW_PASSWORD = d.default.object().keys({
-            password: d.default
+            .keys({ email: u.default.string().email().required() })),
+          (d.NEW_PASSWORD = u.default.object().keys({
+            password: u.default
               .string()
               .min(8)
               .regex(/[a-z]/)
@@ -1185,22 +1162,22 @@
               .regex(/[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/)
               .required(),
           })),
-          (l.DEVOTIONAL_CREATION = d.default
+          (d.DEVOTIONAL_CREATION = u.default
             .object()
             .keys({
-              body: d.default.string().required(),
-              title: d.default.string().required(),
-              author: d.default.string().required(),
-              scheduledTo: d.default.string().required(),
+              body: u.default.string().required(),
+              title: u.default.string().required(),
+              author: u.default.string().required(),
+              scheduledTo: u.default.string().required(),
             })),
-          (l.NEWS_CREATION = d.default
+          (d.NEWS_CREATION = u.default
             .object()
             .keys({
-              title: d.default.string().required(),
-              body: d.default.string().required(),
-              scheduledTo: d.default.string().required(),
+              title: u.default.string().required(),
+              body: u.default.string().required(),
+              scheduledTo: u.default.string().required(),
             })),
-          (t.default = l)
+          (t.default = d)
       },
       362: function (e, t, i) {
         var n =

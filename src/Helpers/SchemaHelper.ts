@@ -52,14 +52,6 @@ class SchemaHelper {
   })
 
   static validateSchema(schema: Schema, validationTarget: any) {
-    let itemToValidate = validationTarget
-
-    if (validationTarget?.body?.user) {
-      const { user, ...rest } = validationTarget.body
-
-      itemToValidate = rest
-    }
-
     const { error } = Joi.validate(validationTarget, schema, { abortEarly: false, convert: false })
 
     if (!error || !error.details) {

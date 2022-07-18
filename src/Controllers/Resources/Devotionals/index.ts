@@ -26,7 +26,7 @@ class Devotionals {
     app.get('/api/devotionals/:slug', async (req: Request, res: Response) => {
       try {
         const { slug } = req.params
-        const { id: userId } = req.body.user ?? {}
+        const { id: userId } = req.cookies.user ?? {}
 
         const response: Devotional | null = await DevotionalModel.getBySlug(slug)
 
@@ -36,7 +36,6 @@ class Devotionals {
           return res.status(200).json(response)
         
       } catch (error) {
-        console.log('🚀 ~ file: index.ts ~ line 39 ~ Devotionals ~ app.get ~ error', error)
         res.sendStatus(500)
       }
     })
@@ -121,7 +120,7 @@ class Devotionals {
     app.post('/api/devotionals/:id/like', async (req: Request, res: Response) => {
       try {
         const { id } = req.params
-        const { id: userId } = req.body.user ?? {}
+        const { id: userId } = req.cookies.user ?? {}
 
         await DevotionalModel.like(id, userId)
 
