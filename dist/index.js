@@ -433,11 +433,11 @@
         Object.defineProperty(t, '__esModule', { value: !0 })
         const s = o(i(362)),
           a = o(i(721)),
-          r = i(628),
-          u = o(i(832)),
-          d = o(i(488)),
-          l = o(i(448)),
-          c = i(465)
+          r = o(i(832)),
+          u = o(i(488)),
+          d = o(i(448)),
+          l = i(465),
+          c = i(628)
         t.default = class {
           static getDevotionals(e) {
             e.get('/api/devotionals', (e, t) =>
@@ -482,27 +482,27 @@
             )
           }
           static createDevotional(e) {
-            e.post('/api/devotionals', d.default.SingleFileUpload('coverImage'), (e, t) =>
+            e.post('/api/devotionals', u.default.SingleFileUpload('coverImage'), (e, t) =>
               n(this, void 0, void 0, function* () {
                 try {
-                  const i = l.default.validateSchema(l.default.DEVOTIONAL_CREATION, e.body)
+                  const i = d.default.validateSchema(d.default.DEVOTIONAL_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { body: n, title: o, scheduledTo: d, author: f } = e.body,
+                  const { body: n, title: o, scheduledTo: u, author: f } = e.body,
                     { file: h } = e,
                     {
                       url: v,
                       thumbnailUrl: p,
                       fileId: _,
-                    } = yield u.default.uploadFile(
+                    } = yield r.default.uploadFile(
                       h.buffer,
                       a.default.generateSlug(o),
-                      r.ImageKitFolders.Devotionals,
+                      c.ImageKitFolders.Devotionals,
                     ),
                     m = yield s.default.create({
                       body: n,
                       title: o,
-                      scheduledTo: (0, c.zonedTimeToUtc)(new Date(d), 'America/Sao_Paulo'),
+                      scheduledTo: (0, l.zonedTimeToUtc)(new Date(u), 'America/Sao_Paulo'),
                       author: f,
                       slug: a.default.generateSlug(o),
                       coverImage: v,
@@ -522,7 +522,7 @@
                 try {
                   const { id: i } = e.params,
                     n = yield s.default.deleteById(i)
-                  yield u.default.delete(n.assetId), t.sendStatus(204)
+                  yield r.default.delete(n.assetId), t.sendStatus(204)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -1303,7 +1303,6 @@
           view(e, t) {
             return n(this, void 0, void 0, function* () {
               try {
-                if (!t) return
                 return s.default.devotionalViews.upsert({
                   create: { devotionalId: e, userId: t },
                   where: { userId_devotionalId: { devotionalId: e, userId: t } },
@@ -1460,7 +1459,6 @@
           view(e, t) {
             return n(this, void 0, void 0, function* () {
               try {
-                if (!t) return
                 return s.default.newsViews.upsert({
                   create: { newsId: e, userId: t },
                   where: { userId_newsId: { newsId: e, userId: t } },

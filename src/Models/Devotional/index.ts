@@ -105,10 +105,8 @@ class DevotionalModel {
     }
   }
 
-  async view(id: string, userId?: string) {
+  async view(id: string, userId: string) {
     try {
-      if (!userId) return
-
       return Prisma.devotionalViews.upsert({
         create: {
           devotionalId: id,

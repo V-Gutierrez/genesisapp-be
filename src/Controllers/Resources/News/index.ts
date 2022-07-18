@@ -105,10 +105,9 @@ class News {
         const response = await NewsModel.getBySlug(slug)
 
         if (!response) return res.sendStatus(404)
-        
-          await NewsModel.view(response.id, userId || Formatter.generateHashFromString(req.ip))
-          return res.status(200).json(response)
-        
+
+        await NewsModel.view(response.id, userId || Formatter.generateHashFromString(req.ip))
+        return res.status(200).json(response)
       } catch (error) {
         res.sendStatus(500)
       }
