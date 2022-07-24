@@ -35,7 +35,6 @@ class Devotionals {
         await DevotionalModel.view(response.id, userId)
         return res.status(200).json(response)
       } catch (error) {
-        console.log('🚀 ~ file: index.ts ~ line 38 ~ Devotionals ~ app.get ~ error', error)
         res.sendStatus(500)
       }
     })

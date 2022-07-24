@@ -463,8 +463,7 @@
                     ? (yield s.default.view(a.id, o), t.status(200).json(a))
                     : t.sendStatus(404)
                 } catch (e) {
-                  console.log('🚀 ~ file: index.ts ~ line 38 ~ Devotionals ~ app.get ~ error', e),
-                    t.sendStatus(500)
+                  t.sendStatus(500)
                 }
               }),
             )
@@ -1479,10 +1478,7 @@
             return n(this, void 0, void 0, function* () {
               try {
                 const i = yield s.default.newsLikes.findFirst({ where: { userId: t } })
-                if (
-                  (console.log('🚀 ~ file: index.ts ~ line 78 ~ NewsModel ~ like ~ like', i),
-                  !(null == i ? void 0 : i.userId))
-                )
+                if (!(null == i ? void 0 : i.userId))
                   return s.default.newsLikes.create({ data: { newsId: e, userId: t } })
                 yield s.default.newsLikes.delete({
                   where: { userId_newsId: { newsId: e, userId: t } },
