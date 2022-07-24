@@ -1293,7 +1293,7 @@
           }
           create(e) {
             return n(this, void 0, void 0, function* () {
-              const t = (0, a.readingTime)(e.body, 200).minutes
+              const t = (0, a.readingTime)(e.body, 120).minutes
               return s.default.devotional.create({
                 data: Object.assign(Object.assign({}, e), { readingTimeInMinutes: t }),
               })

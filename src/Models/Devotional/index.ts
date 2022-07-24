@@ -58,7 +58,7 @@ class DevotionalModel {
   }
 
   async create(data: PrismaType.DevotionalCreateInput) {
-    const readingTimeInMinutes = readingTime(data.body, 200).minutes
+    const readingTimeInMinutes = readingTime(data.body, 120).minutes
 
     return Prisma.devotional.create({
       data: {
