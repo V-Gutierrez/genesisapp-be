@@ -10,6 +10,18 @@ class NewsModel {
   }
 
   async deleteById(id: string) {
+    await Prisma.newsLikes.deleteMany({
+      where: {
+        newsId: id,
+      },
+    })
+
+    await Prisma.newsViews.deleteMany({
+      where: {
+        newsId: id,
+      },
+    })
+
     return Prisma.news.delete({
       where: {
         id,
@@ -27,6 +39,10 @@ class NewsModel {
       },
       orderBy: {
         scheduledTo: 'desc',
+      },
+      include: {
+        NewsLikes: true,
+        NewsViews: true,
       },
     })
   }

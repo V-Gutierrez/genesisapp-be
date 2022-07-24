@@ -433,11 +433,11 @@
         Object.defineProperty(t, '__esModule', { value: !0 })
         const s = o(i(362)),
           a = o(i(721)),
-          r = i(628),
-          u = o(i(832)),
-          d = o(i(488)),
-          l = o(i(448)),
-          c = i(465)
+          r = o(i(832)),
+          u = o(i(488)),
+          d = o(i(448)),
+          l = i(465),
+          c = i(628)
         t.default = class {
           static getDevotionals(e) {
             e.get('/api/devotionals', (e, t) =>
@@ -482,47 +482,47 @@
             )
           }
           static createDevotional(e) {
-            e.post('/api/devotionals', d.default.SingleFileUpload('coverImage'), (e, t) =>
+            e.post('/api/devotionals', u.default.SingleFileUpload('coverImage'), (e, t) =>
               n(this, void 0, void 0, function* () {
                 try {
-                  const i = l.default.validateSchema(l.default.DEVOTIONAL_CREATION, e.body)
+                  const i = d.default.validateSchema(d.default.DEVOTIONAL_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { body: n, title: o, scheduledTo: d, author: f } = e.body,
+                  const { body: n, title: o, scheduledTo: u, author: f } = e.body,
                     { file: h } = e,
                     {
                       url: v,
                       thumbnailUrl: p,
                       fileId: _,
-                    } = yield u.default.uploadFile(
+                    } = yield r.default.uploadFile(
                       h.buffer,
                       a.default.generateSlug(o),
-                      r.ImageKitFolders.Devotionals,
+                      c.ImageKitFolders.Devotionals,
                     ),
-                    m = yield s.default.create({
+                    y = yield s.default.create({
                       body: n,
                       title: o,
-                      scheduledTo: (0, c.zonedTimeToUtc)(new Date(d), 'America/Sao_Paulo'),
+                      scheduledTo: (0, l.zonedTimeToUtc)(new Date(u), 'America/Sao_Paulo'),
                       author: f,
                       slug: a.default.generateSlug(o),
                       coverImage: v,
                       coverThumbnail: p,
                       assetId: _,
                     })
-                  return t.status(201).json(m)
+                  return t.status(201).json(y)
                 } catch (e) {
                   t.sendStatus(500)
                 }
               }),
             )
           }
-          static deleteDevocional(e) {
+          static deleteDevotional(e) {
             e.delete('/api/devotionals/:id', (e, t) =>
               n(this, void 0, void 0, function* () {
                 try {
                   const { id: i } = e.params,
                     n = yield s.default.deleteById(i)
-                  yield u.default.delete(n.assetId), t.sendStatus(204)
+                  yield r.default.delete(n.assetId), t.sendStatus(204)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -712,27 +712,28 @@
                   const i = l.default.validateSchema(l.default.NEWS_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { body: n, title: o, scheduledTo: u } = e.body,
-                    { file: f } = e,
+                  const { body: n, title: o, scheduledTo: u, highlightText: f } = e.body,
+                    { file: h } = e,
                     {
-                      url: h,
-                      thumbnailUrl: v,
-                      fileId: p,
+                      url: v,
+                      thumbnailUrl: p,
+                      fileId: _,
                     } = yield r.default.uploadFile(
-                      f.buffer,
+                      h.buffer,
                       s.default.generateSlug(o),
                       a.ImageKitFolders.News,
                     ),
-                    _ = yield d.default.create({
+                    y = yield d.default.create({
                       body: n,
                       title: o,
                       scheduledTo: (0, c.zonedTimeToUtc)(new Date(u), 'America/Sao_Paulo'),
-                      coverImage: h,
-                      coverThumbnail: v,
+                      coverImage: v,
+                      coverThumbnail: p,
                       slug: s.default.generateSlug(o),
-                      assetId: p,
+                      assetId: _,
+                      highlightText: f,
                     })
-                  return t.status(201).json(_)
+                  return t.status(201).json(y)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -787,6 +788,20 @@
                   return s
                     ? (yield d.default.view(s.id, o), t.status(200).json(s))
                     : t.sendStatus(404)
+                } catch (e) {
+                  t.sendStatus(500)
+                }
+              }),
+            )
+          }
+          static like(e) {
+            e.post('/api/news/:id/like', (e, t) =>
+              n(this, void 0, void 0, function* () {
+                var i
+                try {
+                  const { id: n } = e.params,
+                    { id: o } = null !== (i = e.cookies.user) && void 0 !== i ? i : {}
+                  yield d.default.like(n, o), t.sendStatus(204)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -937,9 +952,9 @@
                       _ = c.default.sign({ id: p.id }, process.env.ACTIVATION_TOKEN_SECRET, {
                         expiresIn: '30d',
                       }),
-                      m = new d.default()
-                    yield m.send(
-                      m.TEMPLATES.confirmationEmail.config(p.email, {
+                      y = new d.default()
+                    yield y.send(
+                      y.TEMPLATES.confirmationEmail.config(p.email, {
                         userFirstName: r.default.getUserFirstName(p.name),
                         activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${_}`,
                       }),
@@ -1184,6 +1199,7 @@
             .keys({
               title: u.default.string().required(),
               body: u.default.string().required(),
+              highlightText: u.default.string().required(),
               scheduledTo: u.default.string().required(),
             })),
           (t.default = d)
@@ -1283,7 +1299,11 @@
           }
           deleteById(e) {
             return n(this, void 0, void 0, function* () {
-              return s.default.devotional.delete({ where: { id: e } })
+              return (
+                yield s.default.devotionalLikes.deleteMany({ where: { devotionalId: e } }),
+                yield s.default.devotionalViews.deleteMany({ where: { devotionalId: e } }),
+                s.default.devotional.delete({ where: { id: e } })
+              )
             })
           }
           like(e, t) {
@@ -1416,7 +1436,11 @@
           }
           deleteById(e) {
             return n(this, void 0, void 0, function* () {
-              return s.default.news.delete({ where: { id: e } })
+              return (
+                yield s.default.newsLikes.deleteMany({ where: { newsId: e } }),
+                yield s.default.newsViews.deleteMany({ where: { newsId: e } }),
+                s.default.news.delete({ where: { id: e } })
+              )
             })
           }
           getBySlug(e) {
@@ -1429,6 +1453,7 @@
                   },
                 },
                 orderBy: { scheduledTo: 'desc' },
+                include: { NewsLikes: !0, NewsViews: !0 },
               })
             })
           }
@@ -1670,6 +1695,7 @@
               s.default.getDevotionalBySlug(this.app),
               d.default.getNews(this.app),
               d.default.getNewsBySlug(this.app),
+              d.default.like(this.app),
               c.default.signUp(this.app),
               r.default.getGooglePhotosAlbumPhotos(this.app),
               u.default.JWT(this.app),
@@ -1683,7 +1709,7 @@
               c.default.getAllUsersAsAdmin(this.app),
               s.default.createDevotional(this.app),
               s.default.getDevotionalsAsAdmin(this.app),
-              s.default.deleteDevocional(this.app),
+              s.default.deleteDevotional(this.app),
               l.default.getStats(this.app)
           }
         }

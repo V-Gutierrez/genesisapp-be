@@ -101,6 +101,7 @@ model News {
   coverImage     String
   coverThumbnail String
   assetId        String
+  highlightText  String
   NewsLikes      NewsLikes[]
   NewsViews      NewsViews[]
 }

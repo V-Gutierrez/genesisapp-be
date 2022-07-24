@@ -100,7 +100,7 @@ class Devotionals {
     )
   }
 
-  static deleteDevocional(app: Express) {
+  static deleteDevotional(app: Express) {
     app.delete('/api/devotionals/:id', async (req: Request, res: Response) => {
       try {
         const { id } = req.params

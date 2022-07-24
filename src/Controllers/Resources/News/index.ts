@@ -25,7 +25,7 @@ class News {
             return res.status(400).json({ error: 'coverImage is missing' })
           }
 
-          const { body, title, scheduledTo } = req.body
+          const { body, title, scheduledTo, highlightText } = req.body
           const { file } = req
 
           const {
@@ -46,6 +46,7 @@ class News {
             coverThumbnail,
             slug: Formatter.generateSlug(title),
             assetId: fileId,
+            highlightText,
           })
 
           return res.status(201).json(news)
@@ -108,6 +109,21 @@ class News {
 
         await NewsModel.view(response.id, userId)
         return res.status(200).json(response)
+      } catch (error) {
+        res.sendStatus(500)
+      }
+    })
+  }
+
+  static like(app: Express) {
+    app.post('/api/news/:id/like', async (req: Request, res: Response) => {
+      try {
+        const { id } = req.params
+        const { id: userId } = req.cookies.user ?? {}
+
+        await NewsModel.like(id, userId)
+
+        res.sendStatus(204)
       } catch (error) {
         res.sendStatus(500)
       }

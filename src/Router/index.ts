@@ -25,6 +25,7 @@ export default class RoutesController {
 
     News.getNews(this.app)
     News.getNewsBySlug(this.app)
+    News.like(this.app)
 
     Users.signUp(this.app)
     Integrations.getGooglePhotosAlbumPhotos(this.app)
@@ -44,7 +45,7 @@ export default class RoutesController {
     Users.getAllUsersAsAdmin(this.app)
     Devotionals.createDevotional(this.app)
     Devotionals.getDevotionalsAsAdmin(this.app)
-    Devotionals.deleteDevocional(this.app)
+    Devotionals.deleteDevotional(this.app)
     Stats.getStats(this.app)
     /* ADMIN ROUTES */
   }

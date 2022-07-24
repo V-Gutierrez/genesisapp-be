@@ -70,6 +70,18 @@ class DevotionalModel {
   }
 
   async deleteById(id: string) {
+    await Prisma.devotionalLikes.deleteMany({
+      where: {
+        devotionalId: id,
+      },
+    })
+
+    await Prisma.devotionalViews.deleteMany({
+      where: {
+        devotionalId: id,
+      },
+    })
+
     return Prisma.devotional.delete({
       where: { id },
     })

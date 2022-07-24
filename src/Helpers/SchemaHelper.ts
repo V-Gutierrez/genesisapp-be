@@ -48,6 +48,7 @@ class SchemaHelper {
   static NEWS_CREATION = Joi.object().keys({
     title: Joi.string().required(),
     body: Joi.string().required(),
+    highlightText: Joi.string().required(),
     scheduledTo: Joi.string().required(),
   })
 
