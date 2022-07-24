@@ -859,8 +859,11 @@
                     devotionals: e,
                     activeUsers: i,
                     growthGroups: n,
+                    news: o,
                   } = yield s.default.getStats()
-                  return t.status(200).json({ activeUsers: i, devotionals: e, growthGroups: n })
+                  return t
+                    .status(200)
+                    .json({ activeUsers: i, devotionals: e, growthGroups: n, news: o })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -1475,7 +1478,11 @@
           like(e, t) {
             return n(this, void 0, void 0, function* () {
               try {
-                if (!(yield s.default.newsLikes.findFirst({ where: { userId: t } })))
+                const i = yield s.default.newsLikes.findFirst({ where: { userId: t } })
+                if (
+                  (console.log('🚀 ~ file: index.ts ~ line 78 ~ NewsModel ~ like ~ like', i),
+                  !(null == i ? void 0 : i.userId))
+                )
                   return s.default.newsLikes.create({ data: { newsId: e, userId: t } })
                 yield s.default.newsLikes.delete({
                   where: { userId_newsId: { newsId: e, userId: t } },
@@ -1548,9 +1555,10 @@
                   s.default.user.count({ where: { active: !0 } }),
                   s.default.devotional.count(),
                   s.default.growthGroup.count(),
+                  s.default.news.count(),
                 ],
-                [t, i, n] = yield Promise.all(e)
-              return { activeUsers: t, devotionals: i, growthGroups: n }
+                [t, i, n, o] = yield Promise.all(e)
+              return { activeUsers: t, devotionals: i, growthGroups: n, news: o }
             })
           }
         })()

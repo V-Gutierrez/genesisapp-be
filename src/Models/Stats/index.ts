@@ -10,14 +10,16 @@ class StatsModel {
       }),
       Prisma.devotional.count(),
       Prisma.growthGroup.count(),
+      Prisma.news.count(),
     ]
 
-    const [activeUsers, devotionals, growthGroups] = await Promise.all(promises)
+    const [activeUsers, devotionals, growthGroups, news] = await Promise.all(promises)
 
     return {
       activeUsers,
       devotionals,
       growthGroups,
+      news,
     }
   }
 }

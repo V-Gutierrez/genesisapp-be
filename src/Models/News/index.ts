@@ -75,8 +75,9 @@ class NewsModel {
           userId,
         },
       })
+      console.log('🚀 ~ file: index.ts ~ line 78 ~ NewsModel ~ like ~ like', like)
 
-      if (like) {
+      if (like?.userId) {
         await Prisma.newsLikes.delete({
           where: {
             userId_newsId: {
