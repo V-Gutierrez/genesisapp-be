@@ -1,7 +1,6 @@
 import Prisma from '@Clients/Prisma'
 import { Prisma as PrismaType } from '@prisma/client'
 import { readingTime } from 'reading-time-estimator'
-import { where } from 'ramda'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
 class DevotionalModel {
