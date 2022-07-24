@@ -1477,8 +1477,7 @@
           like(e, t) {
             return n(this, void 0, void 0, function* () {
               try {
-                const i = yield s.default.newsLikes.findFirst({ where: { userId: t } })
-                if (!(null == i ? void 0 : i.userId))
+                if (!(yield s.default.newsLikes.findFirst({ where: { userId: t, newsId: e } })))
                   return s.default.newsLikes.create({ data: { newsId: e, userId: t } })
                 yield s.default.newsLikes.delete({
                   where: { userId_newsId: { newsId: e, userId: t } },

@@ -73,10 +73,11 @@ class NewsModel {
       const like = await Prisma.newsLikes.findFirst({
         where: {
           userId,
+          newsId: id,
         },
       })
 
-      if (like?.userId) {
+      if (like) {
         await Prisma.newsLikes.delete({
           where: {
             userId_newsId: {
