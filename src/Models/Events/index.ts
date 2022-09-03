@@ -72,8 +72,8 @@ class EventsModel {
 
     if (!currentEvent) throw new Error(`No event found for ${eventId}`)
 
-    const {maxSlots} = currentEvent
-    const subsCount = currentEvent._count.EventsSubscriptions
+    const { maxSlots } = currentEvent
+    const { EventsSubscriptions: subsCount } = currentEvent._count
 
     if (subsCount < maxSlots) {
       await Prisma.eventsSubscriptions.create({
@@ -86,8 +86,6 @@ class EventsModel {
           },
         },
       })
-    } else {
-      
     }
   }
 

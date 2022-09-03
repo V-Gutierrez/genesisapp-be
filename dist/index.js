@@ -1584,8 +1584,9 @@
                 include: { _count: { select: { EventsSubscriptions: !0 } } },
               })
               if (!i) throw new Error(`No event found for ${t}`)
-              const n = i.maxSlots
-              i._count.EventsSubscriptions < n &&
+              const { maxSlots: n } = i,
+                { EventsSubscriptions: s } = i._count
+              s < n &&
                 (yield a.default.eventsSubscriptions.create({
                   data: Object.assign(Object.assign({}, e), { Event: { connect: { id: t } } }),
                 }))
