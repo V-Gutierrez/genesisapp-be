@@ -332,7 +332,8 @@
           d = s(i(766)),
           l = s(i(344)),
           c = s(i(470)),
-          f = s(i(738))
+          f = s(i(738)),
+          { useTreblle: h } = i(549)
         t.default = class {
           constructor(e) {
             ;(this.app = e),
@@ -341,6 +342,7 @@
               this.app.use((0, r.default)()),
               this.app.use(o.default.urlencoded({ extended: !1 })),
               this.app.use((0, c.default)('short')),
+              this.TrebbleDocs(this.app),
               this.UserContext(this.app)
           }
           CORS() {
@@ -348,6 +350,9 @@
             this.app.use(
               (0, u.default)({ credentials: !0, origin: [process.env.FRONT_BASE_URL, ...e] }),
             )
+          }
+          TrebbleDocs(e) {
+            h(e, { apiKey: process.env.TREBBLE_DOCS_API, projectId: process.env.TREBBLE_DOCS_PID })
           }
           UserContext(e) {
             e.use((e, t, i) =>
@@ -2295,6 +2300,9 @@
       },
       285: (e) => {
         e.exports = require('reading-time-estimator')
+      },
+      549: (e) => {
+        e.exports = require('treblle')
       },
       113: (e) => {
         e.exports = require('crypto')

@@ -11,6 +11,8 @@ import jwt from 'jsonwebtoken'
 import morgan from 'morgan'
 import multer from 'multer'
 
+const { useTreblle } = require('treblle')
+
 export default class Middlewares {
   constructor(private readonly app: Express) {
     this.CORS()
@@ -19,6 +21,8 @@ export default class Middlewares {
     this.app.use(cookieParser())
     this.app.use(express.urlencoded({ extended: false }))
     this.app.use(morgan('short'))
+
+    this.TrebbleDocs(this.app)
     this.UserContext(this.app)
   }
 
@@ -33,6 +37,13 @@ export default class Middlewares {
         origin: [process.env.FRONT_BASE_URL as string, ...localEnvironments],
       }),
     )
+  }
+
+  private TrebbleDocs(app: Express) {
+    useTreblle(app, {
+      apiKey: process.env.TREBBLE_DOCS_API,
+      projectId: process.env.TREBBLE_DOCS_PID,
+    })
   }
 
   UserContext(app: Express) {
