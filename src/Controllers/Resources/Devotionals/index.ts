@@ -7,6 +7,7 @@ import ImageKitService from '@Services/ImageKitService'
 import Middlewares from '@Controllers/Middlewares'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { zonedTimeToUtc } from 'date-fns-tz'
+import { TIMEZONE } from '@Constants/index'
 import { ImageKitFolders } from '../../../Types/Enum'
 
 class Devotionals {
@@ -83,7 +84,7 @@ class Devotionals {
           const devotional = await DevotionalModel.create({
             body,
             title,
-            scheduledTo: zonedTimeToUtc(new Date(scheduledTo), 'America/Sao_Paulo'),
+            scheduledTo: zonedTimeToUtc(new Date(scheduledTo), TIMEZONE),
             author,
             slug: Formatter.generateSlug(title),
             coverImage,

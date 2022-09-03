@@ -1,4 +1,5 @@
 import Prisma from '@Clients/Prisma'
+import { TIMEZONE } from '@Constants/index'
 import { Prisma as PrismaType } from '@prisma/client'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
@@ -10,18 +11,6 @@ class NewsModel {
   }
 
   async deleteById(id: string) {
-    await Prisma.newsLikes.deleteMany({
-      where: {
-        newsId: id,
-      },
-    })
-
-    await Prisma.newsViews.deleteMany({
-      where: {
-        newsId: id,
-      },
-    })
-
     return Prisma.news.delete({
       where: {
         id,
@@ -34,7 +23,7 @@ class NewsModel {
       where: {
         slug,
         scheduledTo: {
-          lte: zonedTimeToUtc(new Date(Date.now()), 'America/Sao_Paulo'),
+          lte: zonedTimeToUtc(new Date(Date.now()), TIMEZONE),
         },
       },
       orderBy: {
@@ -51,7 +40,7 @@ class NewsModel {
     return Prisma.news.findMany({
       where: {
         scheduledTo: {
-          lte: zonedTimeToUtc(new Date(), 'America/Sao_Paulo'),
+          lte: zonedTimeToUtc(new Date(), TIMEZONE),
         },
       },
       orderBy: {
@@ -87,7 +76,7 @@ class NewsModel {
           },
         })
       } else {
-        return Prisma.newsLikes.create({
+        await Prisma.newsLikes.create({
           data: {
             newsId: id,
             userId,
@@ -103,7 +92,7 @@ class NewsModel {
     try {
       if (!userId) return
 
-      return Prisma.newsViews.upsert({
+      await Prisma.newsViews.upsert({
         create: {
           newsId: id,
           userId,

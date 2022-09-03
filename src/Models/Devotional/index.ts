@@ -2,13 +2,14 @@ import Prisma from '@Clients/Prisma'
 import { Prisma as PrismaType } from '@prisma/client'
 import { readingTime } from 'reading-time-estimator'
 import { zonedTimeToUtc } from 'date-fns-tz'
+import { TIMEZONE } from '@Constants/index'
 
 class DevotionalModel {
   async getReleasedDevotionals() {
     return Prisma.devotional.findMany({
       where: {
         scheduledTo: {
-          lte: zonedTimeToUtc(new Date(), 'America/Sao_Paulo'),
+          lte: zonedTimeToUtc(new Date(), TIMEZONE),
         },
       },
       orderBy: {
@@ -22,7 +23,7 @@ class DevotionalModel {
       where: {
         slug,
         scheduledTo: {
-          lte: zonedTimeToUtc(new Date(Date.now()), 'America/Sao_Paulo'),
+          lte: zonedTimeToUtc(new Date(Date.now()), TIMEZONE),
         },
       },
       orderBy: {
@@ -40,7 +41,7 @@ class DevotionalModel {
       where: {
         id,
         scheduledTo: {
-          lte: zonedTimeToUtc(new Date(Date.now()), 'America/Sao_Paulo'),
+          lte: zonedTimeToUtc(new Date(Date.now()), TIMEZONE),
         },
       },
       orderBy: {
@@ -69,18 +70,6 @@ class DevotionalModel {
   }
 
   async deleteById(id: string) {
-    await Prisma.devotionalLikes.deleteMany({
-      where: {
-        devotionalId: id,
-      },
-    })
-
-    await Prisma.devotionalViews.deleteMany({
-      where: {
-        devotionalId: id,
-      },
-    })
-
     return Prisma.devotional.delete({
       where: { id },
     })
@@ -105,7 +94,7 @@ class DevotionalModel {
           },
         })
       } else {
-        return Prisma.devotionalLikes.create({
+        await Prisma.devotionalLikes.create({
           data: {
             devotionalId: id,
             userId,
@@ -121,7 +110,7 @@ class DevotionalModel {
     try {
       if (!userId) return
 
-      return Prisma.devotionalViews.upsert({
+      await Prisma.devotionalViews.upsert({
         create: {
           devotionalId: id,
           userId,

@@ -7,6 +7,7 @@ import Middlewares from '@Controllers/Middlewares'
 import NewsModel from '@Models/News'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { zonedTimeToUtc } from 'date-fns-tz'
+import { TIMEZONE } from '@Constants/index'
 
 class News {
   static createNews(app: Express) {
@@ -41,7 +42,7 @@ class News {
           const news = await NewsModel.create({
             body,
             title,
-            scheduledTo: zonedTimeToUtc(new Date(scheduledTo), 'America/Sao_Paulo'),
+            scheduledTo: zonedTimeToUtc(new Date(scheduledTo), TIMEZONE),
             coverImage,
             coverThumbnail,
             slug: Formatter.generateSlug(title),

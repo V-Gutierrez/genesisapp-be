@@ -6,6 +6,11 @@
         const n = new (i(524).PrismaClient)()
         t.default = n
       },
+      315: (e, t) => {
+        Object.defineProperty(t, '__esModule', { value: !0 }),
+          (t.TIMEZONE = void 0),
+          (t.TIMEZONE = 'America/Sao_Paulo')
+      },
       835: function (e, t, i) {
         var n =
             (this && this.__awaiter) ||
@@ -437,7 +442,8 @@
           u = o(i(488)),
           d = o(i(448)),
           l = i(465),
-          c = i(628)
+          c = i(628),
+          f = i(315)
         t.default = class {
           static getDevotionals(e) {
             e.get('/api/devotionals', (e, t) =>
@@ -487,28 +493,28 @@
                   const i = d.default.validateSchema(d.default.DEVOTIONAL_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { body: n, title: o, scheduledTo: u, author: f } = e.body,
-                    { file: h } = e,
+                  const { body: n, title: o, scheduledTo: u, author: h } = e.body,
+                    { file: v } = e,
                     {
-                      url: v,
-                      thumbnailUrl: p,
-                      fileId: _,
+                      url: p,
+                      thumbnailUrl: _,
+                      fileId: y,
                     } = yield r.default.uploadFile(
-                      h.buffer,
+                      v.buffer,
                       a.default.generateSlug(o),
                       c.ImageKitFolders.Devotionals,
                     ),
-                    y = yield s.default.create({
+                    m = yield s.default.create({
                       body: n,
                       title: o,
-                      scheduledTo: (0, l.zonedTimeToUtc)(new Date(u), 'America/Sao_Paulo'),
-                      author: f,
+                      scheduledTo: (0, l.zonedTimeToUtc)(new Date(u), f.TIMEZONE),
+                      author: h,
                       slug: a.default.generateSlug(o),
-                      coverImage: v,
-                      coverThumbnail: p,
-                      assetId: _,
+                      coverImage: p,
+                      coverThumbnail: _,
+                      assetId: y,
                     })
-                  return t.status(201).json(y)
+                  return t.status(201).json(m)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -702,7 +708,8 @@
           u = o(i(488)),
           d = o(i(168)),
           l = o(i(448)),
-          c = i(465)
+          c = i(465),
+          f = i(315)
         t.default = class {
           static createNews(e) {
             e.post('/api/news', u.default.SingleFileUpload('coverImage'), (e, t) =>
@@ -711,28 +718,28 @@
                   const i = l.default.validateSchema(l.default.NEWS_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { body: n, title: o, scheduledTo: u, highlightText: f } = e.body,
-                    { file: h } = e,
+                  const { body: n, title: o, scheduledTo: u, highlightText: h } = e.body,
+                    { file: v } = e,
                     {
-                      url: v,
-                      thumbnailUrl: p,
-                      fileId: _,
+                      url: p,
+                      thumbnailUrl: _,
+                      fileId: y,
                     } = yield r.default.uploadFile(
-                      h.buffer,
+                      v.buffer,
                       s.default.generateSlug(o),
                       a.ImageKitFolders.News,
                     ),
-                    y = yield d.default.create({
+                    m = yield d.default.create({
                       body: n,
                       title: o,
-                      scheduledTo: (0, c.zonedTimeToUtc)(new Date(u), 'America/Sao_Paulo'),
-                      coverImage: v,
-                      coverThumbnail: p,
+                      scheduledTo: (0, c.zonedTimeToUtc)(new Date(u), f.TIMEZONE),
+                      coverImage: p,
+                      coverThumbnail: _,
                       slug: s.default.generateSlug(o),
-                      assetId: _,
-                      highlightText: f,
+                      assetId: y,
+                      highlightText: h,
                     })
-                  return t.status(201).json(y)
+                  return t.status(201).json(m)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -1247,14 +1254,13 @@
         Object.defineProperty(t, '__esModule', { value: !0 })
         const s = o(i(988)),
           a = i(285),
-          r = i(465)
+          r = i(465),
+          u = i(315)
         t.default = new (class {
           getReleasedDevotionals() {
             return n(this, void 0, void 0, function* () {
               return s.default.devotional.findMany({
-                where: {
-                  scheduledTo: { lte: (0, r.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo') },
-                },
+                where: { scheduledTo: { lte: (0, r.zonedTimeToUtc)(new Date(), u.TIMEZONE) } },
                 orderBy: { scheduledTo: 'desc' },
               })
             })
@@ -1264,9 +1270,7 @@
               return s.default.devotional.findFirst({
                 where: {
                   slug: e,
-                  scheduledTo: {
-                    lte: (0, r.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
-                  },
+                  scheduledTo: { lte: (0, r.zonedTimeToUtc)(new Date(Date.now()), u.TIMEZONE) },
                 },
                 orderBy: { scheduledTo: 'desc' },
                 include: { DevotionalLikes: !0, DevotionalViews: !0 },
@@ -1278,9 +1282,7 @@
               return s.default.devotional.findFirst({
                 where: {
                   id: e,
-                  scheduledTo: {
-                    lte: (0, r.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
-                  },
+                  scheduledTo: { lte: (0, r.zonedTimeToUtc)(new Date(Date.now()), u.TIMEZONE) },
                 },
                 orderBy: { scheduledTo: 'desc' },
               })
@@ -1301,25 +1303,19 @@
           }
           deleteById(e) {
             return n(this, void 0, void 0, function* () {
-              return (
-                yield s.default.devotionalLikes.deleteMany({ where: { devotionalId: e } }),
-                yield s.default.devotionalViews.deleteMany({ where: { devotionalId: e } }),
-                s.default.devotional.delete({ where: { id: e } })
-              )
+              return s.default.devotional.delete({ where: { id: e } })
             })
           }
           like(e, t) {
             return n(this, void 0, void 0, function* () {
               try {
-                if (
-                  !(yield s.default.devotionalLikes.findFirst({
-                    where: { userId: t, devotionalId: e },
-                  }))
-                )
-                  return s.default.devotionalLikes.create({ data: { devotionalId: e, userId: t } })
-                yield s.default.devotionalLikes.delete({
-                  where: { userId_devotionalId: { devotionalId: e, userId: t } },
-                })
+                ;(yield s.default.devotionalLikes.findFirst({
+                  where: { userId: t, devotionalId: e },
+                }))
+                  ? yield s.default.devotionalLikes.delete({
+                      where: { userId_devotionalId: { devotionalId: e, userId: t } },
+                    })
+                  : yield s.default.devotionalLikes.create({ data: { devotionalId: e, userId: t } })
               } catch (e) {
                 console.log(e)
               }
@@ -1329,7 +1325,7 @@
             return n(this, void 0, void 0, function* () {
               try {
                 if (!t) return
-                return s.default.devotionalViews.upsert({
+                yield s.default.devotionalViews.upsert({
                   create: { devotionalId: e, userId: t },
                   where: { userId_devotionalId: { devotionalId: e, userId: t } },
                   update: { devotionalId: e, userId: t },
@@ -1429,7 +1425,8 @@
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
         const s = o(i(988)),
-          a = i(465)
+          a = i(315),
+          r = i(465)
         t.default = new (class {
           create(e) {
             return n(this, void 0, void 0, function* () {
@@ -1438,11 +1435,7 @@
           }
           deleteById(e) {
             return n(this, void 0, void 0, function* () {
-              return (
-                yield s.default.newsLikes.deleteMany({ where: { newsId: e } }),
-                yield s.default.newsViews.deleteMany({ where: { newsId: e } }),
-                s.default.news.delete({ where: { id: e } })
-              )
+              return s.default.news.delete({ where: { id: e } })
             })
           }
           getBySlug(e) {
@@ -1450,9 +1443,7 @@
               return s.default.news.findFirst({
                 where: {
                   slug: e,
-                  scheduledTo: {
-                    lte: (0, a.zonedTimeToUtc)(new Date(Date.now()), 'America/Sao_Paulo'),
-                  },
+                  scheduledTo: { lte: (0, r.zonedTimeToUtc)(new Date(Date.now()), a.TIMEZONE) },
                 },
                 orderBy: { scheduledTo: 'desc' },
                 include: { NewsLikes: !0, NewsViews: !0 },
@@ -1462,9 +1453,7 @@
           getReleasedNews() {
             return n(this, void 0, void 0, function* () {
               return s.default.news.findMany({
-                where: {
-                  scheduledTo: { lte: (0, a.zonedTimeToUtc)(new Date(), 'America/Sao_Paulo') },
-                },
+                where: { scheduledTo: { lte: (0, r.zonedTimeToUtc)(new Date(), a.TIMEZONE) } },
                 orderBy: { scheduledTo: 'desc' },
               })
             })
@@ -1477,11 +1466,11 @@
           like(e, t) {
             return n(this, void 0, void 0, function* () {
               try {
-                if (!(yield s.default.newsLikes.findFirst({ where: { userId: t, newsId: e } })))
-                  return s.default.newsLikes.create({ data: { newsId: e, userId: t } })
-                yield s.default.newsLikes.delete({
-                  where: { userId_newsId: { newsId: e, userId: t } },
-                })
+                ;(yield s.default.newsLikes.findFirst({ where: { userId: t, newsId: e } }))
+                  ? yield s.default.newsLikes.delete({
+                      where: { userId_newsId: { newsId: e, userId: t } },
+                    })
+                  : yield s.default.newsLikes.create({ data: { newsId: e, userId: t } })
               } catch (e) {
                 console.log(e)
               }
@@ -1491,7 +1480,7 @@
             return n(this, void 0, void 0, function* () {
               try {
                 if (!t) return
-                return s.default.newsViews.upsert({
+                yield s.default.newsViews.upsert({
                   create: { newsId: e, userId: t },
                   where: { userId_newsId: { newsId: e, userId: t } },
                   update: { newsId: e, userId: t },
