@@ -9,6 +9,9 @@ class EventsModel {
       orderBy: {
         scheduledTo: 'desc',
       },
+      include: {
+        EventsSubscriptions: true,
+      },
     })
   }
 
@@ -19,13 +22,22 @@ class EventsModel {
           lte: zonedTimeToUtc(new Date(), TIMEZONE),
         },
       },
+      include: {
+        _count: { select: { EventsSubscriptions: true } },
+      },
       orderBy: {
         scheduledTo: 'desc',
       },
     })
   }
 
-  async deleteEventById(id: string) {
+  async create(data: PrismaType.EventsCreateInput) {
+    return Prisma.events.create({
+      data,
+    })
+  }
+
+  async deleteById(id: string) {
     return Prisma.events.delete({
       where: {
         id,
@@ -41,10 +53,42 @@ class EventsModel {
     })
   }
 
-  async subscribeUserToEvent(userData: PrismaType.EventsSubscriptionsCreateInput) {
-    await Prisma.eventsSubscriptions.create({
-      data: userData,
+  async subscribeUserToEvent(
+    userData: Omit<PrismaType.EventsSubscriptionsCreateInput, 'Event'>,
+    eventId: string,
+  ) {
+    const currentEvent = await Prisma.events.findFirst({
+      where: {
+        id: eventId,
+      },
+      include: {
+        _count: {
+          select: {
+            EventsSubscriptions: true,
+          },
+        },
+      },
     })
+
+    if (!currentEvent) throw new Error(`No event found for ${eventId}`)
+
+    const {maxSlots} = currentEvent
+    const subsCount = currentEvent._count.EventsSubscriptions
+
+    if (subsCount < maxSlots) {
+      await Prisma.eventsSubscriptions.create({
+        data: {
+          ...userData,
+          Event: {
+            connect: {
+              id: eventId,
+            },
+          },
+        },
+      })
+    } else {
+      
+    }
   }
 
   async removeSubscriptionById(subscriptionId: string) {

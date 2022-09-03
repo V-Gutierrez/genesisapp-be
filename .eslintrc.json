@@ -32,7 +32,9 @@
     "no-console": "warn",
     "class-methods-use-this": "off",
     "no-useless-escape": "off",
-    "import/prefer-default-export": "off"
+    "import/prefer-default-export": "off",
+    "no-empty": "warn",
+    "no-underscore-dangle": "warn"
   },
   "settings": {
     "import/resolver": {

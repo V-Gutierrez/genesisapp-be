@@ -7,6 +7,7 @@ import Middlewares from '@Controllers/Middlewares'
 import News from '@Controllers/Resources/News'
 import Stats from '@Controllers/Resources/Stats'
 import Users from '@Controllers/Resources/Users'
+import Events from '@Controllers/Resources/Events'
 
 export default class RoutesController {
   constructor(private readonly app: Express) {
@@ -28,6 +29,9 @@ export default class RoutesController {
     News.like(this.app)
 
     Users.signUp(this.app)
+
+    Events.subscribeToEvent(this.app)
+    Events.getEvents(this.app)
     Integrations.getGooglePhotosAlbumPhotos(this.app)
 
     Middlewares.JWT(this.app)
@@ -39,9 +43,15 @@ export default class RoutesController {
 
     Middlewares.IsAdmin(this.app)
     /* ADMIN ROUTES */
+    Events.getEventsAsAdmin(this.app)
+    Events.createEvent(this.app)
+    Events.deleteEvent(this.app)
+    Events.deleteSubscription(this.app)
+
     News.createNews(this.app)
     News.deleteNews(this.app)
     News.getNewsAsAdmin(this.app)
+
     Users.getAllUsersAsAdmin(this.app)
     Devotionals.createDevotional(this.app)
     Devotionals.getDevotionalsAsAdmin(this.app)

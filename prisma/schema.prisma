@@ -76,7 +76,7 @@ model DevotionalLikes {
   devotional   Devotional @relation(fields: [devotionalId], references: [id], onDelete: Cascade)
   devotionalId String
   User         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String //Wont relate to any user but will count outsider view
+  userId       String
 
   @@id([userId, devotionalId])
 }
@@ -85,7 +85,7 @@ model DevotionalViews {
   devotional   Devotional @relation(fields: [devotionalId], references: [id], onDelete: Cascade)
   devotionalId String
   User         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId       String //Wont relate to any user but will count outsider view
+  userId       String
 
   @@id([userId, devotionalId])
 }
@@ -126,10 +126,11 @@ model NewsViews {
 model Events {
   id                  String                @id @default(uuid())
   title               String
+  description         String
   coverImage          String
   coverThumbnail      String
   assetId             String
-  vacancies           Int
+  maxSlots           Int
   scheduledTo         DateTime              @default(now())
   createdAt           DateTime              @default(now())
   EventsSubscriptions EventsSubscriptions[]
