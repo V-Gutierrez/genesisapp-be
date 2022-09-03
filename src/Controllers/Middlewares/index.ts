@@ -40,10 +40,12 @@ export default class Middlewares {
   }
 
   private TrebbleDocs(app: Express) {
-    useTreblle(app, {
-      apiKey: process.env.TREBBLE_DOCS_API,
-      projectId: process.env.TREBBLE_DOCS_PID,
-    })
+    if (isProduction) {
+      useTreblle(app, {
+        apiKey: process.env.TREBBLE_DOCS_API,
+        projectId: process.env.TREBBLE_DOCS_PID,
+      })
+    }
   }
 
   UserContext(app: Express) {

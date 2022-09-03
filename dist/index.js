@@ -352,7 +352,11 @@
             )
           }
           TrebbleDocs(e) {
-            h(e, { apiKey: process.env.TREBBLE_DOCS_API, projectId: process.env.TREBBLE_DOCS_PID })
+            d.default &&
+              h(e, {
+                apiKey: process.env.TREBBLE_DOCS_API,
+                projectId: process.env.TREBBLE_DOCS_PID,
+              })
           }
           UserContext(e) {
             e.use((e, t, i) =>
