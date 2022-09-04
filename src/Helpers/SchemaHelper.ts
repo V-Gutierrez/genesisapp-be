@@ -48,7 +48,9 @@ class SchemaHelper {
   static EVENTS_CREATION = Joi.object().keys({
     title: Joi.string().required(),
     maxSlots: Joi.string().required(),
-    scheduledTo: Joi.string().required(),
+    subscriptionsScheduledTo: Joi.string().required(),
+    subscriptionsDueDate: Joi.string().required(),
+    eventDate: Joi.string().required(),
     description: Joi.string().required(),
   })
 

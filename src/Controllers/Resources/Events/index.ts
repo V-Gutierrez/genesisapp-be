@@ -34,7 +34,14 @@ class Events {
             return res.status(400).json({ error: 'coverImage is missing' })
           }
 
-          const { title, scheduledTo, maxSlots, description } = req.body
+          const {
+            title,
+            subscriptionsScheduledTo,
+            subscriptionsDueDate,
+            eventDate,
+            maxSlots,
+            description,
+          } = req.body
           const { file } = req
 
           const {
@@ -49,7 +56,9 @@ class Events {
 
           const newEvent = await EventsModel.create({
             title,
-            scheduledTo,
+            subscriptionsScheduledTo,
+            subscriptionsDueDate,
+            eventDate,
             description,
             maxSlots,
             coverImage,
@@ -125,7 +134,7 @@ class Events {
       try {
         const { id } = req.params
 
-        const deletedSubscription = await EventsModel.removeSubscriptionById(id)
+        await EventsModel.removeSubscriptionById(id)
 
         res.sendStatus(204)
       } catch (error) {

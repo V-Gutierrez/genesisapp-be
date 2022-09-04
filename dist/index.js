@@ -624,27 +624,36 @@
                   const i = a.default.validateSchema(a.default.EVENTS_CREATION, e.body)
                   if (i) return t.status(400).json({ error: i })
                   if (!e.file) return t.status(400).json({ error: 'coverImage is missing' })
-                  const { title: n, scheduledTo: s, maxSlots: r, description: c } = e.body,
-                    { file: f } = e,
+                  const {
+                      title: n,
+                      subscriptionsScheduledTo: s,
+                      subscriptionsDueDate: r,
+                      eventDate: c,
+                      maxSlots: f,
+                      description: h,
+                    } = e.body,
+                    { file: v } = e,
                     {
-                      url: h,
-                      thumbnailUrl: v,
-                      fileId: p,
+                      url: p,
+                      thumbnailUrl: _,
+                      fileId: y,
                     } = yield d.default.uploadFile(
-                      f.buffer,
+                      v.buffer,
                       u.default.generateSlug(n),
                       l.ImageKitFolders.Events,
                     ),
-                    _ = yield o.default.create({
+                    m = yield o.default.create({
                       title: n,
-                      scheduledTo: s,
-                      description: c,
-                      maxSlots: r,
-                      coverImage: h,
-                      coverThumbnail: v,
-                      assetId: p,
+                      subscriptionsScheduledTo: s,
+                      subscriptionsDueDate: r,
+                      eventDate: c,
+                      description: h,
+                      maxSlots: f,
+                      coverImage: p,
+                      coverThumbnail: _,
+                      assetId: y,
                     })
-                  return t.status(201).json(_)
+                  return t.status(201).json(m)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -1367,7 +1376,9 @@
             .keys({
               title: u.default.string().required(),
               maxSlots: u.default.string().required(),
-              scheduledTo: u.default.string().required(),
+              subscriptionsScheduledTo: u.default.string().required(),
+              subscriptionsDueDate: u.default.string().required(),
+              eventDate: u.default.string().required(),
               description: u.default.string().required(),
             })),
           (d.EVENTS_SUBSCRIPTION = u.default
@@ -1557,7 +1568,7 @@
           getAll() {
             return n(this, void 0, void 0, function* () {
               return a.default.events.findMany({
-                orderBy: { scheduledTo: 'desc' },
+                orderBy: { subscriptionsScheduledTo: 'desc' },
                 include: { EventsSubscriptions: !0 },
               })
             })
@@ -1565,9 +1576,13 @@
           getReleasedEvents() {
             return n(this, void 0, void 0, function* () {
               return a.default.events.findMany({
-                where: { scheduledTo: { lte: (0, r.zonedTimeToUtc)(new Date(), o.TIMEZONE) } },
+                where: {
+                  subscriptionsScheduledTo: { lte: (0, r.zonedTimeToUtc)(new Date(), o.TIMEZONE) },
+                  eventDate: { gte: (0, r.zonedTimeToUtc)(new Date(), o.TIMEZONE) },
+                  subscriptionsDueDate: { gte: (0, r.zonedTimeToUtc)(new Date(), o.TIMEZONE) },
+                },
                 include: { _count: { select: { EventsSubscriptions: !0 } } },
-                orderBy: { scheduledTo: 'desc' },
+                orderBy: { subscriptionsScheduledTo: 'desc' },
               })
             })
           }
@@ -1583,16 +1598,20 @@
           }
           getEventById(e) {
             return n(this, void 0, void 0, function* () {
-              return a.default.events.findFirst({ where: { id: e } })
+              return a.default.events.findFirst({
+                where: {
+                  id: e,
+                  eventDate: { gte: (0, r.zonedTimeToUtc)(new Date(), o.TIMEZONE) },
+                  subscriptionsDueDate: { gte: (0, r.zonedTimeToUtc)(new Date(), o.TIMEZONE) },
+                },
+                include: { _count: { select: { EventsSubscriptions: !0 } } },
+              })
             })
           }
           subscribeUserToEvent(e, t) {
             return n(this, void 0, void 0, function* () {
-              const i = yield a.default.events.findFirst({
-                where: { id: t },
-                include: { _count: { select: { EventsSubscriptions: !0 } } },
-              })
-              if (!i) throw new Error(`No event found for ${t}`)
+              const i = yield this.getEventById(t)
+              if (!i) throw new Error(`No available event found for ${t}`)
               const { maxSlots: n } = i,
                 { EventsSubscriptions: s } = i._count
               s < n &&

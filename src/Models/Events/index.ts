@@ -7,7 +7,7 @@ class EventsModel {
   async getAll() {
     return Prisma.events.findMany({
       orderBy: {
-        scheduledTo: 'desc',
+        subscriptionsScheduledTo: 'desc',
       },
       include: {
         EventsSubscriptions: true,
@@ -18,15 +18,21 @@ class EventsModel {
   async getReleasedEvents() {
     return Prisma.events.findMany({
       where: {
-        scheduledTo: {
+        subscriptionsScheduledTo: {
           lte: zonedTimeToUtc(new Date(), TIMEZONE),
+        },
+        eventDate: {
+          gte: zonedTimeToUtc(new Date(), TIMEZONE),
+        },
+        subscriptionsDueDate: {
+          gte: zonedTimeToUtc(new Date(), TIMEZONE),
         },
       },
       include: {
         _count: { select: { EventsSubscriptions: true } },
       },
       orderBy: {
-        scheduledTo: 'desc',
+        subscriptionsScheduledTo: 'desc',
       },
     })
   }
@@ -49,17 +55,12 @@ class EventsModel {
     return Prisma.events.findFirst({
       where: {
         id,
-      },
-    })
-  }
-
-  async subscribeUserToEvent(
-    userData: Omit<PrismaType.EventsSubscriptionsCreateInput, 'Event'>,
-    eventId: string,
-  ) {
-    const currentEvent = await Prisma.events.findFirst({
-      where: {
-        id: eventId,
+        eventDate: {
+          gte: zonedTimeToUtc(new Date(), TIMEZONE),
+        },
+        subscriptionsDueDate: {
+          gte: zonedTimeToUtc(new Date(), TIMEZONE),
+        },
       },
       include: {
         _count: {
@@ -69,8 +70,15 @@ class EventsModel {
         },
       },
     })
+  }
 
-    if (!currentEvent) throw new Error(`No event found for ${eventId}`)
+  async subscribeUserToEvent(
+    userData: Omit<PrismaType.EventsSubscriptionsCreateInput, 'Event'>,
+    eventId: string,
+  ) {
+    const currentEvent = await this.getEventById(eventId)
+
+    if (!currentEvent) throw new Error(`No available event found for ${eventId}`)
 
     const { maxSlots } = currentEvent
     const { EventsSubscriptions: subsCount } = currentEvent._count

@@ -124,16 +124,18 @@ model NewsViews {
 }
 
 model Events {
-  id                  String                @id @default(uuid())
-  title               String
-  description         String
-  coverImage          String
-  coverThumbnail      String
-  assetId             String
-  maxSlots           Int
-  scheduledTo         DateTime              @default(now())
-  createdAt           DateTime              @default(now())
-  EventsSubscriptions EventsSubscriptions[]
+  id                       String                @id @default(uuid())
+  title                    String
+  description              String
+  coverImage               String
+  coverThumbnail           String
+  assetId                  String
+  maxSlots                 Int
+  subscriptionsScheduledTo DateTime              @default(now())
+  subscriptionsDueDate     DateTime
+  eventDate                DateTime
+  createdAt                DateTime              @default(now())
+  EventsSubscriptions      EventsSubscriptions[]
 }
 
 model EventsSubscriptions {
