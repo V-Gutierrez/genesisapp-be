@@ -1598,7 +1598,7 @@
                   )
                 if (i && t) return a.default.events.create({ data: e })
                 throw new Error(
-                  `Cannot create subscription because of: isEventDateTheLaterDate : ${t}, isSubscriptionDueDateLaterThanSubscriptionScheduledDate: ${i}`,
+                  `Cannot create event because of: isEventDateTheLaterDate : ${t}, isSubscriptionDueDateLaterThanSubscriptionScheduledDate: ${i}`,
                 )
               } catch (e) {
                 return console.log(e), null
