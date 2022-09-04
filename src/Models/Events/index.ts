@@ -2,6 +2,7 @@ import { TIMEZONE } from '@Constants/index'
 import Prisma from '@Clients/Prisma'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { Prisma as PrismaType } from '@prisma/client'
+import { isAfter } from 'date-fns'
 
 class EventsModel {
   async getAll() {
@@ -38,9 +39,28 @@ class EventsModel {
   }
 
   async create(data: PrismaType.EventsCreateInput) {
-    return Prisma.events.create({
-      data,
-    })
+    try {
+      const isEventDateTheLaterDate =
+        isAfter(new Date(data.eventDate), new Date(data.subscriptionsDueDate)) &&
+        isAfter(new Date(data.eventDate), new Date(data.subscriptionsScheduledTo))
+
+      const isSubscriptionDueDateLaterThanSubscriptionScheduledDate = isAfter(
+        new Date(data.subscriptionsDueDate),
+        new Date(data.subscriptionsScheduledTo),
+      )
+
+      if (isSubscriptionDueDateLaterThanSubscriptionScheduledDate && isEventDateTheLaterDate) {
+        return Prisma.events.create({
+          data,
+        })
+      } 
+        throw new Error(
+          `Cannot create subscription because of: isEventDateTheLaterDate : ${isEventDateTheLaterDate}, isSubscriptionDueDateLaterThanSubscriptionScheduledDate: ${isSubscriptionDueDateLaterThanSubscriptionScheduledDate}`,
+        )
+      
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   async deleteById(id: string) {

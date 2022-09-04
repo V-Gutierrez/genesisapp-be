@@ -131,7 +131,7 @@ model Events {
   coverThumbnail           String
   assetId                  String
   maxSlots                 Int
-  subscriptionsScheduledTo DateTime              @default(now())
+  subscriptionsScheduledTo DateTime
   subscriptionsDueDate     DateTime
   eventDate                DateTime
   createdAt                DateTime              @default(now())

@@ -1563,7 +1563,8 @@
         Object.defineProperty(t, '__esModule', { value: !0 })
         const o = i(315),
           a = s(i(988)),
-          r = i(465)
+          r = i(465),
+          u = i(146)
         t.default = new (class {
           getAll() {
             return n(this, void 0, void 0, function* () {
@@ -1588,7 +1589,21 @@
           }
           create(e) {
             return n(this, void 0, void 0, function* () {
-              return a.default.events.create({ data: e })
+              try {
+                const t =
+                    (0, u.isAfter)(new Date(e.eventDate), new Date(e.subscriptionsDueDate)) &&
+                    (0, u.isAfter)(new Date(e.eventDate), new Date(e.subscriptionsScheduledTo)),
+                  i = (0, u.isAfter)(
+                    new Date(e.subscriptionsDueDate),
+                    new Date(e.subscriptionsScheduledTo),
+                  )
+                if (i && t) return a.default.events.create({ data: e })
+                throw new Error(
+                  `Cannot create subscription because of: isEventDateTheLaterDate : ${t}, isSubscriptionDueDateLaterThanSubscriptionScheduledDate: ${i}`,
+                )
+              } catch (e) {
+                console.log(e)
+              }
             })
           }
           deleteById(e) {
@@ -2290,6 +2305,9 @@
       },
       582: (e) => {
         e.exports = require('cors')
+      },
+      146: (e) => {
+        e.exports = require('date-fns')
       },
       465: (e) => {
         e.exports = require('date-fns-tz')
