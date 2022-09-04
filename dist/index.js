@@ -469,13 +469,12 @@
           static getDevotionalBySlug(e) {
             e.get('/api/devotionals/:slug', (e, t) =>
               n(this, void 0, void 0, function* () {
-                var i
                 try {
-                  const { slug: n } = e.params,
-                    { id: s } = null !== (i = e.cookies.user) && void 0 !== i ? i : {},
-                    a = yield o.default.getBySlug(n)
-                  return a
-                    ? (yield o.default.view(a.id, s), t.status(200).json(a))
+                  const { slug: i } = e.params,
+                    { id: n } = e.cookies.user,
+                    s = yield o.default.getBySlug(i)
+                  return s
+                    ? (yield o.default.view(s.id, n), t.status(200).json(s))
                     : t.sendStatus(404)
                 } catch (e) {
                   t.sendStatus(500)
@@ -1602,7 +1601,7 @@
                   `Cannot create subscription because of: isEventDateTheLaterDate : ${t}, isSubscriptionDueDateLaterThanSubscriptionScheduledDate: ${i}`,
                 )
               } catch (e) {
-                console.log(e)
+                return console.log(e), null
               }
             })
           }

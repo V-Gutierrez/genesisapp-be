@@ -53,11 +53,10 @@ class EventsModel {
         return Prisma.events.create({
           data,
         })
-      } 
-        throw new Error(
-          `Cannot create subscription because of: isEventDateTheLaterDate : ${isEventDateTheLaterDate}, isSubscriptionDueDateLaterThanSubscriptionScheduledDate: ${isSubscriptionDueDateLaterThanSubscriptionScheduledDate}`,
-        )
-      
+      }
+      throw new Error(
+        `Cannot create subscription because of: isEventDateTheLaterDate : ${isEventDateTheLaterDate}, isSubscriptionDueDateLaterThanSubscriptionScheduledDate: ${isSubscriptionDueDateLaterThanSubscriptionScheduledDate}`,
+      )
     } catch (error) {
       console.log(error)
       return null

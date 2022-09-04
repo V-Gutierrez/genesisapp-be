@@ -1,6 +1,5 @@
 import { Express, Request, Response } from 'express'
 
-import { Devotional } from '@prisma/client'
 import DevotionalModel from '@Models/Devotional'
 import Formatter from '@Helpers/Formatter'
 import ImageKitService from '@Services/ImageKitService'
@@ -14,7 +13,7 @@ class Devotionals {
   static getDevotionals(app: Express) {
     app.get('/api/devotionals', async (_req: Request, res: Response) => {
       try {
-        const response: Devotional[] = await DevotionalModel.getReleasedDevotionals()
+        const response = await DevotionalModel.getReleasedDevotionals()
 
         res.status(200).json(response)
       } catch (error) {
@@ -27,9 +26,9 @@ class Devotionals {
     app.get('/api/devotionals/:slug', async (req: Request, res: Response) => {
       try {
         const { slug } = req.params
-        const { id: userId } = req.cookies.user ?? {}
+        const { id: userId } = req.cookies.user
 
-        const response: Devotional | null = await DevotionalModel.getBySlug(slug)
+        const response = await DevotionalModel.getBySlug(slug)
 
         if (!response) return res.sendStatus(404)
 
@@ -44,7 +43,7 @@ class Devotionals {
   static getDevotionalsAsAdmin(app: Express) {
     app.get('/api/all-devotionals', async (_req: Request, res: Response) => {
       try {
-        const response: Devotional[] = await DevotionalModel.getAll()
+        const response = await DevotionalModel.getAll()
 
         res.status(200).json(response)
       } catch (error) {
