@@ -19,6 +19,19 @@ class Events {
     })
   }
 
+  static getEventById(app: Express) {
+    app.get('/api/events/:id', async (req: Request, res: Response) => {
+      try {
+        const { id } = req.params
+        const response = await EventsModel.getEventById(id)
+
+        res.status(200).json(response)
+      } catch (error) {
+        res.sendStatus(500)
+      }
+    })
+  }
+
   static createEvent(app: Express) {
     app.post(
       '/api/events',

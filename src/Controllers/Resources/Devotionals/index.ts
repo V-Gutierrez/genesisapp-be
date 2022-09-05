@@ -26,13 +26,14 @@ class Devotionals {
     app.get('/api/devotionals/:slug', async (req: Request, res: Response) => {
       try {
         const { slug } = req.params
-        const { id: userId } = req.cookies.user
+        const { id: userId } = req.cookies.user ?? {}
 
         const response = await DevotionalModel.getBySlug(slug)
 
         if (!response) return res.sendStatus(404)
 
         await DevotionalModel.view(response.id, userId)
+
         return res.status(200).json(response)
       } catch (error) {
         res.sendStatus(500)

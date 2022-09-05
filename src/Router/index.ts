@@ -32,9 +32,12 @@ export default class RoutesController {
 
     Events.subscribeToEvent(this.app)
     Events.getEvents(this.app)
+    Events.getEventById(this.app)
+
     Integrations.getGooglePhotosAlbumPhotos(this.app)
 
     Middlewares.JWT(this.app)
+
     /* AUTH ROUTES */
     Authentication.getUserInformation(this.app)
     Users.get(this.app)

@@ -274,9 +274,15 @@
             return n(this, void 0, void 0, function* () {
               e.get('/api/auth/me', (e, t) =>
                 n(this, void 0, void 0, function* () {
+                  var i
                   try {
-                    const { email: i, role: n, id: s, name: o } = e.cookies.user
-                    return t.status(200).json({ email: i, role: n, id: s, name: o })
+                    const {
+                      email: n,
+                      role: s,
+                      id: o,
+                      name: a,
+                    } = null !== (i = e.cookies.user) && void 0 !== i ? i : {}
+                    return t.status(200).json({ email: n, role: s, id: o, name: a })
                   } catch (e) {
                     return t.sendStatus(500)
                   }
@@ -469,12 +475,13 @@
           static getDevotionalBySlug(e) {
             e.get('/api/devotionals/:slug', (e, t) =>
               n(this, void 0, void 0, function* () {
+                var i
                 try {
-                  const { slug: i } = e.params,
-                    { id: n } = e.cookies.user,
-                    s = yield o.default.getBySlug(i)
-                  return s
-                    ? (yield o.default.view(s.id, n), t.status(200).json(s))
+                  const { slug: n } = e.params,
+                    { id: s } = null !== (i = e.cookies.user) && void 0 !== i ? i : {},
+                    a = yield o.default.getBySlug(n)
+                  return a
+                    ? (yield o.default.view(a.id, s), t.status(200).json(a))
                     : t.sendStatus(404)
                 } catch (e) {
                   t.sendStatus(500)
@@ -610,6 +617,19 @@
                 try {
                   const e = yield o.default.getReleasedEvents()
                   t.status(200).json(e)
+                } catch (e) {
+                  t.sendStatus(500)
+                }
+              }),
+            )
+          }
+          static getEventById(e) {
+            e.get('/api/events/:id', (e, t) =>
+              n(this, void 0, void 0, function* () {
+                try {
+                  const { id: i } = e.params,
+                    n = yield o.default.getEventById(i)
+                  t.status(200).json(n)
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -1996,6 +2016,7 @@
               c.default.signUp(this.app),
               f.default.subscribeToEvent(this.app),
               f.default.getEvents(this.app),
+              f.default.getEventById(this.app),
               r.default.getGooglePhotosAlbumPhotos(this.app),
               u.default.JWT(this.app),
               s.default.getUserInformation(this.app),
