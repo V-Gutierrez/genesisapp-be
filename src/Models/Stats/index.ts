@@ -1,4 +1,6 @@
 import Prisma from '@Clients/Prisma'
+import { TIMEZONE } from '@Constants/index'
+import { zonedTimeToUtc } from 'date-fns-tz'
 
 class StatsModel {
   async getStats() {
@@ -11,15 +13,31 @@ class StatsModel {
       Prisma.devotional.count(),
       Prisma.growthGroup.count(),
       Prisma.news.count(),
+      Prisma.events.count({
+        where: {
+          subscriptionsScheduledTo: {
+            lte: zonedTimeToUtc(new Date(), TIMEZONE),
+          },
+          eventDate: {
+            gte: zonedTimeToUtc(new Date(), TIMEZONE),
+          },
+          subscriptionsDueDate: {
+            gte: zonedTimeToUtc(new Date(), TIMEZONE),
+          },
+        },
+      }),
     ]
 
-    const [activeUsers, devotionals, growthGroups, news] = await Promise.all(promises)
+    const [activeUsers, devotionals, growthGroups, news, ongoingEvents] = await Promise.all(
+      promises,
+    )
 
     return {
       activeUsers,
       devotionals,
       growthGroups,
       news,
+      ongoingEvents,
     }
   }
 }

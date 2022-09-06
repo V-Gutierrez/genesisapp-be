@@ -116,7 +116,7 @@ class Events {
   }
 
   static subscribeToEvent(app: Express) {
-    app.post('/api/events/:id', async (req: Request, res: Response) => {
+    app.post('/api/events/subscriptions/:id', async (req: Request, res: Response) => {
       try {
         const errors = SchemaHelper.validateSchema(SchemaHelper.EVENTS_SUBSCRIPTION, req.body)
 

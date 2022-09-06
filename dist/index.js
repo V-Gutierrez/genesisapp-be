@@ -705,7 +705,7 @@
             )
           }
           static subscribeToEvent(e) {
-            e.post('/api/events/:id', (e, t) =>
+            e.post('/api/events/subscriptions/:id', (e, t) =>
               n(this, void 0, void 0, function* () {
                 try {
                   const i = a.default.validateSchema(a.default.EVENTS_SUBSCRIPTION, e.body)
@@ -1053,10 +1053,17 @@
                     activeUsers: i,
                     growthGroups: n,
                     news: s,
+                    ongoingEvents: a,
                   } = yield o.default.getStats()
                   return t
                     .status(200)
-                    .json({ activeUsers: i, devotionals: e, growthGroups: n, news: s })
+                    .json({
+                      activeUsers: i,
+                      devotionals: e,
+                      growthGroups: n,
+                      news: s,
+                      ongoingEvents: a,
+                    })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -1589,7 +1596,7 @@
             return n(this, void 0, void 0, function* () {
               return a.default.events.findMany({
                 orderBy: { subscriptionsScheduledTo: 'desc' },
-                include: { EventsSubscriptions: !0 },
+                include: { _count: { select: { EventsSubscriptions: !0 } } },
               })
             })
           }
@@ -1855,7 +1862,9 @@
               return e && e.__esModule ? e : { default: e }
             }
         Object.defineProperty(t, '__esModule', { value: !0 })
-        const o = s(i(988))
+        const o = s(i(988)),
+          a = i(315),
+          r = i(465)
         t.default = new (class {
           getStats() {
             return n(this, void 0, void 0, function* () {
@@ -1864,9 +1873,18 @@
                   o.default.devotional.count(),
                   o.default.growthGroup.count(),
                   o.default.news.count(),
+                  o.default.events.count({
+                    where: {
+                      subscriptionsScheduledTo: {
+                        lte: (0, r.zonedTimeToUtc)(new Date(), a.TIMEZONE),
+                      },
+                      eventDate: { gte: (0, r.zonedTimeToUtc)(new Date(), a.TIMEZONE) },
+                      subscriptionsDueDate: { gte: (0, r.zonedTimeToUtc)(new Date(), a.TIMEZONE) },
+                    },
+                  }),
                 ],
-                [t, i, n, s] = yield Promise.all(e)
-              return { activeUsers: t, devotionals: i, growthGroups: n, news: s }
+                [t, i, n, s, u] = yield Promise.all(e)
+              return { activeUsers: t, devotionals: i, growthGroups: n, news: s, ongoingEvents: u }
             })
           }
         })()

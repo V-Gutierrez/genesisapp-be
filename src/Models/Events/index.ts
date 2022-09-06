@@ -11,7 +11,7 @@ class EventsModel {
         subscriptionsScheduledTo: 'desc',
       },
       include: {
-        EventsSubscriptions: true,
+        _count: { select: { EventsSubscriptions: true } },
       },
     })
   }
