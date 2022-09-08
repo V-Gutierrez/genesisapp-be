@@ -1596,7 +1596,10 @@
             return n(this, void 0, void 0, function* () {
               return a.default.events.findMany({
                 orderBy: { subscriptionsScheduledTo: 'desc' },
-                include: { _count: { select: { EventsSubscriptions: !0 } } },
+                include: {
+                  _count: { select: { EventsSubscriptions: !0 } },
+                  EventsSubscriptions: !0,
+                },
               })
             })
           }

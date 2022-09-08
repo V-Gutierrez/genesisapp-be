@@ -12,6 +12,7 @@ class EventsModel {
       },
       include: {
         _count: { select: { EventsSubscriptions: true } },
+        EventsSubscriptions: true,
       },
     })
   }
