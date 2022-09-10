@@ -5,6 +5,8 @@ import Middlewares from '@Controllers/Middlewares'
 import Formatter from '@Helpers/Formatter'
 import ImageKitService from '@Services/ImageKitService'
 import { ImageKitFolders } from '@Types/Enum'
+import { TIMEZONE } from '@Constants/index'
+import { zonedTimeToUtc } from 'date-fns-tz'
 
 class Events {
   static getEvents(app: Express) {
@@ -69,11 +71,11 @@ class Events {
 
           const newEvent = await EventsModel.create({
             title,
-            subscriptionsScheduledTo,
-            subscriptionsDueDate,
-            eventDate,
+            subscriptionsScheduledTo: zonedTimeToUtc(new Date(subscriptionsScheduledTo), TIMEZONE),
+            subscriptionsDueDate: zonedTimeToUtc(new Date(subscriptionsDueDate), TIMEZONE),
+            eventDate: zonedTimeToUtc(new Date(eventDate), TIMEZONE),
             description,
-            maxSlots,
+            maxSlots: Number(maxSlots),
             coverImage,
             coverThumbnail,
             assetId: fileId,

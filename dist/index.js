@@ -609,7 +609,9 @@
           r = s(i(488)),
           u = s(i(721)),
           d = s(i(832)),
-          l = i(628)
+          l = i(628),
+          c = i(315),
+          f = i(465)
         t.default = class {
           static getEvents(e) {
             e.get('/api/events', (e, t) =>
@@ -647,32 +649,32 @@
                       title: n,
                       subscriptionsScheduledTo: s,
                       subscriptionsDueDate: r,
-                      eventDate: c,
-                      maxSlots: f,
-                      description: h,
+                      eventDate: h,
+                      maxSlots: v,
+                      description: p,
                     } = e.body,
-                    { file: v } = e,
+                    { file: _ } = e,
                     {
-                      url: p,
-                      thumbnailUrl: _,
-                      fileId: y,
+                      url: y,
+                      thumbnailUrl: m,
+                      fileId: g,
                     } = yield d.default.uploadFile(
-                      v.buffer,
+                      _.buffer,
                       u.default.generateSlug(n),
                       l.ImageKitFolders.Events,
                     ),
-                    m = yield o.default.create({
+                    w = yield o.default.create({
                       title: n,
-                      subscriptionsScheduledTo: s,
-                      subscriptionsDueDate: r,
-                      eventDate: c,
-                      description: h,
-                      maxSlots: f,
-                      coverImage: p,
-                      coverThumbnail: _,
-                      assetId: y,
+                      subscriptionsScheduledTo: (0, f.zonedTimeToUtc)(new Date(s), c.TIMEZONE),
+                      subscriptionsDueDate: (0, f.zonedTimeToUtc)(new Date(r), c.TIMEZONE),
+                      eventDate: (0, f.zonedTimeToUtc)(new Date(h), c.TIMEZONE),
+                      description: p,
+                      maxSlots: Number(v),
+                      coverImage: y,
+                      coverThumbnail: m,
+                      assetId: g,
                     })
-                  return t.status(201).json(m)
+                  return t.status(201).json(w)
                 } catch (e) {
                   t.sendStatus(500)
                 }
