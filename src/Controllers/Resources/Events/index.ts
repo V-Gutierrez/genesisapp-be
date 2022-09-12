@@ -98,7 +98,7 @@ class Events {
 
         await ImageKitService.delete(deleted.assetId)
 
-        res.sendStatus(204)
+        res.status(200).json({ message: 'Resource deleted successfully.' })
       } catch (error) {
         res.sendStatus(500)
       }
@@ -151,7 +151,7 @@ class Events {
 
         await EventsModel.removeSubscriptionById(id)
 
-        res.sendStatus(204)
+        res.status(200).json({ message: 'Resource deleted successfully.' })
       } catch (error) {
         res.sendStatus(500)
       }

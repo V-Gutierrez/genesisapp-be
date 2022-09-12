@@ -109,7 +109,7 @@ class Devotionals {
 
         await ImageKitService.delete(deleted.assetId)
 
-        res.sendStatus(204)
+        res.status(200).json({ message: 'Resource deleted successfully.' })
       } catch (error) {
         res.sendStatus(500)
       }
@@ -124,7 +124,7 @@ class Devotionals {
 
         await DevotionalModel.like(id, userId)
 
-        res.sendStatus(204)
+        res.status(201).json({ status: 'Resource created' })
       } catch (error) {
         res.sendStatus(500)
       }

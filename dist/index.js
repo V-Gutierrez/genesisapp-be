@@ -185,7 +185,8 @@
                       n(this, void 0, void 0, function* () {
                         return e
                           ? t.sendStatus(401)
-                          : (yield c.default.activateUserById(i.id), t.sendStatus(204))
+                          : (yield c.default.activateUserById(i.id),
+                            t.status(200).json({ activated: !0 }))
                       }),
                     )
                   } catch (e) {
@@ -261,7 +262,7 @@
                         r.default.AuthCookieDefaultOptions.name,
                         r.default.AuthCookieDefaultOptions.config,
                       ),
-                      t.sendStatus(204)
+                      t.status(200).json({ message: 'Operation successful' })
                     )
                   } catch (e) {
                     t.sendStatus(500)
@@ -542,7 +543,8 @@
                 try {
                   const { id: i } = e.params,
                     n = yield o.default.deleteById(i)
-                  yield r.default.delete(n.assetId), t.sendStatus(204)
+                  yield r.default.delete(n.assetId),
+                    t.status(200).json({ message: 'Resource deleted successfully.' })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -556,7 +558,7 @@
                 try {
                   const { id: n } = e.params,
                     { id: s } = null !== (i = e.cookies.user) && void 0 !== i ? i : {}
-                  yield o.default.like(n, s), t.sendStatus(204)
+                  yield o.default.like(n, s), t.status(201).json({ status: 'Resource created' })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -687,7 +689,8 @@
                 try {
                   const { id: i } = e.params,
                     n = yield o.default.deleteById(i)
-                  yield d.default.delete(n.assetId), t.sendStatus(204)
+                  yield d.default.delete(n.assetId),
+                    t.status(200).json({ message: 'Resource deleted successfully.' })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -730,7 +733,8 @@
               n(this, void 0, void 0, function* () {
                 try {
                   const { id: i } = e.params
-                  yield o.default.removeSubscriptionById(i), t.sendStatus(204)
+                  yield o.default.removeSubscriptionById(i),
+                    t.status(200).json({ message: 'Resource deleted successfully.' })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -941,7 +945,8 @@
                 try {
                   const { id: i } = e.params,
                     n = yield d.default.deleteById(i)
-                  yield r.default.delete(n.assetId), t.sendStatus(204)
+                  yield r.default.delete(n.assetId),
+                    t.status(200).json({ message: 'Resource deleted successfully.' })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -996,7 +1001,7 @@
                 try {
                   const { id: n } = e.params,
                     { id: s } = null !== (i = e.cookies.user) && void 0 !== i ? i : {}
-                  yield d.default.like(n, s), t.sendStatus(204)
+                  yield d.default.like(n, s), t.status(201).json({ status: 'Resource created' })
                 } catch (e) {
                   t.sendStatus(500)
                 }

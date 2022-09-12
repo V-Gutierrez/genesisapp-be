@@ -174,7 +174,7 @@ class Authentication {
 
             await UserModel.activateUserById(decoded.id)
 
-            return res.sendStatus(204)
+            return res.status(200).json({ activated: true })
           },
         )
       } catch (error) {
@@ -253,7 +253,7 @@ class Authentication {
           CookieHelper.AuthCookieDefaultOptions.name,
           CookieHelper.AuthCookieDefaultOptions.config,
         )
-        return res.sendStatus(204)
+        return res.status(200).json({ message: 'Operation successful' })
       } catch (error) {
         res.sendStatus(500)
       }
