@@ -39,22 +39,26 @@ class Authentication {
 
         const user = await UserModel.getUserByEmail(email)
 
-        if (!user) return res.sendStatus(404)
+        if (!user) return res.status(404).json({ message: Errors.USER_NOT_FOUND })
         if (!user.active) return res.status(403).json({ message: Errors.USER_NOT_ACTIVE })
 
         const matchPassword = await Bcrypt.comparePassword(password, user.password)
 
         if (matchPassword) {
-          const accessToken = jwt.sign(
-            { email: user.email, role: user.role, id: user.id, name: user.name },
-            process.env.ACCESS_TOKEN_SECRET as string,
-            { expiresIn: '12h' },
-          )
-          const refreshToken = jwt.sign(
-            { email: user.email, role: user.role, id: user.id, name: user.name },
-            process.env.REFRESH_TOKEN_SECRET as string,
-            { expiresIn: '30d' },
-          )
+          const tokenPayload = {
+            email: user.email,
+            role: user.role,
+            id: user.id,
+            name: user.name,
+            region: user.region,
+          }
+
+          const accessToken = jwt.sign(tokenPayload, process.env.ACCESS_TOKEN_SECRET as string, {
+            expiresIn: '12h',
+          })
+          const refreshToken = jwt.sign(tokenPayload, process.env.REFRESH_TOKEN_SECRET as string, {
+            expiresIn: '30d',
+          })
 
           await Prisma.userRefreshTokens.upsert({
             where: {
@@ -99,7 +103,7 @@ class Authentication {
                 CookieHelper.AuthCookieDefaultOptions.name,
                 CookieHelper.AuthCookieDefaultOptions.config,
               )
-              return res.sendStatus(403)
+              return res.status(403).json({ message: Errors.NO_AUTH })
             }
 
             const user = await UserModel.getUserByDecodedEmail(decoded.email)
@@ -110,7 +114,7 @@ class Authentication {
                 secure: isProduction,
                 sameSite: isProduction ? 'none' : undefined,
               })
-              return res.sendStatus(403)
+              return res.status(403).json({ message: Errors.NO_AUTH })
             }
 
             const { UserRefreshTokens, id: userId } = user
@@ -131,11 +135,11 @@ class Authentication {
                     CookieHelper.AuthCookieDefaultOptions.name,
                     CookieHelper.AuthCookieDefaultOptions.config,
                   )
-                  return res.sendStatus(403)
+                  return res.status(403).json({ message: Errors.NO_AUTH })
                 }
 
                 const refreshedAccessToken = jwt.sign(
-                  { email: user.email, role: user.role },
+                  { email: user.email, role: user.role, id: user.id, region: user.region },
                   process.env.ACCESS_TOKEN_SECRET as string,
                   { expiresIn: '12h' },
                 )
@@ -146,7 +150,7 @@ class Authentication {
                   refreshedAccessToken,
                   CookieHelper.AuthCookieDefaultOptions.config,
                 )
-                res.status(200).json({ userLoggedIn: true })
+                res.status(200).json({ message: Success.LOGIN })
               },
             )
           },
@@ -162,7 +166,7 @@ class Authentication {
       try {
         const authToken = req.headers.authorization
 
-        if (!authToken) return res.sendStatus(401)
+        if (!authToken) return res.status(401).json({ message: Errors.NO_AUTH })
 
         const { authorization } = req.headers
 
@@ -170,7 +174,7 @@ class Authentication {
           authorization as string,
           process.env.ACTIVATION_TOKEN_SECRET as string,
           async (error: any, decoded: Decoded) => {
-            if (error) return res.sendStatus(401)
+            if (error) return res.status(401).json({ message: Errors.NO_AUTH })
 
             await UserModel.activateUserById(decoded.id)
 
@@ -225,7 +229,8 @@ class Authentication {
 
       try {
         const errors = SchemaHelper.validateSchema(SchemaHelper.NEW_PASSWORD, req.body)
-        if (errors || !authToken) return res.sendStatus(400)
+        if (errors || !authToken)
+          return res.status(400).json({ message: Errors.NO_AUTH, error: errors })
 
         const { password } = req.body
 
@@ -233,7 +238,7 @@ class Authentication {
           authToken,
           process.env.PASSWORD_RESET_TOKEN_SECRET as string,
           async (error: any, decoded: Decoded) => {
-            if (error) return res.sendStatus(401)
+            if (error) return res.status(401).json({ message: Errors.NO_AUTH })
 
             await UserModel.setUserPasswordByEmail(decoded.email, password)
 

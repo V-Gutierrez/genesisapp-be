@@ -1,16 +1,17 @@
 import Prisma from '@Clients/Prisma'
-import { Prisma as PrismaType } from '@prisma/client'
+import { Prisma as PrismaType, Region } from '@prisma/client'
 import { readingTime } from 'reading-time-estimator'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { TIMEZONE } from '@Constants/index'
 
 class DevotionalModel {
-  async getReleasedDevotionals() {
+  async getReleasedDevotionals(region: Region) {
     return Prisma.devotional.findMany({
       where: {
         scheduledTo: {
           lte: zonedTimeToUtc(new Date(), TIMEZONE),
         },
+        region,
       },
       orderBy: {
         scheduledTo: 'desc',
@@ -18,13 +19,14 @@ class DevotionalModel {
     })
   }
 
-  async getBySlug(slug: string) {
+  async getBySlug(slug: string, region: Region) {
     return Prisma.devotional.findFirst({
       where: {
         slug,
         scheduledTo: {
           lte: zonedTimeToUtc(new Date(Date.now()), TIMEZONE),
         },
+        region,
       },
       orderBy: {
         scheduledTo: 'desc',
@@ -36,13 +38,14 @@ class DevotionalModel {
     })
   }
 
-  async getById(id: string) {
+  async getById(id: string, region: Region) {
     return Prisma.devotional.findFirst({
       where: {
         id,
         scheduledTo: {
           lte: zonedTimeToUtc(new Date(Date.now()), TIMEZONE),
         },
+        region,
       },
       orderBy: {
         scheduledTo: 'desc',
@@ -50,8 +53,11 @@ class DevotionalModel {
     })
   }
 
-  async getAll() {
+  async getAll(region: Region) {
     return Prisma.devotional.findMany({
+      where: {
+        region,
+      },
       orderBy: {
         scheduledTo: 'desc',
       },

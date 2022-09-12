@@ -16,6 +16,11 @@ enum Role {
   ADMIN
 }
 
+enum Region {
+  FEC // Feira de Santana
+  AEP // Ciudad Autonoma de Buenos Aires
+}
+
 model User {
   id                String              @id @default(cuid())
   name              String
@@ -24,6 +29,7 @@ model User {
   email             String              @unique
   phone             String              @unique
   role              Role                @default(USER)
+  region            Region              @default(AEP)
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @default(now())
   UserRefreshTokens UserRefreshTokens[]
@@ -54,6 +60,7 @@ model GrowthGroup {
   weekDay       String
   scheduledTime String
   leadership    String[] //Relate to users in a distant future (leaders need to have an account)
+  region        Region   @default(AEP)
 }
 
 model Devotional {
@@ -70,6 +77,7 @@ model Devotional {
   readingTimeInMinutes Int               @default(0)
   DevotionalLikes      DevotionalLikes[]
   DevotionalViews      DevotionalViews[]
+  region               Region            @default(AEP)
 }
 
 model DevotionalLikes {
@@ -103,6 +111,7 @@ model News {
   highlightText  String
   NewsLikes      NewsLikes[]
   NewsViews      NewsViews[]
+  region         Region      @default(AEP)
 }
 
 model NewsLikes {
@@ -136,6 +145,7 @@ model Events {
   eventDate                DateTime
   createdAt                DateTime              @default(now())
   EventsSubscriptions      EventsSubscriptions[]
+  region                   Region                @default(AEP)
 }
 
 model EventsSubscriptions {

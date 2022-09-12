@@ -8,7 +8,7 @@ import NewsModel from '@Models/News'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { TIMEZONE } from '@Constants/index'
-import { Success } from '@Helpers/Messages'
+import { Errors, Success } from '@Helpers/Messages'
 
 class News {
   static createNews(app: Express) {
@@ -107,7 +107,7 @@ class News {
 
         const response = await NewsModel.getBySlug(slug)
 
-        if (!response) return res.sendStatus(404)
+        if (!response) return res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
 
         await NewsModel.view(response.id, userId)
 

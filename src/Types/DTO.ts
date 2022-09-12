@@ -3,7 +3,9 @@ import * as GIS from 'google-photos-album-image-url-fetch'
 import { CookieOptions } from 'express'
 import { User } from '@prisma/client'
 
-export type Decoded = Pick<User, 'id' | 'email' | 'name' | 'role'> | any
+type DecodedPayload = 'id' | 'email' | 'name' | 'role' | 'region'
+
+export type Decoded = Pick<User, DecodedPayload> | any
 
 export type CookieHelperOptions = { name: string; config: CookieOptions }
 

@@ -7,14 +7,16 @@ import Middlewares from '@Controllers/Middlewares'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { TIMEZONE } from '@Constants/index'
-import { Success } from '@Helpers/Messages'
+import { Errors, Success } from '@Helpers/Messages'
 import { ImageKitFolders } from '../../../Types/Enum'
 
 class Devotionals {
   static getDevotionals(app: Express) {
-    app.get('/api/devotionals', async (_req: Request, res: Response) => {
+    app.get('/api/devotionals', async (req: Request, res: Response) => {
+      const { region } = req.cookies.user ?? {}
+
       try {
-        const response = await DevotionalModel.getReleasedDevotionals()
+        const response = await DevotionalModel.getReleasedDevotionals(region)
 
         res.status(200).json(response)
       } catch (error) {
@@ -27,11 +29,11 @@ class Devotionals {
     app.get('/api/devotionals/:slug', async (req: Request, res: Response) => {
       try {
         const { slug } = req.params
-        const { id: userId } = req.cookies.user ?? {}
+        const { id: userId, region } = req.cookies.user ?? {}
 
-        const response = await DevotionalModel.getBySlug(slug)
+        const response = await DevotionalModel.getBySlug(slug, region)
 
-        if (!response) return res.sendStatus(404)
+        if (!response) return res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
 
         await DevotionalModel.view(response.id, userId)
 
@@ -43,9 +45,11 @@ class Devotionals {
   }
 
   static getDevotionalsAsAdmin(app: Express) {
-    app.get('/api/all-devotionals', async (_req: Request, res: Response) => {
+    app.get('/api/all-devotionals', async (req: Request, res: Response) => {
+      const { region } = req.cookies.user ?? {}
+
       try {
-        const response = await DevotionalModel.getAll()
+        const response = await DevotionalModel.getAll(region)
 
         res.status(200).json(response)
       } catch (error) {
@@ -71,6 +75,7 @@ class Devotionals {
 
           const { body, title, scheduledTo, author } = req.body
           const { file } = req
+          const { region } = req.cookies.user ?? {}
 
           const {
             url: coverImage,
@@ -91,6 +96,7 @@ class Devotionals {
             coverImage,
             coverThumbnail,
             assetId: fileId,
+            region,
           })
 
           return res.status(201).json(devotional)

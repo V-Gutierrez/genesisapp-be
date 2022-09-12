@@ -4,7 +4,8 @@ export const Errors = {
   USER_NOT_ACTIVE: 'Usuário não ativado',
   USER_ALREADY_EXISTS: 'Este usuário já existe. Você esqueceu sua senha?',
   INTERNAL_SERVER_ERROR: 'Houve um problema. Se este erro persistir contate o suporte',
-  NO_AUTH: 'Usuário ou senha inválido',
+  NO_AUTH: 'Credenciais inválidas',
+  RESOURCE_NOT_FOUND: 'Recurso não encontrado',
 }
 
 export const Success = {
@@ -16,4 +17,5 @@ export const Success = {
   RESOURCE_DELETED: 'Recurso deletado',
   LOGOUT: 'Usuário deslogado com sucesso',
   SUBSCRIPTION_CREATED: 'Inscrição realizada',
+  LOGIN: 'Usuário logado com sucesso',
 }

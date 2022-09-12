@@ -56,6 +56,7 @@ class UserModel {
         id: true,
         role: true,
         active: true,
+        region: true,
       },
     })
   }
@@ -69,6 +70,7 @@ class UserModel {
         id: true,
         email: true,
         role: true,
+        region: true,
         UserRefreshTokens: true,
       },
     })

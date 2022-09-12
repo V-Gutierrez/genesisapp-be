@@ -11,8 +11,7 @@ import isProduction from '@Helpers/Environment'
 import jwt from 'jsonwebtoken'
 import morgan from 'morgan'
 import multer from 'multer'
-
-const { useTreblle } = require('treblle')
+import { useTreblle } from 'treblle'
 
 export default class Middlewares {
   constructor(private readonly app: Express) {
@@ -94,8 +93,8 @@ export default class Middlewares {
           token,
           process.env.ACCESS_TOKEN_SECRET as string,
           (err: any, decoded: Decoded) => {
-            if (err) return res.sendStatus(403)
-            if (decoded.role !== 'ADMIN') return res.sendStatus(401)
+            if (err) return res.status(403).json({ message: Errors.NO_AUTH })
+            if (decoded.role !== 'ADMIN') return res.status(401).json({ message: Errors.NO_AUTH })
             next()
           },
         )

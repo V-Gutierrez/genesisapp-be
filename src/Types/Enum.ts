@@ -3,3 +3,8 @@ export enum ImageKitFolders {
   News = 'news',
   Events = 'events',
 }
+
+export enum Region {
+  AEP = 'AEP',
+  FEC = 'FEC',
+}
