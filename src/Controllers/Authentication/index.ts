@@ -33,14 +33,14 @@ class Authentication {
         }
 
         const errors = SchemaHelper.validateSchema(SchemaHelper.LOGIN_SCHEMA, req.body)
-        if (errors) return res.status(400).json({ error: errors })
+        if (errors) return res.status(400).json({ message: errors })
 
         const { email, password }: User = req.body
 
         const user = await UserModel.getUserByEmail(email)
 
         if (!user) return res.sendStatus(404)
-        if (!user.active) return res.status(403).json({ error: Errors.USER_NOT_ACTIVE })
+        if (!user.active) return res.status(403).json({ message: Errors.USER_NOT_ACTIVE })
 
         const matchPassword = await Bcrypt.comparePassword(password, user.password)
 
@@ -77,7 +77,7 @@ class Authentication {
 
           return res.status(200).json({ userLoggedIn: true })
         }
-        return res.status(401).json({ error: Errors.NO_AUTH })
+        return res.status(401).json({ message: Errors.NO_AUTH })
       } catch (error) {
         res.sendStatus(500)
       }
@@ -174,7 +174,7 @@ class Authentication {
 
             await UserModel.activateUserById(decoded.id)
 
-            return res.status(200).json({ activated: true })
+            return res.status(200).json({ message: Success.USER_ACTIVATED })
           },
         )
       } catch (error) {
@@ -187,7 +187,7 @@ class Authentication {
     app.post('/api/auth/reset-password', async (req: Request, res: Response) => {
       try {
         const errors = SchemaHelper.validateSchema(SchemaHelper.RESET_PASSWORD, req.body)
-        if (errors) return res.status(400).json({ error: errors })
+        if (errors) return res.status(400).json({ message: errors })
 
         const { email } = req.body
 
@@ -253,7 +253,7 @@ class Authentication {
           CookieHelper.AuthCookieDefaultOptions.name,
           CookieHelper.AuthCookieDefaultOptions.config,
         )
-        return res.status(200).json({ message: 'Operation successful' })
+        return res.status(200).json({ message: Success.LOGOUT })
       } catch (error) {
         res.sendStatus(500)
       }

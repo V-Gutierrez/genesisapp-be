@@ -8,6 +8,7 @@ import NewsModel from '@Models/News'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { TIMEZONE } from '@Constants/index'
+import { Success } from '@Helpers/Messages'
 
 class News {
   static createNews(app: Express) {
@@ -19,11 +20,11 @@ class News {
           const errors = SchemaHelper.validateSchema(SchemaHelper.NEWS_CREATION, req.body)
 
           if (errors) {
-            return res.status(400).json({ error: errors })
+            return res.status(400).json({ message: errors })
           }
 
           if (!req.file) {
-            return res.status(400).json({ error: 'coverImage is missing' })
+            return res.status(400).json({ message: 'coverImage is missing' })
           }
 
           const { body, title, scheduledTo, highlightText } = req.body
@@ -67,7 +68,7 @@ class News {
 
         await ImageKitService.delete(deleted.assetId)
 
-        res.status(200).json({ message: 'Resource deleted successfully.' })
+        res.status(200).json({ message: Success.RESOURCE_DELETED })
       } catch (error) {
         res.sendStatus(500)
       }
@@ -124,7 +125,7 @@ class News {
 
         await NewsModel.like(id, userId)
 
-        res.status(201).json({ status: 'Resource created' })
+        res.status(201).json({ message: Success.RESOURCE_CREATED })
       } catch (error) {
         res.sendStatus(500)
       }

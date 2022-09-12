@@ -17,11 +17,11 @@ class Users {
       const { id } = req.params
 
       try {
-        if (!id) res.status(401).json({ error: Errors.INVALID_OR_MISSING_ID })
+        if (!id) res.status(401).json({ message: Errors.INVALID_OR_MISSING_ID })
         else {
           const user = await UserModel.getUserById(id)
 
-          if (!user) res.status(404).json({ error: Errors.USER_NOT_FOUND })
+          if (!user) res.status(404).json({ message: Errors.USER_NOT_FOUND })
           if (user) res.status(200).json(user)
         }
       } catch (error) {
@@ -35,7 +35,7 @@ class Users {
       try {
         const errors = SchemaHelper.validateSchema(SchemaHelper.SIGNUP_SCHEMA, req.body)
 
-        if (errors) return res.status(400).json({ error: errors })
+        if (errors) return res.status(400).json({ message: errors })
 
         const { email, name, password, phone, birthdate }: User = req.body
 
@@ -63,8 +63,8 @@ class Users {
         res.status(201).json({ message: Success.USER_CREATED, user })
       } catch (error) {
         if ((error as any).code === 'P2002')
-          res.status(409).json({ error: Errors.USER_ALREADY_EXISTS })
-        else res.status(500).json({ error: Errors.INTERNAL_SERVER_ERROR })
+          res.status(409).json({ message: Errors.USER_ALREADY_EXISTS })
+        else res.status(500).json({ message: Errors.INTERNAL_SERVER_ERROR })
       }
     })
   }

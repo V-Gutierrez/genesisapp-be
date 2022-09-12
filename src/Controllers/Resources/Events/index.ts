@@ -7,6 +7,7 @@ import ImageKitService from '@Services/ImageKitService'
 import { ImageKitFolders } from '@Types/Enum'
 import { TIMEZONE } from '@Constants/index'
 import { zonedTimeToUtc } from 'date-fns-tz'
+import { Success } from '@Helpers/Messages'
 
 class Events {
   static getEvents(app: Express) {
@@ -43,10 +44,10 @@ class Events {
           const errors = SchemaHelper.validateSchema(SchemaHelper.EVENTS_CREATION, req.body)
 
           if (errors) {
-            return res.status(400).json({ error: errors })
+            return res.status(400).json({ message: errors })
           }
           if (!req.file) {
-            return res.status(400).json({ error: 'coverImage is missing' })
+            return res.status(400).json({ message: 'coverImage is missing' })
           }
 
           const {
@@ -98,7 +99,7 @@ class Events {
 
         await ImageKitService.delete(deleted.assetId)
 
-        res.status(200).json({ message: 'Resource deleted successfully.' })
+        res.status(200).json({ message: Success.RESOURCE_DELETED })
       } catch (error) {
         res.sendStatus(500)
       }
@@ -123,7 +124,7 @@ class Events {
         const errors = SchemaHelper.validateSchema(SchemaHelper.EVENTS_SUBSCRIPTION, req.body)
 
         if (errors) {
-          return res.status(400).json({ error: errors })
+          return res.status(400).json({ message: errors })
         }
         const { id } = req.params
         const { userName, userEmail, userPhone } = req.body
@@ -151,7 +152,7 @@ class Events {
 
         await EventsModel.removeSubscriptionById(id)
 
-        res.status(200).json({ message: 'Resource deleted successfully.' })
+        res.status(200).json({ message: Success.RESOURCE_DELETED })
       } catch (error) {
         res.sendStatus(500)
       }

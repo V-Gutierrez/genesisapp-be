@@ -7,6 +7,7 @@ import Middlewares from '@Controllers/Middlewares'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { TIMEZONE } from '@Constants/index'
+import { Success } from '@Helpers/Messages'
 import { ImageKitFolders } from '../../../Types/Enum'
 
 class Devotionals {
@@ -62,10 +63,10 @@ class Devotionals {
           const errors = SchemaHelper.validateSchema(SchemaHelper.DEVOTIONAL_CREATION, req.body)
 
           if (errors) {
-            return res.status(400).json({ error: errors })
+            return res.status(400).json({ message: errors })
           }
           if (!req.file) {
-            return res.status(400).json({ error: 'coverImage is missing' })
+            return res.status(400).json({ message: 'coverImage is missing' })
           }
 
           const { body, title, scheduledTo, author } = req.body
@@ -109,7 +110,7 @@ class Devotionals {
 
         await ImageKitService.delete(deleted.assetId)
 
-        res.status(200).json({ message: 'Resource deleted successfully.' })
+        res.status(200).json({ message: Success.RESOURCE_DELETED })
       } catch (error) {
         res.sendStatus(500)
       }
@@ -124,7 +125,7 @@ class Devotionals {
 
         await DevotionalModel.like(id, userId)
 
-        res.status(201).json({ status: 'Resource created' })
+        res.status(201).json({ status: Success.RESOURCE_CREATED })
       } catch (error) {
         res.sendStatus(500)
       }
