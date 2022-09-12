@@ -1,18 +1,31 @@
 import Prisma from '@Clients/Prisma'
 import { TIMEZONE } from '@Constants/index'
+import { Region } from '@prisma/client'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
 class StatsModel {
-  async getStats() {
+  async getStats(region: Region) {
     const promises = [
       Prisma.user.count({
         where: {
           active: true,
         },
       }),
-      Prisma.devotional.count(),
-      Prisma.growthGroup.count(),
-      Prisma.news.count(),
+      Prisma.devotional.count({
+        where: {
+          region,
+        },
+      }),
+      Prisma.growthGroup.count({
+        where: {
+          region,
+        },
+      }),
+      Prisma.news.count({
+        where: {
+          region,
+        },
+      }),
       Prisma.events.count({
         where: {
           subscriptionsScheduledTo: {
@@ -24,6 +37,7 @@ class StatsModel {
           subscriptionsDueDate: {
             gte: zonedTimeToUtc(new Date(), TIMEZONE),
           },
+          region,
         },
       }),
     ]

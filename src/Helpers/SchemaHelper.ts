@@ -17,6 +17,7 @@ class SchemaHelper {
       .regex(/[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/)
       .required(),
     birthdate: Joi.string().required(),
+    region: Joi.string().required(),
   })
 
   static LOGIN_SCHEMA = Joi.object().keys({

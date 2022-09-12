@@ -11,9 +11,11 @@ import { Success } from '@Helpers/Messages'
 
 class Events {
   static getEvents(app: Express) {
-    app.get('/api/events', async (_req: Request, res: Response) => {
+    app.get('/api/events', async (req: Request, res: Response) => {
+      const { region } = req.cookies.user ?? {}
+
       try {
-        const response = await EventsModel.getReleasedEvents()
+        const response = await EventsModel.getReleasedEvents(region)
 
         res.status(200).json(response)
       } catch (error) {
@@ -24,9 +26,11 @@ class Events {
 
   static getEventById(app: Express) {
     app.get('/api/events/:id', async (req: Request, res: Response) => {
+      const { region } = req.cookies.user ?? {}
+
       try {
         const { id } = req.params
-        const response = await EventsModel.getEventById(id)
+        const response = await EventsModel.getEventById(id, region)
 
         res.status(200).json(response)
       } catch (error) {
@@ -49,6 +53,8 @@ class Events {
           if (!req.file) {
             return res.status(400).json({ message: 'coverImage is missing' })
           }
+
+          const { region } = req.cookies.user ?? {}
 
           const {
             title,
@@ -80,6 +86,7 @@ class Events {
             coverImage,
             coverThumbnail,
             assetId: fileId,
+            region,
           })
 
           return res.status(201).json(newEvent)
@@ -107,7 +114,7 @@ class Events {
   }
 
   static getEventsAsAdmin(app: Express) {
-    app.get('/api/all-events', async (_req: Request, res: Response) => {
+    app.get('/api/all-events', async (req: Request, res: Response) => {
       try {
         const response = await EventsModel.getAll()
 
@@ -128,6 +135,7 @@ class Events {
         }
         const { id } = req.params
         const { userName, userEmail, userPhone } = req.body
+        const { region } = req.cookies.user ?? {}
 
         await EventsModel.subscribeUserToEvent(
           {
@@ -136,6 +144,7 @@ class Events {
             userPhone,
           },
           id,
+          region,
         )
 
         res.status(201).json({ message: Success.SUBSCRIPTION_CREATED })

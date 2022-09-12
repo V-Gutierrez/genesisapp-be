@@ -1,7 +1,7 @@
 import { TIMEZONE } from '@Constants/index'
 import Prisma from '@Clients/Prisma'
 import { zonedTimeToUtc } from 'date-fns-tz'
-import { Prisma as PrismaType } from '@prisma/client'
+import { Prisma as PrismaType, Region } from '@prisma/client'
 import { isAfter } from 'date-fns'
 
 class EventsModel {
@@ -17,7 +17,7 @@ class EventsModel {
     })
   }
 
-  async getReleasedEvents() {
+  async getReleasedEvents(region: Region) {
     return Prisma.events.findMany({
       where: {
         subscriptionsScheduledTo: {
@@ -29,6 +29,7 @@ class EventsModel {
         subscriptionsDueDate: {
           gte: zonedTimeToUtc(new Date(), TIMEZONE),
         },
+        region,
       },
       include: {
         _count: { select: { EventsSubscriptions: true } },
@@ -72,7 +73,7 @@ class EventsModel {
     })
   }
 
-  async getEventById(id: string) {
+  async getEventById(id: string, region: Region) {
     return Prisma.events.findFirst({
       where: {
         id,
@@ -82,6 +83,7 @@ class EventsModel {
         subscriptionsDueDate: {
           gte: zonedTimeToUtc(new Date(), TIMEZONE),
         },
+        region,
       },
       include: {
         _count: {
@@ -96,8 +98,9 @@ class EventsModel {
   async subscribeUserToEvent(
     userData: Omit<PrismaType.EventsSubscriptionsCreateInput, 'Event'>,
     eventId: string,
+    region: Region,
   ) {
-    const currentEvent = await this.getEventById(eventId)
+    const currentEvent = await this.getEventById(eventId, region)
 
     if (!currentEvent) throw new Error(`No available event found for ${eventId}`)
 

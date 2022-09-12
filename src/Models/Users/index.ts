@@ -1,6 +1,6 @@
 import Bcrypt from '@Helpers/Bcrypt'
 import Prisma from '@Clients/Prisma'
-import { Prisma as PrismaType } from '@prisma/client'
+import { Prisma as PrismaType, Region } from '@prisma/client'
 
 class UserModel {
   async getUserById(id: string) {
@@ -16,7 +16,7 @@ class UserModel {
     })
   }
 
-  async getAll() {
+  async getAll(region: Region) {
     return Prisma.user.findMany({
       select: {
         id: true,
@@ -26,6 +26,9 @@ class UserModel {
         birthdate: true,
         phone: true,
         active: true,
+      },
+      where: {
+        region,
       },
     })
   }

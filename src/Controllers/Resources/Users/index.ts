@@ -37,7 +37,7 @@ class Users {
 
         if (errors) return res.status(400).json({ message: errors })
 
-        const { email, name, password, phone, birthdate }: User = req.body
+        const { email, name, password, phone, birthdate, region }: User = req.body
 
         const user = await UserModel.create({
           email: Formatter.sanitizeEmail(email),
@@ -45,6 +45,7 @@ class Users {
           birthdate: new Date(birthdate).toISOString(),
           password: await Bcrypt.hashPassword(password),
           phone,
+          region,
         })
 
         const token = jwt.sign({ id: user.id }, process.env.ACTIVATION_TOKEN_SECRET as string, {
@@ -70,9 +71,11 @@ class Users {
   }
 
   static async getAllUsersAsAdmin(app: Express) {
-    app.get('/api/users', async (_: Request, res: Response) => {
+    app.get('/api/users', async (req: Request, res: Response) => {
+      const { region } = req.cookies.user ?? {}
+
       try {
-        const users = await UserModel.getAll()
+        const users = await UserModel.getAll(region)
 
         res.status(200).json(users)
       } catch (error) {

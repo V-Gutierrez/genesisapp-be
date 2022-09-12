@@ -29,6 +29,7 @@ class News {
 
           const { body, title, scheduledTo, highlightText } = req.body
           const { file } = req
+          const { region } = req.cookies.user ?? {}
 
           const {
             url: coverImage,
@@ -49,6 +50,7 @@ class News {
             slug: Formatter.generateSlug(title),
             assetId: fileId,
             highlightText,
+            region,
           })
 
           return res.status(201).json(news)
@@ -76,9 +78,11 @@ class News {
   }
 
   static getNewsAsAdmin(app: Express) {
-    app.get('/api/all-news', async (_req: Request, res: Response) => {
+    app.get('/api/all-news', async (req: Request, res: Response) => {
+      const { region } = req.cookies.user ?? {}
+
       try {
-        const response = await NewsModel.getAll()
+        const response = await NewsModel.getAll(region)
 
         res.status(200).json(response)
       } catch (error) {
@@ -88,9 +92,11 @@ class News {
   }
 
   static getNews(app: Express) {
-    app.get('/api/news', async (_req: Request, res: Response) => {
+    app.get('/api/news', async (req: Request, res: Response) => {
+      const { region } = req.cookies.user ?? {}
+
       try {
-        const response = await NewsModel.getReleasedNews()
+        const response = await NewsModel.getReleasedNews(region)
 
         res.status(200).json(response)
       } catch (error) {
@@ -103,9 +109,9 @@ class News {
     app.get('/api/news/:slug', async (req: Request, res: Response) => {
       try {
         const { slug } = req.params
-        const { id: userId } = req.cookies.user ?? {}
+        const { id: userId, region } = req.cookies.user ?? {}
 
-        const response = await NewsModel.getBySlug(slug)
+        const response = await NewsModel.getBySlug(slug, region)
 
         if (!response) return res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
 

@@ -1,6 +1,6 @@
 import Prisma from '@Clients/Prisma'
 import { TIMEZONE } from '@Constants/index'
-import { Prisma as PrismaType } from '@prisma/client'
+import { Prisma as PrismaType, Region } from '@prisma/client'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
 class NewsModel {
@@ -18,13 +18,14 @@ class NewsModel {
     })
   }
 
-  async getBySlug(slug: string) {
+  async getBySlug(slug: string, region: Region) {
     return Prisma.news.findFirst({
       where: {
         slug,
         scheduledTo: {
           lte: zonedTimeToUtc(new Date(Date.now()), TIMEZONE),
         },
+        region,
       },
       orderBy: {
         scheduledTo: 'desc',
@@ -36,12 +37,13 @@ class NewsModel {
     })
   }
 
-  async getReleasedNews() {
+  async getReleasedNews(region: Region) {
     return Prisma.news.findMany({
       where: {
         scheduledTo: {
           lte: zonedTimeToUtc(new Date(), TIMEZONE),
         },
+        region,
       },
       orderBy: {
         scheduledTo: 'desc',
@@ -49,10 +51,13 @@ class NewsModel {
     })
   }
 
-  async getAll() {
+  async getAll(region: Region) {
     return Prisma.news.findMany({
       orderBy: {
         scheduledTo: 'desc',
+      },
+      where: {
+        region,
       },
     })
   }

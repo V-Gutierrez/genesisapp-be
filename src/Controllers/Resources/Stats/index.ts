@@ -4,10 +4,12 @@ import StatsModel from '@Models/Stats'
 
 class Stats {
   static getStats(app: Express) {
-    app.get('/api/stats', async (_req: Request, res: Response) => {
+    app.get('/api/stats', async (req: Request, res: Response) => {
+      const { region } = req.cookies.user ?? {}
+
       try {
         const { devotionals, activeUsers, growthGroups, news, ongoingEvents } =
-          await StatsModel.getStats()
+          await StatsModel.getStats(region)
 
         return res.status(200).json({
           activeUsers,
