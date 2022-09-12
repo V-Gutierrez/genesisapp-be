@@ -1,3 +1,4 @@
+import { Errors } from '@Helpers/Messages'
 import 'dotenv/config'
 
 import express, { Express, NextFunction, Request, Response } from 'express'
@@ -75,7 +76,7 @@ export default class Middlewares {
         const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
         jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any) => {
-          if (err) return res.sendStatus(403)
+          if (err) return res.status(403).json({ message: Errors.NO_AUTH })
           next()
         })
       } catch (error) {

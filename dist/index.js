@@ -331,36 +331,38 @@
             function (e) {
               return e && e.__esModule ? e : { default: e }
             }
-        Object.defineProperty(t, '__esModule', { value: !0 }), i(81)
-        const o = n(i(860)),
-          a = n(i(20)),
-          r = n(i(710)),
-          u = n(i(582)),
-          d = n(i(766)),
-          c = n(i(344)),
-          l = n(i(470)),
-          f = n(i(738)),
-          { useTreblle: h } = i(549)
+        Object.defineProperty(t, '__esModule', { value: !0 })
+        const o = i(590)
+        i(81)
+        const a = n(i(860)),
+          r = n(i(20)),
+          u = n(i(710)),
+          d = n(i(582)),
+          c = n(i(766)),
+          l = n(i(344)),
+          f = n(i(470)),
+          h = n(i(738)),
+          { useTreblle: v } = i(549)
         t.default = class {
           constructor(e) {
             ;(this.app = e),
               this.CORS(),
-              this.app.use(o.default.json()),
-              this.app.use((0, r.default)()),
-              this.app.use(o.default.urlencoded({ extended: !1 })),
-              this.app.use((0, l.default)('short')),
+              this.app.use(a.default.json()),
+              this.app.use((0, u.default)()),
+              this.app.use(a.default.urlencoded({ extended: !1 })),
+              this.app.use((0, f.default)('short')),
               this.TrebbleDocs(this.app),
               this.UserContext(this.app)
           }
           CORS() {
-            const e = d.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
+            const e = c.default ? [] : ['http://localhost:3000', 'http://192.168.0.56:3000']
             this.app.use(
-              (0, u.default)({ credentials: !0, origin: [process.env.FRONT_BASE_URL, ...e] }),
+              (0, d.default)({ credentials: !0, origin: [process.env.FRONT_BASE_URL, ...e] }),
             )
           }
           TrebbleDocs(e) {
-            d.default &&
-              h(e, {
+            c.default &&
+              v(e, {
                 apiKey: process.env.TREBBLE_DOCS_API,
                 projectId: process.env.TREBBLE_DOCS_PID,
               })
@@ -369,8 +371,8 @@
             e.use((e, t, i) =>
               s(this, void 0, void 0, function* () {
                 try {
-                  const { [a.default.AuthCookieDefaultOptions.name]: t } = e.cookies
-                  c.default.verify(t, process.env.ACCESS_TOKEN_SECRET, (t, s) => {
+                  const { [r.default.AuthCookieDefaultOptions.name]: t } = e.cookies
+                  l.default.verify(t, process.env.ACCESS_TOKEN_SECRET, (t, s) => {
                     ;(e.cookies.user = t ? null : s), i()
                   })
                 } catch (e) {
@@ -383,9 +385,9 @@
             e.use((e, t, i) =>
               s(this, void 0, void 0, function* () {
                 try {
-                  const { [a.default.AuthCookieDefaultOptions.name]: s } = e.cookies
-                  c.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e) => {
-                    if (e) return t.sendStatus(403)
+                  const { [r.default.AuthCookieDefaultOptions.name]: s } = e.cookies
+                  l.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e) => {
+                    if (e) return t.status(403).json({ message: o.Errors.NO_AUTH })
                     i()
                   })
                 } catch (e) {
@@ -398,8 +400,8 @@
             e.use((e, t, i) =>
               s(this, void 0, void 0, function* () {
                 try {
-                  const { [a.default.AuthCookieDefaultOptions.name]: s } = e.cookies
-                  c.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
+                  const { [r.default.AuthCookieDefaultOptions.name]: s } = e.cookies
+                  l.default.verify(s, process.env.ACCESS_TOKEN_SECRET, (e, s) =>
                     e ? t.sendStatus(403) : 'ADMIN' !== s.role ? t.sendStatus(401) : void i(),
                   )
                 } catch (e) {
@@ -409,7 +411,7 @@
             )
           }
           static SingleFileUpload(e) {
-            return (0, f.default)({ limits: { fileSize: 2e6 } }).single(e)
+            return (0, h.default)({ limits: { fileSize: 2e6 } }).single(e)
           }
         }
       },
@@ -459,8 +461,8 @@
           d = n(i(448)),
           c = i(465),
           l = i(315),
-          f = i(628),
-          h = i(590)
+          f = i(590),
+          h = i(628)
         t.default = class {
           static getDevotionals(e) {
             e.get('/api/devotionals', (e, t) =>
@@ -510,7 +512,7 @@
                   const i = d.default.validateSchema(d.default.DEVOTIONAL_CREATION, e.body)
                   if (i) return t.status(400).json({ message: i })
                   if (!e.file) return t.status(400).json({ message: 'coverImage is missing' })
-                  const { body: s, title: n, scheduledTo: u, author: h } = e.body,
+                  const { body: s, title: n, scheduledTo: u, author: f } = e.body,
                     { file: v } = e,
                     {
                       url: p,
@@ -519,13 +521,13 @@
                     } = yield r.default.uploadFile(
                       v.buffer,
                       a.default.generateSlug(n),
-                      f.ImageKitFolders.Devotionals,
+                      h.ImageKitFolders.Devotionals,
                     ),
                     g = yield o.default.create({
                       body: s,
                       title: n,
                       scheduledTo: (0, c.zonedTimeToUtc)(new Date(u), l.TIMEZONE),
-                      author: h,
+                      author: f,
                       slug: a.default.generateSlug(n),
                       coverImage: p,
                       coverThumbnail: _,
@@ -545,7 +547,7 @@
                   const { id: i } = e.params,
                     s = yield o.default.deleteById(i)
                   yield r.default.delete(s.assetId),
-                    t.status(200).json({ message: h.Success.RESOURCE_DELETED })
+                    t.status(200).json({ message: f.Success.RESOURCE_DELETED })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -560,7 +562,7 @@
                   const { id: s } = e.params,
                     { id: n } = null !== (i = e.cookies.user) && void 0 !== i ? i : {}
                   yield o.default.like(s, n),
-                    t.status(201).json({ status: h.Success.RESOURCE_CREATED })
+                    t.status(201).json({ status: f.Success.RESOURCE_CREATED })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -724,7 +726,7 @@
                     { userName: n, userEmail: r, userPhone: u },
                     s,
                   ),
-                    t.sendStatus(201)
+                    t.status(201).json({ message: h.Success.SUBSCRIPTION_CREATED })
                 } catch (e) {
                   t.sendStatus(500)
                 }
@@ -1313,6 +1315,7 @@
             RESOURCE_CREATED: 'Recurso criado',
             RESOURCE_DELETED: 'Recurso deletado',
             LOGOUT: 'Usuário deslogado com sucesso',
+            SUBSCRIPTION_CREATED: 'Inscrição realizada',
           })
       },
       448: function (e, t, i) {

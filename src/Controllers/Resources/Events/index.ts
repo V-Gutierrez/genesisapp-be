@@ -138,7 +138,7 @@ class Events {
           id,
         )
 
-        res.sendStatus(201)
+        res.status(201).json({ message: Success.SUBSCRIPTION_CREATED })
       } catch (error) {
         res.sendStatus(500)
       }

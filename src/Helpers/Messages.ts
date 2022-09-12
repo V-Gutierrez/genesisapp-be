@@ -15,4 +15,5 @@ export const Success = {
   RESOURCE_CREATED: 'Recurso criado',
   RESOURCE_DELETED: 'Recurso deletado',
   LOGOUT: 'Usuário deslogado com sucesso',
+  SUBSCRIPTION_CREATED: 'Inscrição realizada',
 }
