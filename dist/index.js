@@ -286,8 +286,9 @@
                       role: n,
                       id: o,
                       name: a,
+                      region: r,
                     } = null !== (i = e.cookies.user) && void 0 !== i ? i : {}
-                    return t.status(200).json({ email: s, role: n, id: o, name: a })
+                    return t.status(200).json({ email: s, role: n, id: o, name: a, region: r })
                   } catch (e) {
                     return t.sendStatus(500)
                   }

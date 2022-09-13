@@ -268,9 +268,9 @@ class Authentication {
   static async getUserInformation(app: Express) {
     app.get('/api/auth/me', async (req: Request, res: Response) => {
       try {
-        const { email, role, id, name } = req.cookies.user ?? {}
+        const { email, role, id, name, region } = req.cookies.user ?? {}
 
-        return res.status(200).json({ email, role, id, name })
+        return res.status(200).json({ email, role, id, name, region })
       } catch (error) {
         return res.sendStatus(500)
       }
