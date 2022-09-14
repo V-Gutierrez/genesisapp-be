@@ -8,6 +8,7 @@ import News from '@Controllers/Resources/News'
 import Stats from '@Controllers/Resources/Stats'
 import Users from '@Controllers/Resources/Users'
 import Events from '@Controllers/Resources/Events'
+import Regions from '@Controllers/Resources/Regions'
 
 export default class RoutesController {
   constructor(private readonly app: Express) {
@@ -35,17 +36,17 @@ export default class RoutesController {
     Events.getEventById(this.app)
 
     Integrations.getGooglePhotosAlbumPhotos(this.app)
-
-    Middlewares.JWT(this.app)
+    Regions.getRegions(this.app)
 
     /* AUTH ROUTES */
+    Middlewares.JWT(this.app)
     Authentication.getUserInformation(this.app)
     Users.get(this.app)
     Devotionals.like(this.app)
     /* AUTH ROUTES */
 
-    Middlewares.IsAdmin(this.app)
     /* ADMIN ROUTES */
+    Middlewares.IsAdmin(this.app)
     Events.getEventsAsAdmin(this.app)
     Events.createEvent(this.app)
     Events.deleteEvent(this.app)
