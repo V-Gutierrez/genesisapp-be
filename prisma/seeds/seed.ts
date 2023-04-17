@@ -1,13 +1,109 @@
-import { PrismaClient } from '@prisma/client'
+import { Devotional, PrismaClient, Region, Role } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-async function main() {
-  await prisma.userRefreshTokens.deleteMany({})
-  await prisma.user.deleteMany({})
-  await prisma.growthGroup.deleteMany({})
-  await prisma.devotional.deleteMany({})
+async function seedUsers() {
+  await prisma.user.createMany({
+    skipDuplicates: true,
+    data: [
+      {
+        name: 'John Doe',
+        email: 'johndoe@example.com',
+        phone: '+1 555-1234',
+        password: 'password123',
+        birthdate: new Date('1990-01-01'),
+        role: Role.ADMIN,
+        region: 'FEC',
+        active: true,
+      },
+      {
+        name: 'Jane Smith',
+        email: 'janesmith@example.com',
+        phone: '+1 555-5678',
+        password: 'password456',
+        birthdate: new Date('1995-06-15'),
+        role: Role.USER,
+        region: 'AEP',
+        active: true,
+      },
+    ],
+  })
+}
 
+async function seedDevotionals() {
+  const devotionals: Devotional[] = [
+    {
+      createdAt: new Date('2021-04-18T10:00:00.000Z'),
+      scheduledTo: new Date('2023-04-18T10:00:00.000Z'),
+      title: 'Title of the first devotional',
+      body: 'Body of the first devotional',
+      slug: 'title-of-the-first-devotional',
+      author: 'Author 1',
+      coverImage: 'https://example.com/cover-image-1.png',
+      coverThumbnail: 'https://example.com/cover-thumbnail-1.png',
+      assetId: 'asset-id-1',
+      readingTimeInMinutes: 10,
+      region: Region.AEP,
+      id: 'uuid-1',
+    },
+    {
+      scheduledTo: new Date('2023-04-19T10:00:00.000Z'),
+      title: 'Title of the second devotional',
+      body: 'Body of the second devotional',
+      slug: 'title-of-the-second-devotional',
+      author: 'Author 2',
+      coverImage: 'https://example.com/cover-image-2.png',
+      coverThumbnail: 'https://example.com/cover-thumbnail-2.png',
+      assetId: 'asset-id-2',
+      readingTimeInMinutes: 8,
+      region: Region.FEC,
+      createdAt: new Date('2021-04-18T10:00:00.000Z'),
+      id: 'uuid-2',
+    },
+    // Add more devotionals as needed
+  ]
+
+  await prisma.devotional.createMany({ data: devotionals })
+}
+
+async function seedNews() {
+  const data = [
+    {
+      title: 'New product launch',
+      body: 'We are thrilled to announce the launch of our latest product. Click here to learn more!',
+      slug: 'new-product-launch',
+      coverImage: 'https://example.com/images/new-product.jpg',
+      coverThumbnail: 'https://example.com/images/new-product-thumbnail.jpg',
+      assetId: '12345',
+      highlightText: 'Introducing our most advanced product yet!',
+      region: Region.AEP,
+    },
+    {
+      title: 'Upcoming sale',
+      body: 'Get ready for our biggest sale of the year! Starting on Monday, save up to 50% off on all products.',
+      slug: 'upcoming-sale',
+      coverImage: 'https://example.com/images/sale.jpg',
+      coverThumbnail: 'https://example.com/images/sale-thumbnail.jpg',
+      assetId: '67890',
+      highlightText: "Don't miss out on these amazing deals!",
+      region: Region.FEC,
+    },
+    {
+      title: 'New partnership',
+      body: 'We are excited to announce our new partnership with XYZ company. Click here to learn more about this exciting collaboration.',
+      slug: 'new-partnership',
+      coverImage: 'https://example.com/images/partnership.jpg',
+      coverThumbnail: 'https://example.com/images/partnership-thumbnail.jpg',
+      assetId: '54321',
+      highlightText: 'Together, we will revolutionize the industry!',
+      region: Region.AEP,
+    },
+  ]
+
+  await prisma.news.createMany({ data })
+}
+
+async function seedGrowthGroups() {
   await prisma.growthGroup.createMany({
     skipDuplicates: true,
     data: [
@@ -143,6 +239,80 @@ async function main() {
       },
     ],
   })
+}
+
+async function seedEvents() {
+  const data = [
+    {
+      title: 'Community Service Day',
+      description:
+        'Join us for a day of giving back to the community! We will be cleaning up local parks and streets, planting trees, and more.',
+      coverImage: 'https://example.com/images/community-service-day.jpg',
+      coverThumbnail: 'https://example.com/images/community-service-day-thumbnail.jpg',
+      assetId: 'c75f1b0f-c84f-413e-bb06-9399ac39c36a',
+      maxSlots: 50,
+      subscriptionsScheduledTo: new Date('2023-05-10T00:00:00Z'),
+      subscriptionsDueDate: new Date('2023-05-07T23:59:59Z'),
+      eventDate: new Date('2023-05-13T08:00:00Z'),
+      region: Region.AEP,
+      EventsSubscriptions: {
+        create: [
+          {
+            userName: 'John Doe',
+            userEmail: 'johndoe@example.com',
+            userPhone: '+1 555-1234',
+          },
+          {
+            userName: 'Jane Smith',
+            userEmail: 'janesmith@example.com',
+            userPhone: '+1 555-5678',
+          },
+        ],
+      },
+    },
+    {
+      title: 'Family Movie Night',
+      description:
+        'Bring the whole family for a night of fun and entertainment! We will be screening the latest blockbuster movies and serving free popcorn and drinks.',
+      coverImage: 'https://example.com/images/family-movie-night.jpg',
+      coverThumbnail: 'https://example.com/images/family-movie-night-thumbnail.jpg',
+      assetId: '11b179fc-08ea-4d9d-a9a2-5c9602e6fc84',
+      maxSlots: 100,
+      subscriptionsScheduledTo: new Date('2023-05-17T00:00:00Z'),
+      subscriptionsDueDate: new Date('2023-05-15T23:59:59Z'),
+      eventDate: new Date('2023-05-20T18:00:00Z'),
+      region: Region.FEC,
+      EventsSubscriptions: {
+        create: [
+          {
+            userName: 'Bob Johnson',
+            userEmail: 'bobjohnson@example.com',
+            userPhone: '+1 555-9012',
+          },
+          {
+            userName: 'Alice Williams',
+            userEmail: 'alicewilliams@example.com',
+            userPhone: '+1 555-3456',
+          },
+          {
+            userName: 'Tom Smith',
+            userEmail: 'tomsmith@example.com',
+            userPhone: '+1 555-7890',
+          },
+        ],
+      },
+    },
+  ]
+
+  await prisma.events.createMany({ data })
+}
+
+async function main() {
+  await seedDevotionals()
+  await seedUsers()
+  await seedNews()
+  await seedEvents()
+  await seedGrowthGroups()
 }
 
 main()
