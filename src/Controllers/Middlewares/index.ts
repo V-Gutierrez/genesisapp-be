@@ -1,5 +1,6 @@
 import { Errors } from '@Helpers/Messages'
 import 'dotenv/config'
+import rateLimit from 'express-rate-limit'
 
 import express, { Express, NextFunction, Request, Response } from 'express'
 
@@ -16,6 +17,7 @@ import { useTreblle } from 'treblle'
 export default class Middlewares {
   constructor(private readonly app: Express) {
     this.CORS()
+    this.rateLimiter()
 
     this.app.use(express.json())
     this.app.use(cookieParser())
@@ -48,7 +50,7 @@ export default class Middlewares {
     }
   }
 
-  UserContext(app: Express) {
+  private UserContext(app: Express) {
     app.use(async (req: Request, res: Response, next: NextFunction) => {
       try {
         const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
@@ -67,6 +69,17 @@ export default class Middlewares {
         res.sendStatus(500)
       }
     })
+  }
+
+  private rateLimiter() {
+    const limiter = rateLimit({
+      windowMs: 10 * 60 * 1000, // 10 minutes
+      max: 200, // Limit each IP to 100 requests per `window` (here, per 15 minutes)
+      standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+      legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+    })
+
+    this.app.use(limiter)
   }
 
   static JWT(app: Express) {
