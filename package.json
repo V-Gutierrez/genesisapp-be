@@ -44,7 +44,7 @@
     "reading-time-estimator": "^1.5.3",
     "treblle": "^1.2.1",
     "twilio": "^3.77.2",
-    "ua-parser-js": "^1.0.2"
+    "ua-parser-js": "^1.0.33"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
