@@ -109,7 +109,7 @@
     ]
   },
   "prisma": {
-    "seed": "ts-node --transpile-only src/ddd/shared/infra/database/prisma/seeds/seed.ts",
-    "schema": "src/ddd/shared/infra/database/prisma/schema.prisma"
+    "seed": "ts-node --transpile-only src/ddd/shared/infra/prisma/seeds/seed.ts",
+    "schema": "src/ddd/shared/infra/prisma/schema.prisma"
   }
 }
