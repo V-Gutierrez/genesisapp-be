@@ -2,12 +2,12 @@ import { Express, Request, Response } from 'express'
 
 import Formatter from '@Helpers/Formatter'
 import { ImageKitFolders } from '@Types/Enum'
-import ImageKitService from '@Services/ImageKitService'
-import NewsModel from '@Models/News'
+import ImageKitService from '@Shared/domain/services/ImageKitService'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { TIMEZONE } from '@Constants/index'
 import { Errors, Success } from '@Helpers/Messages'
+import NewsRepository from '@Modules/News/domain/repositories/NewsRepository'
 
 class NewsController {
   static async createNews(req: Request, res: Response) {
@@ -36,7 +36,7 @@ class NewsController {
         ImageKitFolders.News,
       )
 
-      const news = await NewsModel.create({
+      const news = await NewsRepository.create({
         body,
         title,
         scheduledTo: zonedTimeToUtc(new Date(scheduledTo), TIMEZONE),
@@ -58,7 +58,7 @@ class NewsController {
     try {
       const { id } = req.params
 
-      const deleted = await NewsModel.deleteById(id)
+      const deleted = await NewsRepository.deleteById(id)
 
       await ImageKitService.delete(deleted.assetId)
 
@@ -72,7 +72,7 @@ class NewsController {
     const { region } = req.cookies.user ?? {}
 
     try {
-      const response = await NewsModel.getAll(region)
+      const response = await NewsRepository.getAll(region)
 
       res.status(200).json(response)
     } catch (error) {
@@ -85,7 +85,7 @@ class NewsController {
       const { region } = req.cookies.user ?? {}
 
       try {
-        const response = await NewsModel.getReleasedNews(region)
+        const response = await NewsRepository.getReleasedNews(region)
 
         res.status(200).json(response)
       } catch (error) {
@@ -100,11 +100,11 @@ class NewsController {
         const { slug } = req.params
         const { id: userId, region } = req.cookies.user ?? {}
 
-        const response = await NewsModel.getBySlug(slug, region)
+        const response = await NewsRepository.getBySlug(slug, region)
 
         if (!response) return res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
 
-        await NewsModel.view(response.id, userId)
+        await NewsRepository.view(response.id, userId)
 
         return res.status(200).json(response)
       } catch (error) {
@@ -119,7 +119,7 @@ class NewsController {
         const { id } = req.params
         const { id: userId } = req.cookies.user ?? {}
 
-        await NewsModel.like(id, userId)
+        await NewsRepository.like(id, userId)
 
         res.status(201).json({ message: Success.RESOURCE_CREATED })
       } catch (error) {

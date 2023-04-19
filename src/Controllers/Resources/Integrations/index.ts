@@ -1,6 +1,6 @@
 import { Express, Request, Response } from 'express'
 
-import GooglePhotosScraper from '@Services/GooglePhotosScrapper'
+import GooglePhotosScraper from '@Shared/domain/services/GooglePhotosScrapper'
 
 class Integrations {
   static getGooglePhotosAlbumPhotos(app: Express) {

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 import SchemaHelper from '@Helpers/SchemaHelper'
 import Formatter from '@Helpers/Formatter'
-import ImageKitService from '@Services/ImageKitService'
+import ImageKitService from '@Shared/domain/services/ImageKitService'
 import { ImageKitFolders } from '@Types/Enum'
 import { TIMEZONE } from '@Constants/index'
 import { zonedTimeToUtc } from 'date-fns-tz'
