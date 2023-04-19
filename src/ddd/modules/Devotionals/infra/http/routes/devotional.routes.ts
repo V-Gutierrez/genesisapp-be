@@ -20,7 +20,7 @@ DevotionalsRouter.route('/admin/devotionals').post(
   Middlewares.SingleFileUpload,
   DevotionalsController.createDevotional,
 )
-DevotionalsRouter.route('admin/devotionals/:id').delete(
+DevotionalsRouter.route('/admin/devotionals/:id').delete(
   Middlewares.Authentication,
   Middlewares.AdminPermissioner,
   DevotionalsController.deleteDevotional,

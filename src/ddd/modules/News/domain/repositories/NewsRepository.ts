@@ -3,7 +3,7 @@ import { TIMEZONE } from '@Constants/index'
 import { Prisma as PrismaType, Region } from '@prisma/client'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
-class NewsModel {
+class NewsRepository {
   async create(data: PrismaType.NewsCreateInput) {
     return Prisma.news.create({
       data,
@@ -119,4 +119,4 @@ class NewsModel {
   }
 }
 
-export default new NewsModel()
+export default new NewsRepository()

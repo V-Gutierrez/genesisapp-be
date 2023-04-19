@@ -1,14 +1,13 @@
 import Authentication from '@Controllers/Authentication'
 import { Express } from 'express'
-// import GrowthGroups from '@Controllers/Resources/GrowthGroups'
 import Integrations from '@Controllers/Resources/Integrations'
 import Middlewares from '@Controllers/Middlewares'
-import News from '@Controllers/Resources/News'
 import Stats from '@Controllers/Resources/Stats'
 import Users from '@Controllers/Resources/Users'
 import Regions from '@Controllers/Resources/Regions'
 import DevotionalsRouter from '@Modules/Devotionals/infra/http/routes/devotional.routes'
 import EventsRouter from '@Modules/Events/infra/http/routes/events.routes'
+import NewsRouter from '@Modules/News/infra/http/routes/news.routes'
 
 export default class RoutesController {
   constructor(private readonly app: Express) {
@@ -23,12 +22,7 @@ export default class RoutesController {
 
     this.app.use('/api', DevotionalsRouter)
     this.app.use('/api', EventsRouter)
-
-    // GrowthGroups.getGrowthGroups(this.app)
-
-    News.getNews(this.app)
-    News.getNewsBySlug(this.app)
-    News.like(this.app)
+    this.app.use('/api', NewsRouter)
 
     Users.signUp(this.app)
 
@@ -44,10 +38,6 @@ export default class RoutesController {
 
     /* ADMIN ROUTES */
     Middlewares.IsAdmin(this.app)
-
-    News.createNews(this.app)
-    News.deleteNews(this.app)
-    News.getNewsAsAdmin(this.app)
 
     Users.getAllUsersAsAdmin(this.app)
 
