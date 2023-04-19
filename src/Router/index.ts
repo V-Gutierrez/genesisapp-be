@@ -1,13 +1,11 @@
 import Authentication from '@Controllers/Authentication'
-import Devotionals from '@Controllers/Resources/Devotionals'
 import { Express } from 'express'
-import GrowthGroups from '@Controllers/Resources/GrowthGroups'
+// import GrowthGroups from '@Controllers/Resources/GrowthGroups'
 import Integrations from '@Controllers/Resources/Integrations'
 import Middlewares from '@Controllers/Middlewares'
 import News from '@Controllers/Resources/News'
 import Stats from '@Controllers/Resources/Stats'
 import Users from '@Controllers/Resources/Users'
-import Events from '@Controllers/Resources/Events'
 import Regions from '@Controllers/Resources/Regions'
 import DevotionalsRouter from '@Modules/Devotionals/infra/http/routes/devotional.routes'
 import EventsRouter from '@Modules/Events/infra/http/routes/events.routes'
@@ -25,18 +23,14 @@ export default class RoutesController {
 
     this.app.use('/api', DevotionalsRouter)
     this.app.use('/api', EventsRouter)
-    
-    GrowthGroups.getGrowthGroups(this.app)
+
+    // GrowthGroups.getGrowthGroups(this.app)
 
     News.getNews(this.app)
     News.getNewsBySlug(this.app)
     News.like(this.app)
 
     Users.signUp(this.app)
-
-    Events.subscribeToEvent(this.app)
-    Events.getEvents(this.app)
-    Events.getEventById(this.app)
 
     Integrations.getGooglePhotosAlbumPhotos(this.app)
     Regions.getRegions(this.app)
