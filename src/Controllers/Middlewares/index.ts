@@ -117,6 +117,20 @@ export default class Middlewares {
     })
   }
 
+  static async AdminPermissioner(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
+
+      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any, decoded: Decoded) => {
+        if (err) return res.status(403).json({ message: Errors.NO_AUTH })
+        if (decoded.role !== 'ADMIN') return res.status(401).json({ message: Errors.NO_AUTH })
+        next()
+      })
+    } catch (error) {
+      res.sendStatus(500)
+    }
+  }
+
   static SingleFileUpload(formDataKey: string) {
     const TWO_MB_IN_BYTES = 2e6
 

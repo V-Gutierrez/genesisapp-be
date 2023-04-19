@@ -61,7 +61,6 @@ class EventsModel {
       )
     } catch (error) {
       console.log(error)
-      return null
     }
   }
 
