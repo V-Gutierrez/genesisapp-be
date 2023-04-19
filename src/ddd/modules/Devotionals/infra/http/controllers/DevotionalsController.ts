@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 
-import DevotionalModel from '@Models/Devotional'
 import Formatter from '@Helpers/Formatter'
 import ImageKitService from '@Services/ImageKitService'
 import SchemaHelper from '@Helpers/SchemaHelper'
@@ -8,13 +7,14 @@ import { zonedTimeToUtc } from 'date-fns-tz'
 import { TIMEZONE } from '@Constants/index'
 import { Errors, Success } from '@Helpers/Messages'
 import { ImageKitFolders } from '@Types/Enum'
+import DevotionalsRepository from '@Modules/Devotionals/domain/repositories/DevotionalsRepository'
 
 class Devotionals {
   static async getDevotionals(req: Request, res: Response) {
     const { region } = req.cookies.user ?? {}
 
     try {
-      const response = await DevotionalModel.getReleasedDevotionals(region)
+      const response = await DevotionalsRepository.getReleasedDevotionals(region)
 
       res.status(200).json(response)
     } catch (error) {
@@ -27,11 +27,11 @@ class Devotionals {
       const { slug } = req.params
       const { id: userId, region } = req.cookies.user ?? {}
 
-      const response = await DevotionalModel.getBySlug(slug, region)
+      const response = await DevotionalsRepository.getBySlug(slug, region)
 
       if (!response) return res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
 
-      await DevotionalModel.view(response.id, userId)
+      await DevotionalsRepository.view(response.id, userId)
 
       return res.status(200).json(response)
     } catch (error) {
@@ -43,7 +43,7 @@ class Devotionals {
     const { region } = req.cookies.user ?? {}
 
     try {
-      const response = await DevotionalModel.getAll(region)
+      const response = await DevotionalsRepository.getAll(region)
 
       res.status(200).json(response)
     } catch (error) {
@@ -76,7 +76,7 @@ class Devotionals {
         ImageKitFolders.Devotionals,
       )
 
-      const devotional = await DevotionalModel.create({
+      const devotional = await DevotionalsRepository.create({
         body,
         title,
         scheduledTo: zonedTimeToUtc(new Date(scheduledTo), TIMEZONE),
@@ -98,7 +98,7 @@ class Devotionals {
     try {
       const { id } = req.params
 
-      const deleted = await DevotionalModel.deleteById(id)
+      const deleted = await DevotionalsRepository.deleteById(id)
 
       await ImageKitService.delete(deleted.assetId)
 
@@ -113,7 +113,7 @@ class Devotionals {
       const { id } = req.params
       const { id: userId } = req.cookies.user ?? {}
 
-      await DevotionalModel.like(id, userId)
+      await DevotionalsRepository.like(id, userId)
 
       res.status(201).json({ status: Success.RESOURCE_CREATED })
     } catch (error) {

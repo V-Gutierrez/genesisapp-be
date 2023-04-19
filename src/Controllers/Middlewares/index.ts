@@ -97,6 +97,19 @@ export default class Middlewares {
     })
   }
 
+  static Authentication(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
+
+      jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any) => {
+        if (err) return res.status(403).json({ message: Errors.NO_AUTH })
+        next()
+      })
+    } catch (error) {
+      res.sendStatus(500)
+    }
+  }
+
   static IsAdmin(app: Express) {
     app.use(async (req: Request, res: Response, next: NextFunction) => {
       try {
@@ -117,7 +130,7 @@ export default class Middlewares {
     })
   }
 
-  static async AdminPermissioner(req: Request, res: Response, next: NextFunction) {
+  static AdminPermissioner(req: Request, res: Response, next: NextFunction) {
     try {
       const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 

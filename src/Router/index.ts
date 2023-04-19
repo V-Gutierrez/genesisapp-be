@@ -10,6 +10,7 @@ import Users from '@Controllers/Resources/Users'
 import Events from '@Controllers/Resources/Events'
 import Regions from '@Controllers/Resources/Regions'
 import DevotionalsRouter from '@Modules/Devotionals/infra/http/routes/devotional.routes'
+import EventsRouter from '@Modules/Events/infra/http/routes/events.routes'
 
 export default class RoutesController {
   constructor(private readonly app: Express) {
@@ -23,10 +24,9 @@ export default class RoutesController {
     Authentication.logout(this.app)
 
     this.app.use('/api', DevotionalsRouter)
-
+    this.app.use('/api', EventsRouter)
+    
     GrowthGroups.getGrowthGroups(this.app)
-    //Devotionals.getDevotionals(this.app)
-    //Devotionals.getDevotionalBySlug(this.app)
 
     News.getNews(this.app)
     News.getNewsBySlug(this.app)
@@ -45,24 +45,18 @@ export default class RoutesController {
     Middlewares.JWT(this.app)
     Authentication.getUserInformation(this.app)
     Users.get(this.app)
-    //Devotionals.like(this.app)
+
     /* AUTH ROUTES */
 
     /* ADMIN ROUTES */
     Middlewares.IsAdmin(this.app)
-    Events.getEventsAsAdmin(this.app)
-    Events.createEvent(this.app)
-    Events.deleteEvent(this.app)
-    Events.deleteSubscription(this.app)
 
     News.createNews(this.app)
     News.deleteNews(this.app)
     News.getNewsAsAdmin(this.app)
 
     Users.getAllUsersAsAdmin(this.app)
-    //Devotionals.createDevotional(this.app)
-    //Devotionals.getDevotionalsAsAdmin(this.app)
-    //Devotionals.deleteDevotional(this.app)
+
     Stats.getStats(this.app)
     /* ADMIN ROUTES */
   }

@@ -4,7 +4,7 @@ import { zonedTimeToUtc } from 'date-fns-tz'
 import { Prisma as PrismaType, Region } from '@prisma/client'
 import { isAfter } from 'date-fns'
 
-class EventsModel {
+class EventsRepository {
   async getAll() {
     return Prisma.events.findMany({
       orderBy: {
@@ -129,4 +129,4 @@ class EventsModel {
   }
 }
 
-export default new EventsModel()
+export default new EventsRepository()

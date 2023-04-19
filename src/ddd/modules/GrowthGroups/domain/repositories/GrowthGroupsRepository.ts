@@ -1,10 +1,10 @@
 import Prisma from '@Clients/Prisma'
 import { Region } from '@prisma/client'
 
-class GrowthGroupsModel {
+class GrowthGroupsRepository {
   async getAll(region: Region) {
     return Prisma.growthGroup.findMany({ where: { region } })
   }
 }
 
-export default new GrowthGroupsModel()
+export default new GrowthGroupsRepository()

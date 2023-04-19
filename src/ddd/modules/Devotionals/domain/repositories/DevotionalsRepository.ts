@@ -4,7 +4,7 @@ import { readingTime } from 'reading-time-estimator'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { TIMEZONE } from '@Constants/index'
 
-class DevotionalModel {
+class DevotionalsRepository {
   async getReleasedDevotionals(region: Region) {
     return Prisma.devotional.findMany({
       where: {
@@ -138,4 +138,4 @@ class DevotionalModel {
   }
 }
 
-export default new DevotionalModel()
+export default new DevotionalsRepository()
