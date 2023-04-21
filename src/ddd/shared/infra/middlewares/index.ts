@@ -28,7 +28,7 @@ export default class Middlewares {
     this.UserContext(this.app)
   }
 
-  CORS() {
+  private CORS() {
     const localEnvironments = isProduction
       ? []
       : ['http://localhost:3000', 'http://192.168.0.56:3000']
@@ -82,21 +82,6 @@ export default class Middlewares {
     this.app.use(limiter)
   }
 
-  static JWT(app: Express) {
-    app.use(async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
-
-        jwt.verify(token, process.env.ACCESS_TOKEN_SECRET as string, (err: any) => {
-          if (err) return res.status(403).json({ message: Errors.NO_AUTH })
-          next()
-        })
-      } catch (error) {
-        res.sendStatus(500)
-      }
-    })
-  }
-
   static Authentication(req: Request, res: Response, next: NextFunction) {
     try {
       const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
@@ -108,26 +93,6 @@ export default class Middlewares {
     } catch (error) {
       res.sendStatus(500)
     }
-  }
-
-  static IsAdmin(app: Express) {
-    app.use(async (req: Request, res: Response, next: NextFunction) => {
-      try {
-        const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
-
-        jwt.verify(
-          token,
-          process.env.ACCESS_TOKEN_SECRET as string,
-          (err: any, decoded: Decoded) => {
-            if (err) return res.status(403).json({ message: Errors.NO_AUTH })
-            if (decoded.role !== 'ADMIN') return res.status(401).json({ message: Errors.NO_AUTH })
-            next()
-          },
-        )
-      } catch (error) {
-        res.sendStatus(500)
-      }
-    })
   }
 
   static AdminPermissioner(req: Request, res: Response, next: NextFunction) {
