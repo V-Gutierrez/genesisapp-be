@@ -310,10 +310,10 @@ async function seedEvents() {
 }
 
 async function main() {
-  await seedDevotionals()
-  await seedUsers()
-  await seedNews()
-  await seedEvents()
+  // await seedDevotionals()
+  // await seedUsers()
+  // await seedNews()
+  // await seedEvents()
   await seedGrowthGroups()
 }
 

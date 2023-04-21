@@ -4,6 +4,8 @@ import Middlewares from '@Shared/infra/http/middlewares'
 
 const NewsRouter = Router()
 
+NewsRouter.route('/news').get(NewsController.getNews)
+
 NewsRouter.route('/news').post(
   Middlewares.Authentication,
   Middlewares.AdminPermissioner,
@@ -23,7 +25,6 @@ NewsRouter.route('/admin/news').get(
   NewsController.getNewsAsAdmin,
 )
 
-NewsRouter.route('/news').get(NewsController.getNews)
 NewsRouter.route('/news/:slug').get(NewsController.getNewsBySlug)
 NewsRouter.route('/news/:id/like').get(
   Middlewares.Authentication,
