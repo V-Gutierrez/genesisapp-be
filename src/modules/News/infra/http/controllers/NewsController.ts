@@ -83,53 +83,47 @@ class NewsController {
     }
   }
 
-  static getNews(app: Express) {
-    app.get('/api/news', async (req: Request, res: Response) => {
-      const { region } = req.cookies.user ?? {}
+  static async getNews(req: Request, res: Response) {
+    const { region } = req.cookies.user ?? {}
 
-      try {
-        const response = await NewsRepository.getReleasedNews(region)
+    try {
+      const response = await NewsRepository.getReleasedNews(region)
 
-        res.status(200).json(response)
-      } catch (error) {
-        res.sendStatus(500)
-      }
-    })
+      res.status(200).json(response)
+    } catch (error) {
+      res.sendStatus(500)
+    }
   }
 
-  static getNewsBySlug(app: Express) {
-    app.get('/api/news/:slug', async (req: Request, res: Response) => {
-      try {
-        const { slug } = req.params
-        const { id: userId, region } = req.cookies.user ?? {}
+  static async getNewsBySlug(req: Request, res: Response) {
+    try {
+      const { slug } = req.params
+      const { id: userId, region } = req.cookies.user ?? {}
 
-        const response = await NewsRepository.getBySlug(slug, region)
+      const response = await NewsRepository.getBySlug(slug, region)
 
-        if (!response)
-          return res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
+      if (!response)
+        return res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
 
-        await NewsRepository.view(response.id, userId)
+      await NewsRepository.view(response.id, userId)
 
-        return res.status(200).json(response)
-      } catch (error) {
-        res.sendStatus(500)
-      }
-    })
+      return res.status(200).json(response)
+    } catch (error) {
+      res.sendStatus(500)
+    }
   }
 
-  static like(app: Express) {
-    app.post('/api/news/:id/like', async (req: Request, res: Response) => {
-      try {
-        const { id } = req.params
-        const { id: userId } = req.cookies.user ?? {}
+  static async like(req: Request, res: Response) {
+    try {
+      const { id } = req.params
+      const { id: userId } = req.cookies.user ?? {}
 
-        await NewsRepository.like(id, userId)
+      await NewsRepository.like(id, userId)
 
-        res.status(201).json({ message: Success.RESOURCE_CREATED })
-      } catch (error) {
-        res.sendStatus(500)
-      }
-    })
+      res.status(201).json({ message: Success.RESOURCE_CREATED })
+    } catch (error) {
+      res.sendStatus(500)
+    }
   }
 }
 
