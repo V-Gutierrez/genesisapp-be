@@ -8,9 +8,9 @@ import RegionsRouter from '@Modules/Regions/infra/http/routes/regions.routes'
 import IntegrationsRouter from '@Modules/Integrations/infra/http/routes/integrations.routes'
 import StatsRouter from '@Modules/Stats/infra/http/routes/stats.routes'
 import UsersRouter from '@Modules/Users/infra/http/routes/users.routes'
-import Middlewares from '@Shared/infra/middlewares'
+import Middlewares from '@Shared/infra/http/middlewares'
 
-export default class RoutesController {
+export class ApplicationRouter {
   constructor(private readonly app: Express) {
     new Middlewares(this.app)
 
@@ -31,7 +31,6 @@ export default class RoutesController {
 
     /* AUTH ROUTES */
     Authentication.getUserInformation(this.app)
-
     /* AUTH ROUTES */
   }
 }
