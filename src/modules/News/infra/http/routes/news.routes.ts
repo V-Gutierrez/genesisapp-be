@@ -26,6 +26,7 @@ NewsRouter.route('/admin/news').get(
 )
 
 NewsRouter.route('/news/:slug').get(NewsController.getNewsBySlug)
+
 NewsRouter.route('/news/:id/like').get(
   Middlewares.Authentication,
   NewsController.like,
