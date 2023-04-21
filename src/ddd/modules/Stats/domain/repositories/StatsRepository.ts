@@ -3,7 +3,7 @@ import { TIMEZONE } from '@Constants/index'
 import { Region } from '@prisma/client'
 import { zonedTimeToUtc } from 'date-fns-tz'
 
-class StatsModel {
+class StatsRepository {
   async getStats(region: Region) {
     const promises = [
       Prisma.user.count({
@@ -56,4 +56,4 @@ class StatsModel {
   }
 }
 
-export default new StatsModel()
+export default new StatsRepository()

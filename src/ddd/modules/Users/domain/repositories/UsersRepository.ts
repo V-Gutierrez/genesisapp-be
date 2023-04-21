@@ -2,7 +2,7 @@ import Bcrypt from '@Helpers/Bcrypt'
 import Prisma from '@Clients/Prisma'
 import { Prisma as PrismaType, Region } from '@prisma/client'
 
-class UserModel {
+class UsersRepository {
   async getUserById(id: string) {
     return Prisma.user.findFirst({
       where: { id },
@@ -103,4 +103,4 @@ class UserModel {
   }
 }
 
-export default new UserModel()
+export default new UsersRepository()
