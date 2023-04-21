@@ -10,7 +10,8 @@ UsersRouter.route('/users/:id').get(
   UsersController.get,
 )
 UsersRouter.route('/users').post(UsersController.signUp)
-UsersRouter.route('/admin/users/').post(
+
+UsersRouter.route('/admin/users/').get(
   Middlewares.Authentication,
   Middlewares.AdminPermissioner,
   UsersController.getAllUsersAsAdmin,
