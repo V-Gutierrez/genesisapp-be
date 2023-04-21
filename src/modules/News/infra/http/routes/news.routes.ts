@@ -6,7 +6,7 @@ const NewsRouter = Router()
 
 NewsRouter.route('/news').get(NewsController.getNews)
 
-NewsRouter.route('/news').post(
+NewsRouter.route('/admin/news').post(
   Middlewares.Authentication,
   Middlewares.AdminPermissioner,
   Middlewares.SingleFileUpload('coverImage'),

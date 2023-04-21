@@ -4,9 +4,8 @@
   "description": "genesis church app backend",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon ",
-    "build": "npm run prisma:migrate:deploy && npm run prisma:generate",
-    "build:dev": "npx prisma generate && npx prisma migrate deploy",
+    "dev": "nodemon",
+    "start:dev": "NODE_ENV=development node --inspect=127.0.0.1:9230 ./dist/index.js ",
     "build:webpack": "webpack --config webpack.config.js",
     "test": "jest",
     "prepare": "husky install",
