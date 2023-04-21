@@ -5,7 +5,7 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { NODE_ENV = 'production' } = process.env
 
 module.exports = {
-  entry: './src/index.ts', // the file you would provide to ts-node or node binaries for execution
+  entry: './src/shared/infra/http/server.ts', // the file you would provide to ts-node or node binaries for execution
   mode: NODE_ENV, // development or production
   target: 'node', // webpack works differently based on target, here we use node.js
   output: {
