@@ -19,13 +19,8 @@ module.exports = {
     alias: {
       // provider any import aliases you may use in your project
       src: path.resolve(__dirname, 'src/'),
-      '@Controllers': path.resolve(__dirname, 'src/Controllers/'),
-      '@Services': path.resolve(__dirname, 'src/Services/'),
-      '@Clients': path.resolve(__dirname, 'src/Clients/'),
-      '@Helpers': path.resolve(__dirname, 'src/Helpers/'),
-      '@Types': path.resolve(__dirname, 'src/Types/'),
-      '@Models': path.resolve(__dirname, 'src/Models/'),
-      '@Constants': path.resolve(__dirname, 'src/Constants/'),
+      '@Shared': path.resolve(__dirname, 'src/shared/'),
+      '@Modules': path.resolve(__dirname, 'src/modules/')
     },
   },
   module: {
