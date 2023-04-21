@@ -105,8 +105,7 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "prettier --write",
-      "eslint --fix",
-      "build:webpack"
+      "eslint --fix"
     ]
   },
   "prisma": {
