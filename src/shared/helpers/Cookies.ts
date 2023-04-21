@@ -1,5 +1,5 @@
+import { CookieHelperOptions } from '@Shared/types/dtos'
 import isProduction from 'src/shared/helpers/Environment'
-import { CookieHelperOptions } from 'src/shared/types/DTO'
 
 export default class CookieHelper {
   static AuthCookieDefaultOptions: CookieHelperOptions = {

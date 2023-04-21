@@ -2,7 +2,6 @@ import 'dotenv/config'
 
 import { Request, Response } from 'express'
 
-import { Decoded } from 'src/shared/types/DTO'
 import SendgridClient from 'src/shared/domain/services/Sendgrid'
 import { User } from '@prisma/client'
 import jwt from 'jsonwebtoken'
@@ -13,6 +12,7 @@ import isProduction from 'src/shared/helpers/Environment'
 import { Errors, Success } from 'src/shared/helpers/Messages'
 import SchemaHelper from 'src/shared/helpers/SchemaHelper'
 import Prisma from 'src/shared/infra/prisma'
+import { Decoded } from '@Shared/types/dtos'
 
 class AuthenticationController {
   static async authenticate(req: Request, res: Response) {

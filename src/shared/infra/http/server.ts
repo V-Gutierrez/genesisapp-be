@@ -4,7 +4,13 @@ import type { Express } from 'express'
 
 class Server {
   constructor(private app: Express) {
-    this.app.listen(process.env.PORT || 5000, () => new ApplicationRouter(app))
+    this.app.listen(process.env.PORT || 5000, () => {
+      new ApplicationRouter(app)
+      console.log(
+        '[Server] Server initialized on port:',
+        process.env.PORT || 5000,
+      )
+    })
   }
 }
 

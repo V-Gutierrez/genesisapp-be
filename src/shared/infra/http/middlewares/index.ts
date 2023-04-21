@@ -3,7 +3,6 @@ import rateLimit from 'express-rate-limit'
 
 import express, { Express, NextFunction, Request, Response } from 'express'
 
-import { Decoded } from 'src/shared/types/DTO'
 import cookieParser from 'cookie-parser'
 import cors from 'cors'
 import jwt from 'jsonwebtoken'
@@ -13,6 +12,7 @@ import { useTreblle } from 'treblle'
 import CookieHelper from 'src/shared/helpers/Cookies'
 import isProduction from 'src/shared/helpers/Environment'
 import { Errors } from 'src/shared/helpers/Messages'
+import { Decoded } from '@Shared/types/dtos'
 
 export default class Middlewares {
   constructor(private readonly app: Express) {

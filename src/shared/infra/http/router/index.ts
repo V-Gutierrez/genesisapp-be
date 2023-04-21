@@ -9,18 +9,22 @@ import StatsRouter from 'src/modules/Stats/infra/http/routes/stats.routes'
 import UsersRouter from 'src/modules/Users/infra/http/routes/users.routes'
 import Middlewares from 'src/shared/infra/http/middlewares'
 import AuthenticationRouter from 'src/shared/modules/Authentication/infra/http/routes/authentication.routes'
+import GrowthGroupsRouter from '@Modules/GrowthGroups/infra/http/routes/growthgroups.routes'
 
 export class ApplicationRouter {
   constructor(private readonly app: Express) {
     new Middlewares(this.app)
 
-    this.app.use('/api', DevotionalsRouter)
-    this.app.use('/api', EventsRouter)
-    this.app.use('/api', NewsRouter)
-    this.app.use('/api', RegionsRouter)
-    this.app.use('/api', StatsRouter)
-    this.app.use('/api', UsersRouter)
-    this.app.use('/api', AuthenticationRouter)
-    this.app.use('/api/integrations', IntegrationsRouter)
+    this.app.use('/api/', DevotionalsRouter)
+    this.app.use('/api/', EventsRouter)
+    this.app.use('/api/', GrowthGroupsRouter)
+    this.app.use('/api/', NewsRouter)
+    this.app.use('/api/', RegionsRouter)
+    this.app.use('/api/', StatsRouter)
+    this.app.use('/api/', UsersRouter)
+    this.app.use('/api/', AuthenticationRouter)
+    this.app.use('/api/integrations/', IntegrationsRouter)
+
+    console.log('[ApplicationRouter] Routes loaded')
   }
 }
