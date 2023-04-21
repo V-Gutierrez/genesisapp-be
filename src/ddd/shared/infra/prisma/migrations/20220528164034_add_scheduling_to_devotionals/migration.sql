@@ -1,2 +1,0 @@
--- AlterTable
-ALTER TABLE "Devotional" ADD COLUMN     "scheduledTo" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP;

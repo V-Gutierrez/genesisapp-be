@@ -4,7 +4,7 @@
   "description": "genesis church app backend",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/index.ts",
+    "dev": "nodemon ",
     "build": "npm run prisma:migrate:deploy && npm run prisma:generate",
     "build:dev": "npx prisma generate && npx prisma migrate deploy",
     "build:webpack": "webpack --config webpack.config.js",
@@ -99,7 +99,7 @@
     "watch": [
       "."
     ],
-    "exec": "node -r tsconfig-paths/register -r ts-node/register ./src/index.ts",
+    "exec": "node -r tsconfig-paths/register -r ts-node/register ./src/shared/infra/http/server.ts",
     "ext": "ts, js"
   },
   "lint-staged": {
@@ -109,7 +109,7 @@
     ]
   },
   "prisma": {
-    "seed": "ts-node --transpile-only src/ddd/shared/infra/prisma/seeds/seed.ts",
-    "schema": "src/ddd/shared/infra/prisma/schema.prisma"
+    "seed": "ts-node --transpile-only src/shared/infra/prisma/seeds/seed.ts",
+    "schema": "src/shared/infra/prisma/schema.prisma"
   }
 }

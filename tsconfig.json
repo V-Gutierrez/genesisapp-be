@@ -39,19 +39,19 @@
         "src/Helpers/*"
       ],
       "@Types/*": [
-        "src/Types/*"
+        "src/shared/types/*"
       ],
       "@Models/*": [
         "src/Models/*"
       ],
       "@Constants/*": [
-        "src/Constants/*"
+        "src/shared/constants/*"
       ],
       "@Modules/*": [
-        "src/ddd/modules/*"
+        "src/modules/*"
       ],
       "@Shared/*": [
-        "src/ddd/shared/*"
+        "src/shared/*"
       ]
     }, /* Specify a set of entries that re-map imports to additional lookup locations. */
     // "rootDirs": [],                                   /* Allow multiple folders to be treated as one when resolving modules. */

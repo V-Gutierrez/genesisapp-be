@@ -1,4 +1,0 @@
--- AlterTable
-ALTER TABLE "GrowthGroup" ALTER COLUMN "addressInfo" DROP DEFAULT,
-ALTER COLUMN "scheduledTime" DROP DEFAULT,
-ALTER COLUMN "weekDay" DROP DEFAULT;
