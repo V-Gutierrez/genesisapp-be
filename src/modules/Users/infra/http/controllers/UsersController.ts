@@ -2,7 +2,7 @@ import 'dotenv/config'
 
 import { Request, Response } from 'express'
 
-import SendgridClient from 'src/shared/domain/services/Sendgrid'
+import SendgridClient from '@Shared/services/Sendgrid'
 import { User } from '@prisma/client'
 import jwt from 'jsonwebtoken'
 import UsersRepository from 'src/modules/Users/domain/repositories/UsersRepository'

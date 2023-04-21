@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-import ImageKitService from 'src/shared/domain/services/ImageKitService'
+import ImageKitService from '@Shared/services/ImageKitService'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { TIMEZONE } from 'src/shared/constants'
 import { ImageKitFolders } from 'src/shared/types/Enum'
