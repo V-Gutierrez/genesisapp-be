@@ -6,8 +6,8 @@ import type { Express } from 'express'
 class Server {
   constructor(private app: Express) {
     this.app.listen(process.env.PORT || 8080, () => {
-      this.setProxyTrust()
-      this.initializeRouter()
+      this.setProxyTrust(app)
+      this.initializeRouter(app)
 
       console.info(
         '[Server] Server initialized on port:',
@@ -16,12 +16,12 @@ class Server {
     })
   }
 
-  private initializeRouter() {
-    new ApplicationRouter(this.app)
+  private initializeRouter(app: Express) {
+    new ApplicationRouter(app)
   }
 
-  private setProxyTrust() {
-    this.app.set('trust proxy', true)
+  private setProxyTrust(app: Express) {
+    app.set('trust proxy', true)
   }
 }
 
