@@ -114,10 +114,10 @@ export default class Middlewares {
   }
 
   static SingleFileUpload(formDataKey: string) {
-    const TWO_MB_IN_BYTES = 2e6
+    const EIGHT_HUNDRED_KB_IN_BYTES = 800 * 1024
 
     return multer({
-      limits: { fileSize: TWO_MB_IN_BYTES },
+      limits: { fileSize: EIGHT_HUNDRED_KB_IN_BYTES },
     }).single(formDataKey)
   }
 }
