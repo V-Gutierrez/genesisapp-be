@@ -15,9 +15,6 @@ RUN npm install
 # Copia os arquivos do aplicativo para o diretório de trabalho
 COPY . .
 
-# Compila o aplicativo usando o webpack
-RUN npm run build:webpack
-
 # Expor a porta do aplicativo
 EXPOSE 5000
 
