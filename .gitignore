@@ -1,6 +1,5 @@
 node_modules
 build
 .env
-dist/bundle_analysis.html
-dist/stats.json
+dist
 /prisma/seeds/execute.ts
