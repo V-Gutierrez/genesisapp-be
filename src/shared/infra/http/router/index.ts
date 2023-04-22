@@ -10,6 +10,7 @@ import UsersRouter from 'src/modules/Users/infra/http/routes/users.routes'
 import Middlewares from 'src/shared/infra/http/middlewares'
 import AuthenticationRouter from 'src/shared/modules/Authentication/infra/http/routes/authentication.routes'
 import GrowthGroupsRouter from '@Modules/GrowthGroups/infra/http/routes/growthgroups.routes'
+import { Errors, Success } from '@Shared/helpers/Messages'
 
 export class ApplicationRouter {
   constructor(private readonly app: Express) {
@@ -25,6 +26,21 @@ export class ApplicationRouter {
     this.app.use('/api/', AuthenticationRouter)
     this.app.use('/api/integrations/', IntegrationsRouter)
 
+    this.handleNotFound()
+    this.healthCheck()
+
     console.log('[ApplicationRouter] Routes loaded')
+  }
+
+  private handleNotFound() {
+    this.app.use('*', (req, res) => {
+      res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
+    })
+  }
+
+  private healthCheck() {
+    this.app.use('/api/healthcheck', (_req, res) => {
+      res.status(200).json({ message: Success.HEALTHCHECK })
+    })
   }
 }

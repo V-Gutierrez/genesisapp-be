@@ -20,4 +20,5 @@ export const Success = {
   LOGOUT: 'Usuário deslogado com sucesso',
   SUBSCRIPTION_CREATED: 'Inscrição realizada',
   LOGIN: 'Usuário logado com sucesso',
+  HEALTHCHECK: 'OK!!',
 }

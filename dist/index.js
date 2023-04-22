@@ -2064,6 +2064,7 @@
             LOGOUT: 'Usuário deslogado com sucesso',
             SUBSCRIPTION_CREATED: 'Inscrição realizada',
             LOGIN: 'Usuário logado com sucesso',
+            HEALTHCHECK: 'OK!!',
           })
       },
       2013: function (e, t, n) {
@@ -2360,7 +2361,8 @@
           l = i(n(6064)),
           c = i(n(4042)),
           f = i(n(755)),
-          h = i(n(6954))
+          h = i(n(6954)),
+          v = n(2397)
         t.ApplicationRouter = class {
           constructor(e) {
             ;(this.app = e),
@@ -2374,7 +2376,19 @@
               this.app.use('/api/', l.default),
               this.app.use('/api/', f.default),
               this.app.use('/api/integrations/', u.default),
+              this.handleNotFound(),
+              this.healthCheck(),
               console.log('[ApplicationRouter] Routes loaded')
+          }
+          handleNotFound() {
+            this.app.use('*', (e, t) => {
+              t.status(404).json({ message: v.Errors.RESOURCE_NOT_FOUND })
+            })
+          }
+          healthCheck() {
+            this.app.use('/api/healthcheck', (e, t) => {
+              t.status(200).json({ message: v.Success.HEALTHCHECK })
+            })
           }
         }
       },
@@ -2390,13 +2404,20 @@
         new (class {
           constructor(e) {
             ;(this.app = e),
+              this.setProxyTrust(),
+              this.initializeRouter(),
               this.app.listen(process.env.PORT || 5e3, () => {
-                new s.ApplicationRouter(e),
-                  console.log(
-                    '[Server] Server initialized on port:',
-                    process.env.PORT || 5e3,
-                  )
+                console.log(
+                  '[Server] Server initialized on port:',
+                  process.env.PORT || 5e3,
+                )
               })
+          }
+          initializeRouter() {
+            new s.ApplicationRouter(this.app)
+          }
+          setProxyTrust() {
+            this.app.set('trust proxy', !0)
           }
         })((0, o.default)())
       },
