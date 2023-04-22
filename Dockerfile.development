@@ -1,0 +1,25 @@
+# Base image
+FROM node:latest
+
+# Diretório de trabalho
+WORKDIR /usr/src/app
+
+# Copia o package.json e package-lock.json para o diretório de trabalho
+COPY package*.json ./
+
+# Instala as dependências do projeto
+RUN npm install
+
+# Copia o restante dos arquivos do projeto para o diretório de trabalho
+COPY . .
+
+# Expor a porta do aplicativo
+EXPOSE 5000
+
+# Roda migrations
+RUN npm run prisma:migrate:deploy
+
+# Iniciar o aplicativo
+CMD ["npm", "run", "dev"]
+
+# Hot Reload: docker run -p 3000:3000 -v $(pwd):/usr/src/app meu-projeto
