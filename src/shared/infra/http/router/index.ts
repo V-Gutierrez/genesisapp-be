@@ -26,8 +26,8 @@ export class ApplicationRouter {
     this.app.use('/api/', AuthenticationRouter)
     this.app.use('/api/integrations/', IntegrationsRouter)
 
-    this.handleNotFound()
     this.healthCheck()
+    this.handleNotFound()
 
     console.log('[ApplicationRouter] Routes loaded')
   }
