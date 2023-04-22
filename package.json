@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "genesis church app backend",
   "main": "index.js",
-  "engines": {
-    "node": "18.x.x"
-  },
   "scripts": {
     "dev": "npx prisma migrate dev && nodemon",
     "start:dev": "npx prisma migrate dev && NODE_ENV=development node --inspect=127.0.0.1:9230 ./dist/index.js ",
