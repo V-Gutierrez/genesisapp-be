@@ -15,7 +15,7 @@
     "prisma:seed": "npx prisma db seed",
     "prisma:modify": "ts-node --transpile-only prisma/seeds/execute.ts",
     "prisma:migrate:deploy": "npx prisma migrate deploy",
-    "start": "npx prisma migrate deploy && pm2 link ewuwbxg78pvrkba 020qnra07i0q733 && pm2-runtime start ecosystem.config.js --env production",
+    "start": "npx prisma migrate deploy && npx prisma generate && webpack --config webpack.config.js && pm2 link ewuwbxg78pvrkba 020qnra07i0q733 && pm2-runtime start ecosystem.config.js --env production",
     "start:raw": "NODE_ENV=production node ./dist/index.js",
     "deploy": "git push heroku main"
   },
