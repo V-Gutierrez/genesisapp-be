@@ -27,6 +27,7 @@ export default class ImageKitService {
         folder,
       })
     } catch (error) {
+      console.error(error)
       throw new Error('Error in ImageKitService')
     }
   }
@@ -36,6 +37,7 @@ export default class ImageKitService {
       const Instance = await ImageKitService.InitializeInstance()
       await Instance.deleteFile(fileId)
     } catch (error) {
+      console.error(error)
       throw new Error('Error in ImageKitService')
     }
   }

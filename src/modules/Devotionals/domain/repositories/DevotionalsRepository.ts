@@ -108,6 +108,7 @@ class DevotionalsRepository {
         })
       }
     } catch (error) {
+      console.error(error)
       console.log(error)
     }
   }
@@ -133,6 +134,7 @@ class DevotionalsRepository {
         },
       })
     } catch (error) {
+      console.error(error)
       console.log(error)
     }
   }

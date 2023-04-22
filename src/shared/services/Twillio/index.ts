@@ -29,6 +29,7 @@ class Twillio {
         messagingServiceSid: this.messagingServiceSid,
       })
     } catch (error) {
+      console.error(error)
       throw new Error('Error in TwillioService')
     }
   }

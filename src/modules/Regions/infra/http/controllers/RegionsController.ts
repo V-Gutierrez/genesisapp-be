@@ -8,6 +8,7 @@ class RegionsController {
 
       res.status(200).json(regions)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }

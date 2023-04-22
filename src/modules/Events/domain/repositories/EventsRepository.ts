@@ -69,6 +69,7 @@ class EventsRepository {
         `Cannot create event because of: isEventDateTheLaterDate : ${isEventDateTheLaterDate}, isSubscriptionDueDateLaterThanSubscriptionScheduledDate: ${isSubscriptionDueDateLaterThanSubscriptionScheduledDate}`,
       )
     } catch (error) {
+      console.error(error)
       console.log(error)
     }
   }

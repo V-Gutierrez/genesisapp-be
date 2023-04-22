@@ -24,6 +24,7 @@ class UsersController {
         if (user) res.status(200).json(user)
       }
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -67,6 +68,7 @@ class UsersController {
 
       res.status(201).json({ message: Success.USER_CREATED, user })
     } catch (error) {
+      console.error(error)
       if ((error as any).code === 'P2002')
         res.status(409).json({ message: Errors.USER_ALREADY_EXISTS })
       else res.status(500).json({ message: Errors.INTERNAL_SERVER_ERROR })
@@ -81,6 +83,7 @@ class UsersController {
 
       res.status(200).json(users)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }

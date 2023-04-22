@@ -102,6 +102,7 @@ class AuthenticationController {
       }
       return res.status(401).json({ message: Errors.NO_AUTH })
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -181,6 +182,7 @@ class AuthenticationController {
         },
       )
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -205,6 +207,7 @@ class AuthenticationController {
         },
       )
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -246,6 +249,7 @@ class AuthenticationController {
 
       return res.status(200).json({ message: Success.RESET_EMAIL_SEND })
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -275,6 +279,7 @@ class AuthenticationController {
         },
       )
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -287,6 +292,7 @@ class AuthenticationController {
       )
       return res.status(200).json({ message: Success.LOGOUT })
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -297,6 +303,7 @@ class AuthenticationController {
 
       return res.status(200).json({ email, role, id, name, region })
     } catch (error) {
+      console.error(error)
       return res.sendStatus(500)
     }
   }

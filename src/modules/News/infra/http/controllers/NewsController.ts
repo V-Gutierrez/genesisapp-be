@@ -53,6 +53,7 @@ class NewsController {
 
       return res.status(201).json(news)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -67,6 +68,7 @@ class NewsController {
 
       res.status(200).json({ message: Success.RESOURCE_DELETED })
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -79,6 +81,7 @@ class NewsController {
 
       res.status(200).json(response)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -91,6 +94,7 @@ class NewsController {
 
       res.status(200).json(response)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -109,6 +113,7 @@ class NewsController {
 
       return res.status(200).json(response)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -122,6 +127,7 @@ class NewsController {
 
       res.status(201).json({ message: Success.RESOURCE_CREATED })
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }

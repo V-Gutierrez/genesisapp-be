@@ -22,6 +22,7 @@ class GooglePhotosScrapper {
 
       return this.parseImageOptmizations(result as GIS.ImageInfo[])
     } catch (error) {
+      console.error(error)
       throw new Error('Error in Google Photos Scrapper flow')
     }
   }

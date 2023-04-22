@@ -17,6 +17,7 @@ class StatsController {
         ongoingEvents,
       })
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }

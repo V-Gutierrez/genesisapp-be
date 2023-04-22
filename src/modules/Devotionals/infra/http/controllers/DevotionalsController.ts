@@ -20,6 +20,7 @@ class DevotionalsController {
 
       res.status(200).json(response)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -38,6 +39,7 @@ class DevotionalsController {
 
       return res.status(200).json(response)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -50,6 +52,7 @@ class DevotionalsController {
 
       res.status(200).json(response)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -110,6 +113,7 @@ class DevotionalsController {
 
       res.status(200).json({ message: Success.RESOURCE_DELETED })
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -123,6 +127,7 @@ class DevotionalsController {
 
       res.status(201).json({ status: Success.RESOURCE_CREATED })
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }

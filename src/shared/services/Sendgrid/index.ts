@@ -56,6 +56,7 @@ class SendgridClient {
     try {
       await SendgridMail.send(msg)
     } catch (error) {
+      console.error(error)
       throw new Error('Error in Sendgrid flow')
     }
   }

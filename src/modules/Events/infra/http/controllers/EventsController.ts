@@ -17,6 +17,7 @@ class EventsController {
 
       res.status(200).json(response)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -30,6 +31,7 @@ class EventsController {
 
       res.status(200).json(response)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -105,6 +107,7 @@ class EventsController {
 
       res.status(200).json({ message: Success.RESOURCE_DELETED })
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -115,6 +118,7 @@ class EventsController {
 
       res.status(200).json(response)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -146,6 +150,7 @@ class EventsController {
 
       res.status(201).json({ message: Success.SUBSCRIPTION_CREATED })
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -158,6 +163,7 @@ class EventsController {
 
       res.status(200).json({ message: Success.RESOURCE_DELETED })
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }

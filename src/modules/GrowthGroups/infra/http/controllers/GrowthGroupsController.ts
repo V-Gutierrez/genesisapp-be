@@ -10,6 +10,7 @@ class GrowthGroupsController {
 
       res.status(200).json(response)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }

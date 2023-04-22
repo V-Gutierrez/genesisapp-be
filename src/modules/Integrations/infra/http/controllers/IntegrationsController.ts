@@ -13,6 +13,7 @@ class IntegrationsController {
 
       return res.status(200).json(photos)
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }

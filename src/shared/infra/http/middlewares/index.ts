@@ -8,7 +8,6 @@ import cors from 'cors'
 import jwt from 'jsonwebtoken'
 import morgan from 'morgan'
 import multer from 'multer'
-import { useTreblle } from 'treblle'
 import CookieHelper from 'src/shared/helpers/Cookies'
 import isProduction from 'src/shared/helpers/Environment'
 import { Errors } from 'src/shared/helpers/Messages'
@@ -24,7 +23,6 @@ export default class Middlewares {
     this.app.use(express.urlencoded({ extended: false }))
     this.app.use(morgan('short'))
 
-    this.TrebbleDocs(this.app)
     this.UserContext(this.app)
   }
 
@@ -39,15 +37,6 @@ export default class Middlewares {
         origin: [process.env.FRONT_BASE_URL as string, ...localEnvironments],
       }),
     )
-  }
-
-  private TrebbleDocs(app: Express) {
-    if (isProduction) {
-      useTreblle(app, {
-        apiKey: process.env.TREBBLE_DOCS_API,
-        projectId: process.env.TREBBLE_DOCS_PID,
-      })
-    }
   }
 
   private UserContext(app: Express) {
@@ -67,6 +56,7 @@ export default class Middlewares {
           },
         )
       } catch (error) {
+        console.error(error)
         res.sendStatus(500)
       }
     })
@@ -97,6 +87,7 @@ export default class Middlewares {
         },
       )
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
@@ -117,6 +108,7 @@ export default class Middlewares {
         },
       )
     } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }

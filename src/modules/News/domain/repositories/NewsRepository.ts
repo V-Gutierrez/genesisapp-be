@@ -89,6 +89,7 @@ class NewsRepository {
         })
       }
     } catch (error) {
+      console.error(error)
       console.log(error)
     }
   }
@@ -114,6 +115,7 @@ class NewsRepository {
         },
       })
     } catch (error) {
+      console.error(error)
       console.log(error)
     }
   }
