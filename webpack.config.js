@@ -1,6 +1,5 @@
 const path = require('path')
 const nodeExternals = require('webpack-node-externals')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const { NODE_ENV = 'production' } = process.env
 
@@ -20,7 +19,7 @@ module.exports = {
       // provider any import aliases you may use in your project
       src: path.resolve(__dirname, 'src/'),
       '@Shared': path.resolve(__dirname, 'src/shared/'),
-      '@Modules': path.resolve(__dirname, 'src/modules/')
+      '@Modules': path.resolve(__dirname, 'src/modules/'),
     },
   },
   module: {
@@ -36,12 +35,4 @@ module.exports = {
     ],
   },
   externals: [nodeExternals()],
-  plugins: [
-    new BundleAnalyzerPlugin({
-      reportFilename: 'bundle_analysis.html',
-      generateStatsFile: true,
-      openAnalyzer: false,
-      analyzerMode: 'static',
-    }),
-  ],
 }
