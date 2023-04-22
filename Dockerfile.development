@@ -16,9 +16,6 @@ COPY . .
 # Expor a porta do aplicativo
 EXPOSE 5000
 
-# Roda migrations
-RUN npm run prisma:migrate:deploy
-
 # Iniciar o aplicativo
 CMD ["npm", "run", "dev"]
 

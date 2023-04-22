@@ -6,7 +6,7 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: mydatabase
+      POSTGRES_DB: genesis-staging
     ports:
       - "5432:5432"
     volumes:
@@ -21,4 +21,4 @@ services:
     depends_on:
       - db
     environment:
-      DATABASE_URL: postgres://postgres:postgres@db:5432/mydatabase
+      DATABASE_URL: postgres://postgres:postgres@db:5432/genesis-staging

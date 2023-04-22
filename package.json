@@ -4,8 +4,8 @@
   "description": "genesis church app backend",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon",
-    "start:dev": "NODE_ENV=development node --inspect=127.0.0.1:9230 ./dist/index.js ",
+    "dev": "npx prisma migrate dev && nodemon",
+    "start:dev": "npx prisma migrate dev && NODE_ENV=development node --inspect=127.0.0.1:9230 ./dist/index.js ",
     "build:webpack": "webpack --config webpack.config.js",
     "test": "jest",
     "prepare": "husky install",
@@ -15,7 +15,7 @@
     "prisma:seed": "npx prisma db seed",
     "prisma:modify": "ts-node --transpile-only prisma/seeds/execute.ts",
     "prisma:migrate:deploy": "npx prisma migrate deploy",
-    "start": "pm2 link ewuwbxg78pvrkba 020qnra07i0q733 && pm2-runtime start ecosystem.config.js --env production",
+    "start": "npx prisma migrate deploy && pm2 link ewuwbxg78pvrkba 020qnra07i0q733 && pm2-runtime start ecosystem.config.js --env production",
     "start:raw": "NODE_ENV=production node ./dist/index.js",
     "deploy": "git push heroku main"
   },
@@ -24,7 +24,6 @@
   "dependencies": {
     "@prisma/client": "^4.3.1",
     "@sendgrid/mail": "^7.7.0",
-    "@uploadcare/upload-client": "^3.1.1",
     "axios": "^0.27.2",
     "bcrypt": "^5.0.1",
     "cookie-parser": "^1.4.6",
@@ -61,7 +60,6 @@
     "@types/ramda": "^0.28.12",
     "@types/twilio": "^3.19.3",
     "@types/ua-parser-js": "^0.7.36",
-    "@types/uploadcare": "^0.4.1",
     "@typescript-eslint/eslint-plugin": "^5.23.0",
     "@typescript-eslint/parser": "^5.23.0",
     "eslint": "^8.15.0",
