@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { ApplicationRouter } from 'src/shared/infra/http/router'
 import express from 'express'
 import type { Express } from 'express'
@@ -7,10 +8,10 @@ class Server {
     this.setProxyTrust()
     this.initializeRouter()
 
-    this.app.listen(process.env.PORT || 5000, () => {
-      console.log(
+    this.app.listen(process.env.PORT || 8080, () => {
+      console.info(
         '[Server] Server initialized on port:',
-        process.env.PORT || 5000,
+        process.env.PORT || 8080,
       )
     })
   }

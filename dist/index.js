@@ -2406,10 +2406,10 @@
             ;(this.app = e),
               this.setProxyTrust(),
               this.initializeRouter(),
-              this.app.listen(process.env.PORT || 5e3, () => {
-                console.log(
+              this.app.listen(process.env.PORT || 8080, () => {
+                console.info(
                   '[Server] Server initialized on port:',
-                  process.env.PORT || 5e3,
+                  process.env.PORT || 8080,
                 )
               })
           }
