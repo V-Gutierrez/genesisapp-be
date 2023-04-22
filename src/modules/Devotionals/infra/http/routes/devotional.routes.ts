@@ -13,17 +13,19 @@ DevotionalsRouter.route('/devotionals/:slug').get(
   DevotionalsController.getDevotionalBySlug,
 )
 
-DevotionalsRouter.route('/admin/devotionals').get(
-  Middlewares.Authentication,
-  Middlewares.AdminPermissioner,
-  DevotionalsController.getDevotionalsAsAdmin,
-)
-DevotionalsRouter.route('/admin/devotionals').post(
-  Middlewares.Authentication,
-  Middlewares.AdminPermissioner,
-  Middlewares.SingleFileUpload,
-  DevotionalsController.createDevotional,
-)
+DevotionalsRouter.route('/admin/devotionals')
+  .post(
+    Middlewares.Authentication,
+    Middlewares.AdminPermissioner,
+    Middlewares.SingleFileUpload,
+    DevotionalsController.createDevotional,
+  )
+  .get(
+    Middlewares.Authentication,
+    Middlewares.AdminPermissioner,
+    DevotionalsController.getDevotionalsAsAdmin,
+  )
+
 DevotionalsRouter.route('/admin/devotionals/:id').delete(
   Middlewares.Authentication,
   Middlewares.AdminPermissioner,

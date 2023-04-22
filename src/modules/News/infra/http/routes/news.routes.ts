@@ -6,23 +6,23 @@ const NewsRouter = Router()
 
 NewsRouter.route('/news').get(NewsController.getNews)
 
-NewsRouter.route('/admin/news').post(
-  Middlewares.Authentication,
-  Middlewares.AdminPermissioner,
-  Middlewares.SingleFileUpload('coverImage'),
-  NewsController.createNews,
-)
+NewsRouter.route('/admin/news')
+  .post(
+    Middlewares.Authentication,
+    Middlewares.AdminPermissioner,
+    Middlewares.SingleFileUpload('coverImage'),
+    NewsController.createNews,
+  )
+  .get(
+    Middlewares.Authentication,
+    Middlewares.AdminPermissioner,
+    NewsController.getNewsAsAdmin,
+  )
 
 NewsRouter.route('/news/:id').delete(
   Middlewares.Authentication,
   Middlewares.AdminPermissioner,
   NewsController.deleteNews,
-)
-
-NewsRouter.route('/admin/news').get(
-  Middlewares.Authentication,
-  Middlewares.AdminPermissioner,
-  NewsController.getNewsAsAdmin,
 )
 
 NewsRouter.route('/news/:slug').get(NewsController.getNewsBySlug)

@@ -7,19 +7,19 @@ const EventsRouter = Router()
 EventsRouter.route('/events').get(EventsController.getEvents)
 EventsRouter.route('/events/:id').get(EventsController.getEventById)
 
-EventsRouter.route('/admin/events').post(
-  Middlewares.Authentication,
-  Middlewares.AdminPermissioner,
-  Middlewares.SingleFileUpload('coverImage'),
-  EventsController.createEvent,
-)
-
-EventsRouter.route('/admin/events').get(
-  Middlewares.Authentication,
-  Middlewares.AdminPermissioner,
-  Middlewares.SingleFileUpload('coverImage'),
-  EventsController.getEventsAsAdmin,
-)
+EventsRouter.route('/admin/events')
+  .post(
+    Middlewares.Authentication,
+    Middlewares.AdminPermissioner,
+    Middlewares.SingleFileUpload('coverImage'),
+    EventsController.createEvent,
+  )
+  .get(
+    Middlewares.Authentication,
+    Middlewares.AdminPermissioner,
+    Middlewares.SingleFileUpload('coverImage'),
+    EventsController.getEventsAsAdmin,
+  )
 
 EventsRouter.route('/admin/events/:id').delete(
   Middlewares.Authentication,
