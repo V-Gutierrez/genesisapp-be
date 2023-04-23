@@ -7,12 +7,12 @@ const NewsRouter = Router()
 NewsRouter.route('/news').get(NewsController.getNews)
 
 NewsRouter.route('/admin/news')
+  .get(Middlewares.AdminPermissioner, NewsController.getNewsAsAdmin)
   .post(
     Middlewares.AdminPermissioner,
     Middlewares.SingleFileUpload('coverImage'),
     NewsController.createNews,
   )
-  .get(Middlewares.AdminPermissioner, NewsController.getNewsAsAdmin)
 
 NewsRouter.route('/news/:id').delete(
   Middlewares.Authentication,

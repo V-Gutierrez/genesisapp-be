@@ -14,14 +14,14 @@ DevotionalsRouter.route('/devotionals/:slug').get(
 )
 
 DevotionalsRouter.route('/admin/devotionals')
+  .get(
+    Middlewares.AdminPermissioner,
+    DevotionalsController.getDevotionalsAsAdmin,
+  )
   .post(
     Middlewares.AdminPermissioner,
     Middlewares.SingleFileUpload,
     DevotionalsController.createDevotional,
-  )
-  .get(
-    Middlewares.AdminPermissioner,
-    DevotionalsController.getDevotionalsAsAdmin,
   )
 
 DevotionalsRouter.route('/admin/devotionals/:id').delete(
