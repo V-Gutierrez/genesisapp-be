@@ -32,15 +32,15 @@ export class ApplicationRouter {
     console.log('[ApplicationRouter] Routes loaded')
   }
 
-  private handleNotFound() {
-    this.app.use('*', (req, res) => {
-      res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
-    })
-  }
-
   private healthCheck() {
     this.app.use('/api/healthcheck', (_req, res) => {
       res.status(200).json({ message: Success.HEALTHCHECK })
+    })
+  }
+
+  private handleNotFound() {
+    this.app.use('*', (_req, res) => {
+      res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
     })
   }
 }

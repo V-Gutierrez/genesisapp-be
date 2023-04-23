@@ -15,13 +15,11 @@ DevotionalsRouter.route('/devotionals/:slug').get(
 
 DevotionalsRouter.route('/admin/devotionals')
   .post(
-    Middlewares.Authentication,
     Middlewares.AdminPermissioner,
     Middlewares.SingleFileUpload,
     DevotionalsController.createDevotional,
   )
   .get(
-    Middlewares.Authentication,
     Middlewares.AdminPermissioner,
     DevotionalsController.getDevotionalsAsAdmin,
   )

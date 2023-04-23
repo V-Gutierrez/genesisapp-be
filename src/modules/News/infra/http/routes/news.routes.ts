@@ -8,16 +8,11 @@ NewsRouter.route('/news').get(NewsController.getNews)
 
 NewsRouter.route('/admin/news')
   .post(
-    Middlewares.Authentication,
     Middlewares.AdminPermissioner,
     Middlewares.SingleFileUpload('coverImage'),
     NewsController.createNews,
   )
-  .get(
-    Middlewares.Authentication,
-    Middlewares.AdminPermissioner,
-    NewsController.getNewsAsAdmin,
-  )
+  .get(Middlewares.AdminPermissioner, NewsController.getNewsAsAdmin)
 
 NewsRouter.route('/news/:id').delete(
   Middlewares.Authentication,
