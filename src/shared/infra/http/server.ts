@@ -21,7 +21,8 @@ class Server {
   }
 
   private setProxyTrust(app: Express) {
-    app.set('trust proxy', true)
+   // This is suggested by GCP
+   // app.set('trust proxy', true)
   }
 }
 
