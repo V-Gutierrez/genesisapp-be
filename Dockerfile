@@ -1,5 +1,5 @@
 # Base image
-FROM node:latest
+FROM node:18.12
 
 # Diretório de trabalho
 WORKDIR /usr/src/app
