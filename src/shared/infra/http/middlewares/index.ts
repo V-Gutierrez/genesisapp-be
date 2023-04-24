@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import rateLimit from 'express-rate-limit'
+import { useTreblle } from 'treblle'
 
 import express, { Express, NextFunction, Request, Response } from 'express'
 
@@ -24,6 +25,7 @@ export default class Middlewares {
     this.app.use(morgan('short'))
 
     this.UserContext(this.app)
+    this.TrebbleDocs(this.app)
   }
 
   private CORS() {
@@ -60,6 +62,15 @@ export default class Middlewares {
         res.sendStatus(500)
       }
     })
+  }
+
+  private TrebbleDocs(app: Express) {
+    if (isProduction) {
+      useTreblle(app, {
+        apiKey: process.env.TREBBLE_DOCS_API,
+        projectId: process.env.TREBBLE_DOCS_PID,
+      })
+    }
   }
 
   private rateLimiter() {
