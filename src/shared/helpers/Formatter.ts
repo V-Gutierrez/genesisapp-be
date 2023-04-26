@@ -18,21 +18,6 @@ class Formatter {
 
   static generateHashFromString = (str: string) =>
     crypto.createHash('md5', { outputLength: 16 }).update(str).digest('hex')
-
-  static paginate<T>(items: T[], page: number, limit: number) {
-    const startIndex = (page - 1) * limit
-    const endIndex = startIndex + limit
-    const results = items.slice(startIndex, endIndex)
-
-    const totalPages = Math.ceil(items.length / limit)
-    const currentPageCount = results.length
-
-    return {
-      results,
-      totalPages,
-      currentPageCount,
-    }
-  }
 }
 
 export default Formatter
