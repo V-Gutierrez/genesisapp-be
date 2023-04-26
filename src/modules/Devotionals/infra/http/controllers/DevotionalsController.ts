@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-import ImageKitService from '@Shared/services/ImageKitService'
+import ImageKit from '@Shared/services/ImageKit'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { TIMEZONE } from 'src/shared/constants'
 import { ImageKitFolders } from 'src/shared/types/Enum'
@@ -79,7 +79,7 @@ class DevotionalsController {
         url: coverImage,
         thumbnailUrl: coverThumbnail,
         fileId,
-      } = await ImageKitService.uploadFile(
+      } = await ImageKit.uploadFile(
         file.buffer,
         Formatter.generateSlug(title),
         ImageKitFolders.Devotionals,
@@ -109,7 +109,7 @@ class DevotionalsController {
 
       const deleted = await DevotionalsRepository.deleteById(id)
 
-      await ImageKitService.delete(deleted.assetId)
+      await ImageKit.delete(deleted.assetId)
 
       res.status(200).json({ message: Success.RESOURCE_DELETED })
     } catch (error) {

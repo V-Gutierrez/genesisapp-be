@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import ImageKitService from '@Shared/services/ImageKitService'
+import ImageKit from '@Shared/services/ImageKit'
 import { ImageKitFolders } from 'src/shared/types/Enum'
 import { TIMEZONE } from 'src/shared/constants'
 import { zonedTimeToUtc } from 'date-fns-tz'
@@ -66,7 +66,7 @@ class EventsController {
         url: coverImage,
         thumbnailUrl: coverThumbnail,
         fileId,
-      } = await ImageKitService.uploadFile(
+      } = await ImageKit.uploadFile(
         file.buffer,
         Formatter.generateSlug(title),
         ImageKitFolders.Events,
@@ -103,7 +103,7 @@ class EventsController {
 
       const deleted = await EventsRepository.deleteById(id)
 
-      await ImageKitService.delete(deleted.assetId)
+      await ImageKit.delete(deleted.assetId)
 
       res.status(200).json({ message: Success.RESOURCE_DELETED })
     } catch (error) {

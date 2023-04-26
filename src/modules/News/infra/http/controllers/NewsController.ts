@@ -1,7 +1,7 @@
 import { Request, Response } from 'express'
 
 import { ImageKitFolders } from 'src/shared/types/Enum'
-import ImageKitService from '@Shared/services/ImageKitService'
+import ImageKit from '@Shared/services/ImageKit'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { TIMEZONE } from 'src/shared/constants'
 import NewsRepository from 'src/modules/News/domain/repositories/NewsRepository'
@@ -33,7 +33,7 @@ class NewsController {
         url: coverImage,
         thumbnailUrl: coverThumbnail,
         fileId,
-      } = await ImageKitService.uploadFile(
+      } = await ImageKit.uploadFile(
         file.buffer,
         Formatter.generateSlug(title),
         ImageKitFolders.News,
@@ -64,7 +64,7 @@ class NewsController {
 
       const deleted = await NewsRepository.deleteById(id)
 
-      await ImageKitService.delete(deleted.assetId)
+      await ImageKit.delete(deleted.assetId)
 
       res.status(200).json({ message: Success.RESOURCE_DELETED })
     } catch (error) {
