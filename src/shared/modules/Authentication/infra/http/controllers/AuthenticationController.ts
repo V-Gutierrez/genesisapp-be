@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import { Request, Response } from 'express'
 
 import SendgridClient from '@Shared/services/Sendgrid'
@@ -8,11 +6,11 @@ import jwt from 'jsonwebtoken'
 import UsersRepository from 'src/modules/Users/domain/repositories/UsersRepository'
 import Bcrypt from 'src/shared/helpers/Bcrypt'
 import CookieHelper from 'src/shared/helpers/Cookies'
-import isProduction from 'src/shared/helpers/Environment'
 import { Errors, Success } from 'src/shared/helpers/Messages'
 import SchemaHelper from 'src/shared/helpers/SchemaHelper'
 import Prisma from 'src/shared/infra/prisma'
 import { Decoded } from '@Shared/types/dtos'
+import Environment from '@Shared/helpers/Environment'
 
 class AuthenticationController {
   static async authenticate(req: Request, res: Response) {
@@ -23,7 +21,7 @@ class AuthenticationController {
       if (currentToken) {
         jwt.verify(
           req.cookies.jwt,
-          process.env.ACCESS_TOKEN_SECRET as string,
+          Environment.getStringEnv('ACCESS_TOKEN_SECRET'),
           (error: any) => {
             if (error) {
               /* Clean old token and proceed to auth */
@@ -66,7 +64,7 @@ class AuthenticationController {
 
         const accessToken = jwt.sign(
           tokenPayload,
-          process.env.ACCESS_TOKEN_SECRET as string,
+          Environment.getStringEnv('ACCESS_TOKEN_SECRET'),
           {
             expiresIn: '12h',
           },
@@ -115,7 +113,7 @@ class AuthenticationController {
       // Check Access Token
       jwt.verify(
         accessToken,
-        process.env.ACCESS_TOKEN_SECRET as string,
+        Environment.getStringEnv('ACCESS_TOKEN_SECRET'),
         async (accessTokenError: any, decoded: Decoded) => {
           if (accessTokenError) {
             res.clearCookie(
@@ -132,8 +130,8 @@ class AuthenticationController {
           if (!user) {
             res.clearCookie('jwt', {
               httpOnly: true,
-              secure: isProduction,
-              sameSite: isProduction ? 'none' : undefined,
+              secure: Environment.isProduction,
+              sameSite: Environment.isProduction ? 'none' : undefined,
             })
             return res.status(403).json({ message: Errors.NO_AUTH })
           }
@@ -166,7 +164,7 @@ class AuthenticationController {
                   id: user.id,
                   region: user.region,
                 },
-                process.env.ACCESS_TOKEN_SECRET as string,
+                Environment.getStringEnv('ACCESS_TOKEN_SECRET'),
                 { expiresIn: '12h' },
               )
 
@@ -237,7 +235,7 @@ class AuthenticationController {
         },
       )
 
-      if (isProduction) {
+      if (Environment.isProduction) {
         const emailSender = new SendgridClient()
 
         await emailSender.send(

@@ -1,5 +1,4 @@
 import Formatter from 'src/shared/helpers/Formatter'
-import 'dotenv/config'
 
 import TwillioClient from 'twilio'
 

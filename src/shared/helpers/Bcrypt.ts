@@ -1,10 +1,9 @@
-import 'dotenv/config'
-
 import * as bcrypt from 'bcrypt'
+import Environment from '@Shared/helpers/Environment'
 
 class Bcrypt {
   static hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, process.env.BCRYPTSALT as string)
+    return bcrypt.hash(password, Environment.getStringEnv('BCRYPTSALT'))
   }
 
   static comparePassword(password: string, hash: string): Promise<boolean> {

@@ -1,4 +1,3 @@
-import 'dotenv/config'
 import rateLimit from 'express-rate-limit'
 import { useTreblle } from 'treblle'
 
@@ -10,9 +9,9 @@ import jwt from 'jsonwebtoken'
 import morgan from 'morgan'
 import multer from 'multer'
 import CookieHelper from 'src/shared/helpers/Cookies'
-import isProduction from 'src/shared/helpers/Environment'
 import { Errors } from 'src/shared/helpers/Messages'
 import { Decoded } from '@Shared/types/dtos'
+import Environment from 'src/shared/helpers/Environment'
 
 export default class Middlewares {
   constructor(private readonly app: Express) {
@@ -29,14 +28,17 @@ export default class Middlewares {
   }
 
   private CORS() {
-    const localEnvironments = isProduction
+    const localEnvironments = Environment.isProduction
       ? []
       : ['http://localhost:3000', 'http://192.168.0.56:3000']
 
     this.app.use(
       cors({
         credentials: true,
-        origin: [process.env.FRONT_BASE_URL as string, ...localEnvironments],
+        origin: [
+          Environment.getStringEnv('FRONT_BASE_URL'),
+          ...localEnvironments,
+        ],
       }),
     )
   }
@@ -49,7 +51,7 @@ export default class Middlewares {
 
         jwt.verify(
           token,
-          process.env.ACCESS_TOKEN_SECRET as string,
+          Environment.getStringEnv('ACCESS_TOKEN_SECRET'),
           (err: any, decoded: Decoded) => {
             if (err) req.cookies.user = null
             else req.cookies.user = decoded
@@ -65,7 +67,7 @@ export default class Middlewares {
   }
 
   private TrebbleDocs(app: Express) {
-    if (isProduction) {
+    if (Environment.isProduction) {
       useTreblle(app, {
         apiKey: process.env.TREBBLE_DOCS_API,
         projectId: process.env.TREBBLE_DOCS_PID,
@@ -91,7 +93,7 @@ export default class Middlewares {
 
       jwt.verify(
         token,
-        process.env.ACCESS_TOKEN_SECRET as string,
+        Environment.getStringEnv('ACCESS_TOKEN_SECRET'),
         (err: any) => {
           if (err) return res.status(403).json({ message: Errors.NO_AUTH })
           next()
@@ -110,7 +112,7 @@ export default class Middlewares {
 
       jwt.verify(
         token,
-        process.env.ACCESS_TOKEN_SECRET as string,
+        Environment.getStringEnv('ACCESS_TOKEN_SECRET'),
         (err: any, decoded: Decoded) => {
           if (err) return res.status(403).json({ message: Errors.NO_AUTH })
           if (decoded.role !== 'ADMIN')

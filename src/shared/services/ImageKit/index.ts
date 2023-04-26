@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import ImageKitInstance from 'imagekit'
 import { ImageKitFolders } from 'src/shared/types/Enum'
 import { UploadResponse } from 'imagekit/dist/libs/interfaces/UploadResponse'

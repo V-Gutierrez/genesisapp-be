@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import SendgridMail, { MailDataRequired } from '@sendgrid/mail'
 
 class SendgridClient {

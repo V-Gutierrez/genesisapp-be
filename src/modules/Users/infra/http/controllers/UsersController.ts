@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 import { Request, Response } from 'express'
 
 import SendgridClient from '@Shared/services/Sendgrid'
@@ -10,6 +8,7 @@ import Bcrypt from 'src/shared/helpers/Bcrypt'
 import Formatter from 'src/shared/helpers/Formatter'
 import { Errors, Success } from 'src/shared/helpers/Messages'
 import SchemaHelper from 'src/shared/helpers/SchemaHelper'
+import Environment from '@Shared/helpers/Environment'
 
 class UsersController {
   static async get(req: Request, res: Response) {
@@ -51,7 +50,7 @@ class UsersController {
 
       const token = jwt.sign(
         { id: user.id },
-        process.env.ACTIVATION_TOKEN_SECRET as string,
+        Environment.getStringEnv('ACTIVATION_TOKEN_SECRET'),
         {
           expiresIn: '30d',
         },
@@ -62,7 +61,9 @@ class UsersController {
       await emailSender.send(
         emailSender.TEMPLATES.confirmationEmail.config(user.email, {
           userFirstName: Formatter.getUserFirstName(user.name),
-          activationUrl: `${process.env.FRONT_BASE_URL}/activate?token=${token}`,
+          activationUrl: `${Environment.getStringEnv(
+            'FRONT_BASE_URL',
+          )}/activate?token=${token}`,
         }),
       )
 

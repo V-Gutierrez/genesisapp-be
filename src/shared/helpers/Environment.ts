@@ -1,9 +1,16 @@
 import 'dotenv/config'
 
 class Environment {
-  isProduction = process.env.NODE_ENV === 'production'
+  public isProduction = process.env.NODE_ENV === 'production'
 
-  public static getEnv<T>(name: string): T {
+  constructor() {
+    console.info(
+      '[Environment] Environment initialized with env set:',
+      JSON.stringify(process.env),
+    )
+  }
+
+  public getEnv<T>(name: string): T {
     const variable = process.env[name]
 
     if (!variable) {
@@ -14,7 +21,7 @@ class Environment {
     return variable as unknown as T
   }
 
-  public static getStringEnv(name: string): string {
+  public getStringEnv(name: string): string {
     const variable = process.env[name]
 
     if (!variable) {
@@ -25,7 +32,7 @@ class Environment {
     return variable
   }
 
-  public static getNumberEnv(name: string): number {
+  public getNumberEnv(name: string): number {
     const variable = process.env[name]
 
     if (!variable) {
@@ -45,7 +52,7 @@ class Environment {
     return convertedNumber
   }
 
-  public static getBooleanEnv(name: string): boolean {
+  public getBooleanEnv(name: string): boolean {
     const variable = process.env[name]
 
     if (!variable) {
