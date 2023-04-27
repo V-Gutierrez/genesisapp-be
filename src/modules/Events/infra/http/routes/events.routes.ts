@@ -8,11 +8,7 @@ EventsRouter.route('/events').get(EventsController.getEvents)
 EventsRouter.route('/events/:id').get(EventsController.getEventById)
 
 EventsRouter.route('/admin/events')
-  .get(
-    Middlewares.AdminPermissioner,
-    Middlewares.SingleFileUpload('coverImage'),
-    EventsController.getEventsAsAdmin,
-  )
+  .get(Middlewares.AdminPermissioner, EventsController.getEventsAsAdmin)
   .post(
     Middlewares.AdminPermissioner,
     Middlewares.SingleFileUpload('coverImage'),

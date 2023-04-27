@@ -20,7 +20,7 @@ DevotionalsRouter.route('/admin/devotionals')
   )
   .post(
     Middlewares.AdminPermissioner,
-    Middlewares.SingleFileUpload,
+    Middlewares.SingleFileUpload('coverImage'),
     DevotionalsController.createDevotional,
   )
 
