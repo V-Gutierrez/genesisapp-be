@@ -5,6 +5,7 @@ import { Router } from 'express'
 const AuthenticationRouter = Router()
 
 AuthenticationRouter.route('/auth').post(AuthenticationController.authenticate)
+
 AuthenticationRouter.route('/auth').get(
   Middlewares.Authentication,
   AuthenticationController.refreshToken,
@@ -24,7 +25,6 @@ AuthenticationRouter.route('/auth/logout').delete(
   AuthenticationController.logout,
 )
 AuthenticationRouter.route('/auth/me').get(
-  Middlewares.Authentication,
   AuthenticationController.getUserInformation,
 )
 

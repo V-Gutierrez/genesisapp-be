@@ -299,6 +299,10 @@ class AuthenticationController {
     try {
       const { email, role, id, name, region } = req.cookies.user ?? {}
 
+      if (!req.cookies.user) {
+        return res.status(204).json({})
+      }
+
       return res.status(200).json({ email, role, id, name, region })
     } catch (error) {
       console.error(error)
