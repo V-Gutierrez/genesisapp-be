@@ -1,37 +1,32 @@
+import CreateDevotionalController from '@Modules/Devotionals/infra/http/controllers/CreateDevotionalController'
+import DeleteDevotionalController from '@Modules/Devotionals/infra/http/controllers/DeleteDevotionalController'
+import GetDevotionalBySlugController from '@Modules/Devotionals/infra/http/controllers/GetDevotionalBySlugController'
+import GetDevotionalsAsAdminController from '@Modules/Devotionals/infra/http/controllers/GetDevotionalsAsAdminController'
+import GetDevotionalsController from '@Modules/Devotionals/infra/http/controllers/GetDevotionalsController'
+import LikeDevotionalController from '@Modules/Devotionals/infra/http/controllers/LikeDevotionalController'
+
 import Middlewares from '@Shared/infra/http/middlewares'
 import { Router } from 'express'
 
-import DevotionalsController from 'src/modules/Devotionals/infra/http/controllers/DevotionalsController'
-
 const DevotionalsRouter = Router()
 
-DevotionalsRouter.route('/devotionals').get(
-  DevotionalsController.getDevotionals,
-)
-
-DevotionalsRouter.route('/devotionals/:slug').get(
-  DevotionalsController.getDevotionalBySlug,
-)
-
+DevotionalsRouter.route('/devotionals').get(GetDevotionalsController)
+DevotionalsRouter.route('/devotionals/:slug').get(GetDevotionalBySlugController)
 DevotionalsRouter.route('/admin/devotionals')
-  .get(
-    Middlewares.AdminPermissioner,
-    DevotionalsController.getDevotionalsAsAdmin,
-  )
+  .get(Middlewares.AdminPermissioner, GetDevotionalsAsAdminController)
   .post(
     Middlewares.AdminPermissioner,
     Middlewares.SingleFileUpload('coverImage'),
-    DevotionalsController.createDevotional,
+    CreateDevotionalController,
   )
-
 DevotionalsRouter.route('/admin/devotionals/:id').delete(
   Middlewares.Authentication,
   Middlewares.AdminPermissioner,
-  DevotionalsController.deleteDevotional,
+  DeleteDevotionalController,
 )
 DevotionalsRouter.route('/devotionals/:id/like').put(
   Middlewares.Authentication,
-  DevotionalsController.like,
+  LikeDevotionalController,
 )
 
 export default DevotionalsRouter

@@ -12,8 +12,7 @@
   "parserOptions": {
     "ecmaVersion": 13,
     "sourceType": "module",
-    "project": "./tsconfig.json",
-    "tsconfigRootDir": "./"
+    "tsconfigRootDir": "."
   },
   "plugins": [
     "@typescript-eslint",
@@ -22,7 +21,6 @@
   ],
   "rules": {
     "node/no-unsupported-features/es-syntax": "off",
-    "no-process-exit": "off",
     "no-new": "off",
     "no-shadow": "warn",
     "no-unused-vars": "warn",
