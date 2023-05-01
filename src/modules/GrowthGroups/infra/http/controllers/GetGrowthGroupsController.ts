@@ -1,8 +1,8 @@
-import GrowthGroupsRepository from 'src/modules/GrowthGroups/domain/repositories/GrowthGroupsRepository'
+import GrowthGroupsRepository from '@Modules/GrowthGroups/domain/repositories/GrowthGroupsRepository'
 import { Request, Response } from 'express'
 
-class GrowthGroupsController {
-  static async getGrowthGroups(req: Request, res: Response) {
+export class GetGrowthGroupsController {
+  async execute(req: Request, res: Response) {
     const { region } = req.cookies.user ?? {}
 
     try {
@@ -16,4 +16,4 @@ class GrowthGroupsController {
   }
 }
 
-export default GrowthGroupsController
+export default new GetGrowthGroupsController().execute

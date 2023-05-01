@@ -1,10 +1,8 @@
-import GrowthGroupsController from 'src/modules/GrowthGroups/infra/http/controllers/GrowthGroupsController'
+import GetGrowthGroupsController from '@Modules/GrowthGroups/infra/http/controllers/GetGrowthGroupsController'
 import { Router } from 'express'
 
 const GrowthGroupsRouter = Router()
 
-GrowthGroupsRouter.route('/growthgroups').get(
-  GrowthGroupsController.getGrowthGroups,
-)
+GrowthGroupsRouter.route('/growthgroups').get(GetGrowthGroupsController)
 
 export default GrowthGroupsRouter
