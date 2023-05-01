@@ -236,10 +236,8 @@ class AuthenticationController {
       )
 
       if (Environment.isProduction) {
-        const emailSender = new SendgridClient()
-
-        await emailSender.send(
-          emailSender.TEMPLATES.resetPassword.config(email, {
+        await SendgridClient.send(
+          SendgridClient.TEMPLATES.resetPassword.config(email, {
             resetPasswordUrl: `${process.env.FRONT_BASE_URL}/reset-password?token=${resetToken}`,
           }),
         )

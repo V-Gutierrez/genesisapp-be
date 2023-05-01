@@ -1,8 +1,9 @@
-import StatsRepository from 'src/modules/Stats/domain/repositories/StatsRepository'
+import StatsRepository from '@Modules/Stats/domain/repositories/StatsRepository'
+import { HTTPController } from '@Shared/types/interfaces'
 import { Request, Response } from 'express'
 
-class StatsController {
-  static async getStats(req: Request, res: Response) {
+export class GetStatsController implements HTTPController {
+  async execute(req: Request, res: Response) {
     const { region } = req.cookies.user ?? {}
 
     try {
@@ -23,4 +24,4 @@ class StatsController {
   }
 }
 
-export default StatsController
+export default new GetStatsController().execute

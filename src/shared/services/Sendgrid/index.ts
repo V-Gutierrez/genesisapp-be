@@ -60,4 +60,4 @@ class SendgridClient {
   }
 }
 
-export default SendgridClient
+export default new SendgridClient()

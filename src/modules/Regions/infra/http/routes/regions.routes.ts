@@ -1,8 +1,8 @@
-import RegionsController from 'src/modules/Regions/infra/http/controllers/RegionsController'
 import { Router } from 'express'
+import GetRegionsController from '@Modules/Regions/infra/http/controllers/GetRegionsController'
 
 const RegionsRouter = Router()
 
-RegionsRouter.route('/regions').get(RegionsController.getRegions)
+RegionsRouter.route('/regions').get(GetRegionsController)
 
 export default RegionsRouter

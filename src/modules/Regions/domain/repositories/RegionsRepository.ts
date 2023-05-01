@@ -7,7 +7,7 @@ class RegionRepository {
     return '-'
   }
 
-  async fetchAll() {
+  async getAll() {
     return Object.entries(Region).map(([key, value]) => ({
       regionKey: key,
       regionTitle: this.translateRegion(value),

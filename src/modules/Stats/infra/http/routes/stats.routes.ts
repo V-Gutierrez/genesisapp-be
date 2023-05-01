@@ -1,6 +1,6 @@
+import GetStatsController from '@Modules/Stats/infra/http/controllers/GetStatsController'
 import Middlewares from '@Shared/infra/http/middlewares'
 
-import StatsController from 'src/modules/Stats/infra/http/controllers/StatsController'
 import { Router } from 'express'
 
 const StatsRouter = Router()
@@ -8,7 +8,7 @@ const StatsRouter = Router()
 StatsRouter.route('/stats').get(
   Middlewares.Authentication,
   Middlewares.AdminPermissioner,
-  StatsController.getStats,
+  GetStatsController,
 )
 
 export default StatsRouter
