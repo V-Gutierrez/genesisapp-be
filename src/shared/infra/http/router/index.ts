@@ -10,12 +10,14 @@ import UsersRouter from 'src/modules/Users/infra/http/routes/users.routes'
 import Middlewares from 'src/shared/infra/http/middlewares'
 import AuthenticationRouter from 'src/shared/modules/Authentication/infra/http/routes/authentication.routes'
 import GrowthGroupsRouter from '@Modules/GrowthGroups/infra/http/routes/growthgroups.routes'
+import AdminRouter from '@Modules/Admin/infra/routes/admin.routes'
 import { Errors, Success } from '@Shared/helpers/Messages'
 
 export class ApplicationRouter {
   constructor(private readonly app: Express) {
     new Middlewares(this.app)
 
+    this.app.use('/api/', AdminRouter)
     this.app.use('/api/', DevotionalsRouter)
     this.app.use('/api/', EventsRouter)
     this.app.use('/api/', GrowthGroupsRouter)
