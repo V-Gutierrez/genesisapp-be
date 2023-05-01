@@ -9,7 +9,7 @@ const DevotionalsRouter = Router()
 
 DevotionalsRouter.route('/devotionals').get(GetDevotionalsController)
 DevotionalsRouter.route('/devotionals/:slug').get(GetDevotionalBySlugController)
-DevotionalsRouter.route('/devotionals/:id/like').put(
+DevotionalsRouter.route('/devotionals/:id/like').post(
   Middlewares.Authentication,
   LikeDevotionalController,
 )
