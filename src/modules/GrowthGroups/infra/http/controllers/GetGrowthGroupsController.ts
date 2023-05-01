@@ -1,7 +1,8 @@
 import GrowthGroupsRepository from '@Modules/GrowthGroups/domain/repositories/GrowthGroupsRepository'
+import { HTTPController } from '@Shared/types/interfaces'
 import { Request, Response } from 'express'
 
-export class GetGrowthGroupsController {
+export class GetGrowthGroupsController implements HTTPController {
   async execute(req: Request, res: Response) {
     const { region } = req.cookies.user ?? {}
 

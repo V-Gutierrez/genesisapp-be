@@ -1,30 +1,35 @@
-import NewsController from 'src/modules/News/infra/http/controllers/NewsController'
 import { Router } from 'express'
 import Middlewares from '@Shared/infra/http/middlewares'
+import GetNewsController from '@Modules/News/infra/http/controllers/GetNewsController'
+import GetNewsAsAdminController from '@Modules/News/infra/http/controllers/GetNewsAsAdminController'
+import CreateNewsController from '@Modules/News/infra/http/controllers/CreateNewsController'
+import DeleteNewsController from '@Modules/News/infra/http/controllers/DeleteNewsController'
+import GetNewsBySlugController from '@Modules/News/infra/http/controllers/GetNewsBySlugController'
+import LikeNewsController from '@Modules/News/infra/http/controllers/LikeNewsController'
 
 const NewsRouter = Router()
 
-NewsRouter.route('/news').get(NewsController.getNews)
+NewsRouter.route('/news').get(GetNewsController)
 
 NewsRouter.route('/admin/news')
-  .get(Middlewares.AdminPermissioner, NewsController.getNewsAsAdmin)
+  .get(Middlewares.AdminPermissioner, GetNewsAsAdminController)
   .post(
     Middlewares.AdminPermissioner,
     Middlewares.SingleFileUpload('coverImage'),
-    NewsController.createNews,
+    CreateNewsController,
   )
 
 NewsRouter.route('/news/:id').delete(
   Middlewares.Authentication,
   Middlewares.AdminPermissioner,
-  NewsController.deleteNews,
+  DeleteNewsController,
 )
 
-NewsRouter.route('/news/:slug').get(NewsController.getNewsBySlug)
+NewsRouter.route('/news/:slug').get(GetNewsBySlugController)
 
 NewsRouter.route('/news/:id/like').post(
   Middlewares.Authentication,
-  NewsController.like,
+  LikeNewsController,
 )
 
 export default NewsRouter

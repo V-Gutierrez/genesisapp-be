@@ -1,4 +1,4 @@
-import EventsRepository from '@Modules/Events/domain/repositories/EventsRepository'
+import NewsRepository from '@Modules/News/domain/repositories/NewsRepository'
 import { TIMEZONE } from '@Shared/constants'
 import Formatter from '@Shared/helpers/Formatter'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
@@ -8,32 +8,25 @@ import { HTTPController } from '@Shared/types/interfaces'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { Request, Response } from 'express'
 
-export class CreateEventController implements HTTPController {
+export class CreateNewsController implements HTTPController {
   async execute(req: Request, res: Response) {
     try {
       const errors = SchemaHelper.validateSchema(
-        SchemaHelper.EVENTS_CREATION,
+        SchemaHelper.NEWS_CREATION,
         req.body,
       )
 
       if (errors) {
         return res.status(400).json({ message: errors })
       }
+
       if (!req.file) {
         return res.status(400).json({ message: 'coverImage is missing' })
       }
 
-      const { region } = req.cookies.user ?? {}
-
-      const {
-        title,
-        subscriptionsScheduledTo,
-        subscriptionsDueDate,
-        eventDate,
-        maxSlots,
-        description,
-      } = req.body
+      const { body, title, scheduledTo, highlightText } = req.body
       const { file } = req
+      const { region } = req.cookies.user ?? {}
 
       const {
         url: coverImage,
@@ -42,33 +35,27 @@ export class CreateEventController implements HTTPController {
       } = await ImageKit.uploadFile(
         file.buffer,
         Formatter.generateSlug(title),
-        ImageKitFolders.Events,
+        ImageKitFolders.News,
       )
 
-      const newEvent = await EventsRepository.create({
+      const news = await NewsRepository.create({
+        body,
         title,
-        subscriptionsScheduledTo: zonedTimeToUtc(
-          new Date(subscriptionsScheduledTo),
-          TIMEZONE,
-        ),
-        subscriptionsDueDate: zonedTimeToUtc(
-          new Date(subscriptionsDueDate),
-          TIMEZONE,
-        ),
-        eventDate: zonedTimeToUtc(new Date(eventDate), TIMEZONE),
-        description,
-        maxSlots: Number(maxSlots),
+        scheduledTo: zonedTimeToUtc(new Date(scheduledTo), TIMEZONE),
         coverImage,
         coverThumbnail,
+        slug: Formatter.generateSlug(title),
         assetId: fileId,
+        highlightText,
         region,
       })
 
-      return res.status(201).json(newEvent)
-    } catch (err) {
+      return res.status(201).json(news)
+    } catch (error) {
+      console.error(error)
       res.sendStatus(500)
     }
   }
 }
 
-export default new CreateEventController().execute
+export default new CreateNewsController().execute

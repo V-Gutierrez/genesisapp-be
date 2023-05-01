@@ -1,9 +1,10 @@
 import EventsRepository from '@Modules/Events/domain/repositories/EventsRepository'
 import { Success } from '@Shared/helpers/Messages'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
+import { HTTPController } from '@Shared/types/interfaces'
 import { Request, Response } from 'express'
 
-export class SubscribeToEventController {
+export class SubscribeToEventController implements HTTPController {
   async execute(req: Request, res: Response) {
     try {
       const errors = SchemaHelper.validateSchema(

@@ -1,9 +1,8 @@
 import { Request, Response } from 'express'
+import GooglePhotosScraper from '@Modules/Integrations/domain/services/GooglePhotosScrapper'
 
-import GooglePhotosScraper from 'src/modules/Integrations/domain/services/GooglePhotosScrapper'
-
-class IntegrationsController {
-  static async getGooglePhotosAlbumPhotos(req: Request, res: Response) {
+export class GooglePhotosIntegrationController {
+  async execute(req: Request, res: Response) {
     try {
       const { albumUrl } = req.query
 
@@ -19,4 +18,4 @@ class IntegrationsController {
   }
 }
 
-export default IntegrationsController
+export default new GooglePhotosIntegrationController().execute

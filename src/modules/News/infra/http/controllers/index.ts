@@ -1,0 +1,6 @@
+export * from './CreateNewsController'
+export * from './DeleteNewsController'
+export * from './GetNewsAsAdminController'
+export * from './GetNewsBySlugController'
+export * from './LikeNewsController'
+export * from './GetNewsController'

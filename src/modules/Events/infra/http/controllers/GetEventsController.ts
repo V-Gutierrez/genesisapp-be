@@ -1,7 +1,8 @@
 import EventsRepository from '@Modules/Events/domain/repositories/EventsRepository'
+import { HTTPController } from '@Shared/types/interfaces'
 import { Request, Response } from 'express'
 
-export class GetEventsController {
+export class GetEventsController implements HTTPController {
   async execute(req: Request, res: Response) {
     const { region } = req.cookies.user ?? {}
 

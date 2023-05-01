@@ -1,10 +1,8 @@
-import IntegrationsController from 'src/modules/Integrations/infra/http/controllers/IntegrationsController'
+import GooglePhotosIntegrationController from '@Modules/Integrations/infra/http/controllers/GooglePhotosIntegrationController'
 import { Router } from 'express'
 
 const IntegrationsRouter = Router()
 
-IntegrationsRouter.route('/googlephotos').get(
-  IntegrationsController.getGooglePhotosAlbumPhotos,
-)
+IntegrationsRouter.route('/googlephotos').get(GooglePhotosIntegrationController)
 
 export default IntegrationsRouter

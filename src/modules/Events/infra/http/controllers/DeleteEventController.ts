@@ -1,9 +1,10 @@
 import EventsRepository from '@Modules/Events/domain/repositories/EventsRepository'
 import { Success } from '@Shared/helpers/Messages'
 import ImageKit from '@Shared/services/ImageKit'
+import { HTTPController } from '@Shared/types/interfaces'
 import { Request, Response } from 'express'
 
-export class DeleteEventController {
+export class DeleteEventController implements HTTPController {
   async execute(req: Request, res: Response) {
     try {
       const { id } = req.params

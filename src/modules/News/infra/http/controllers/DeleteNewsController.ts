@@ -1,13 +1,17 @@
-import EventsRepository from '@Modules/Events/domain/repositories/EventsRepository'
+import NewsRepository from '@Modules/News/domain/repositories/NewsRepository'
 import { Success } from '@Shared/helpers/Messages'
+import ImageKit from '@Shared/services/ImageKit'
 import { HTTPController } from '@Shared/types/interfaces'
 import { Request, Response } from 'express'
 
-export class DeleteEventSubscriptionController implements HTTPController {
+class DeleteNewsController implements HTTPController {
   async execute(req: Request, res: Response) {
     try {
       const { id } = req.params
-      await EventsRepository.removeSubscriptionById(id)
+
+      const deleted = await NewsRepository.deleteById(id)
+
+      await ImageKit.delete(deleted.assetId)
 
       res.status(200).json({ message: Success.RESOURCE_DELETED })
     } catch (error) {
@@ -17,4 +21,4 @@ export class DeleteEventSubscriptionController implements HTTPController {
   }
 }
 
-export default new DeleteEventSubscriptionController().execute
+export default new DeleteNewsController().execute
