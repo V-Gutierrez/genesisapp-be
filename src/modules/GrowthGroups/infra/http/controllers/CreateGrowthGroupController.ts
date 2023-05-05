@@ -21,3 +21,5 @@ export class CreateGrowthGroupsController implements HTTPController {
     }
   }
 }
+
+export default new CreateGrowthGroupsController().execute
