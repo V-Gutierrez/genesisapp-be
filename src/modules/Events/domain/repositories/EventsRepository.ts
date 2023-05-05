@@ -43,24 +43,15 @@ class EventsRepository {
   async create(data: PrismaType.EventsCreateInput) {
     try {
       const isEventDateTheLaterDate =
-        isAfter(
-          new Date(data.eventDate),
-          new Date(data.subscriptionsDueDate),
-        ) &&
-        isAfter(
-          new Date(data.eventDate),
-          new Date(data.subscriptionsScheduledTo),
-        )
+        isAfter(new Date(data.eventDate), new Date(data.subscriptionsDueDate)) &&
+        isAfter(new Date(data.eventDate), new Date(data.subscriptionsScheduledTo))
 
       const isSubscriptionDueDateLaterThanSubscriptionScheduledDate = isAfter(
         new Date(data.subscriptionsDueDate),
         new Date(data.subscriptionsScheduledTo),
       )
 
-      if (
-        isSubscriptionDueDateLaterThanSubscriptionScheduledDate &&
-        isEventDateTheLaterDate
-      ) {
+      if (isSubscriptionDueDateLaterThanSubscriptionScheduledDate && isEventDateTheLaterDate) {
         return Prisma.events.create({
           data,
         })
@@ -70,7 +61,6 @@ class EventsRepository {
       )
     } catch (error) {
       console.error(error)
-      console.log(error)
     }
   }
 
@@ -111,8 +101,7 @@ class EventsRepository {
   ) {
     const currentEvent = await this.getEventById(eventId, region)
 
-    if (!currentEvent)
-      throw new Error(`No available event found for ${eventId}`)
+    if (!currentEvent) throw new Error(`No available event found for ${eventId}`)
 
     const { maxSlots } = currentEvent
     const { EventsSubscriptions: subsCount } = currentEvent._count

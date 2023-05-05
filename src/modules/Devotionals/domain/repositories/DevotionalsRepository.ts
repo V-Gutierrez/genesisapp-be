@@ -32,8 +32,24 @@ class DevotionalsRepository {
         scheduledTo: 'desc',
       },
       include: {
-        DevotionalLikes: true,
-        DevotionalViews: true,
+        DevotionalLikes: {
+          select: {
+            User: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        DevotionalViews: {
+          select: {
+            User: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
     })
   }
@@ -109,7 +125,6 @@ class DevotionalsRepository {
       }
     } catch (error) {
       console.error(error)
-      console.log(error)
     }
   }
 
@@ -135,7 +150,6 @@ class DevotionalsRepository {
       })
     } catch (error) {
       console.error(error)
-      console.log(error)
     }
   }
 }

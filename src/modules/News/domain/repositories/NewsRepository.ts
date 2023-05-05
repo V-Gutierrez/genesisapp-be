@@ -31,8 +31,24 @@ class NewsRepository {
         scheduledTo: 'desc',
       },
       include: {
-        NewsLikes: true,
-        NewsViews: true,
+        NewsLikes: {
+          select: {
+            User: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        NewsViews: {
+          select: {
+            User: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
       },
     })
   }
@@ -90,7 +106,6 @@ class NewsRepository {
       }
     } catch (error) {
       console.error(error)
-      console.log(error)
     }
   }
 
@@ -116,7 +131,6 @@ class NewsRepository {
       })
     } catch (error) {
       console.error(error)
-      console.log(error)
     }
   }
 }
