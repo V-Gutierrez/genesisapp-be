@@ -3,7 +3,9 @@ import * as R from 'ramda'
 import Joi, { Schema } from 'joi'
 
 class SchemaHelper {
-  static SIGNUP_SCHEMA = Joi.object().keys({
+  private readonly weekdays = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+
+  SIGNUP_SCHEMA = Joi.object().keys({
     email: Joi.string().email().required(),
     name: Joi.string().required(),
     phone: Joi.string()
@@ -16,20 +18,20 @@ class SchemaHelper {
       .regex(/[0-9]/)
       .regex(/[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/)
       .required(),
-    birthdate: Joi.string().required(),
+    birthdate: Joi.date().required(),
     region: Joi.string().required(),
   })
 
-  static LOGIN_SCHEMA = Joi.object().keys({
+  LOGIN_SCHEMA = Joi.object().keys({
     email: Joi.string().email().required(),
     password: Joi.string().required(),
   })
 
-  static RESET_PASSWORD = Joi.object().keys({
+  RESET_PASSWORD = Joi.object().keys({
     email: Joi.string().email().required(),
   })
 
-  static NEW_PASSWORD = Joi.object().keys({
+  NEW_PASSWORD = Joi.object().keys({
     password: Joi.string()
       .min(8)
       .regex(/[a-z]/)
@@ -39,36 +41,47 @@ class SchemaHelper {
       .required(),
   })
 
-  static DEVOTIONAL_CREATION = Joi.object().keys({
+  DEVOTIONAL_CREATION = Joi.object().keys({
     body: Joi.string().required(),
     title: Joi.string().required(),
     author: Joi.string().required(),
-    scheduledTo: Joi.string().required(),
+    scheduledTo: Joi.date().required(),
   })
 
-  static EVENTS_CREATION = Joi.object().keys({
+  GROWTH_GROUP_CREATION = Joi.object().keys({
+    lat: Joi.number().required(),
+    lng: Joi.number().required(),
+    name: Joi.string().required(),
+    whatsappLink: Joi.string().required(),
+    addressInfo: Joi.allow(this.weekdays).required(),
+    weekDay: Joi.string().required(),
+    scheduledTime: Joi.string().required(),
+    leadership: Joi.array().required(),
+  })
+
+  EVENTS_CREATION = Joi.object().keys({
     title: Joi.string().required(),
     maxSlots: Joi.string().required(),
-    subscriptionsScheduledTo: Joi.string().required(),
-    subscriptionsDueDate: Joi.string().required(),
-    eventDate: Joi.string().required(),
+    subscriptionsScheduledTo: Joi.date().required(),
+    subscriptionsDueDate: Joi.date().required(),
+    eventDate: Joi.date().required(),
     description: Joi.string().required(),
   })
 
-  static EVENTS_SUBSCRIPTION = Joi.object().keys({
+  EVENTS_SUBSCRIPTION = Joi.object().keys({
     userName: Joi.string().required(),
     userEmail: Joi.string().required(),
     userPhone: Joi.string().required(),
   })
 
-  static NEWS_CREATION = Joi.object().keys({
+  NEWS_CREATION = Joi.object().keys({
     title: Joi.string().required(),
     body: Joi.string().required(),
     highlightText: Joi.string().required(),
-    scheduledTo: Joi.string().required(),
+    scheduledTo: Joi.date().required(),
   })
 
-  static validateSchema(schema: Schema, validationTarget: any) {
+  validateSchema<T>(schema: Schema, validationTarget: T) {
     const { error } = Joi.validate(validationTarget, schema, {
       abortEarly: false,
       convert: false,
@@ -81,8 +94,9 @@ class SchemaHelper {
     const errorsArray = error.details.map(({ message, path }) => ({
       [path.join('.')]: message,
     }))
+
     return R.mergeAll(errorsArray)
   }
 }
 
-export default SchemaHelper
+export default new SchemaHelper()

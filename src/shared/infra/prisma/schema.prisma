@@ -50,7 +50,6 @@ model UserRefreshTokens {
 
 model GrowthGroup {
   id            String   @id @default(uuid())
-  createdAt     DateTime @default(now())
   lat           Float
   lng           Float
   name          String
@@ -60,6 +59,8 @@ model GrowthGroup {
   scheduledTime String
   leadership    String[] //Relate to users in a distant future (leaders need to have an account)
   region        Region   @default(AEP)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @default(now())
 }
 
 model Devotional {
