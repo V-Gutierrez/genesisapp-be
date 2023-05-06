@@ -13,12 +13,9 @@ import jwt from 'jsonwebtoken'
 export class UserSignUpController implements HTTPController {
   async execute(req: Request, res: Response) {
     try {
-      const errors = SchemaHelper.validateSchema(
-        SchemaHelper.SIGNUP_SCHEMA,
-        req.body,
-      )
+      const errors = SchemaHelper.validateSchema(SchemaHelper.SIGNUP_SCHEMA, req.body)
 
-      if (errors) return res.status(400).json({ message: errors })
+      if (errors) res.status(400).json({ message: errors })
 
       const { email, name, password, phone, birthdate, region }: User = req.body
 
@@ -31,20 +28,14 @@ export class UserSignUpController implements HTTPController {
         region,
       })
 
-      const token = jwt.sign(
-        { id: user.id },
-        Environment.getStringEnv('ACTIVATION_TOKEN_SECRET'),
-        {
-          expiresIn: '30d',
-        },
-      )
+      const token = jwt.sign({ id: user.id }, Environment.getStringEnv('ACTIVATION_TOKEN_SECRET'), {
+        expiresIn: '30d',
+      })
 
       await SendgridClient.send(
         SendgridClient.TEMPLATES.confirmationEmail.config(user.email, {
           userFirstName: Formatter.getUserFirstName(user.name),
-          activationUrl: `${Environment.getStringEnv(
-            'FRONT_BASE_URL',
-          )}/activate?token=${token}`,
+          activationUrl: `${Environment.getStringEnv('FRONT_BASE_URL')}/activate?token=${token}`,
         }),
       )
 

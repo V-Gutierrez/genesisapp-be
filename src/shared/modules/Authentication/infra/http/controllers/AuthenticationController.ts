@@ -15,8 +15,7 @@ import Environment from '@Shared/helpers/Environment'
 class AuthenticationController {
   static async authenticate(req: Request, res: Response) {
     try {
-      const { [CookieHelper.AuthCookieDefaultOptions.name]: currentToken } =
-        req.cookies
+      const { [CookieHelper.AuthCookieDefaultOptions.name]: currentToken } = req.cookies
 
       if (currentToken) {
         jwt.verify(
@@ -34,24 +33,23 @@ class AuthenticationController {
         )
       }
 
-      const errors = SchemaHelper.validateSchema(
-        SchemaHelper.LOGIN_SCHEMA,
-        req.body,
-      )
-      if (errors) return res.status(400).json({ message: errors })
+      const errors = SchemaHelper.validateSchema(SchemaHelper.LOGIN_SCHEMA, req.body)
+      if (errors) res.status(400).json({ message: errors })
 
       const { email, password }: User = req.body
 
       const user = await UsersRepository.getUserByEmail(email)
 
-      if (!user) return res.status(404).json({ message: Errors.USER_NOT_FOUND })
-      if (!user.active)
-        return res.status(403).json({ message: Errors.USER_NOT_ACTIVE })
+      if (!user) {
+        res.status(404).json({ message: Errors.USER_NOT_FOUND })
+        return
+      }
+      if (!user.active) {
+        res.status(403).json({ message: Errors.USER_NOT_ACTIVE })
+        return
+      }
 
-      const matchPassword = await Bcrypt.comparePassword(
-        password,
-        user.password,
-      )
+      const matchPassword = await Bcrypt.comparePassword(password, user.password)
 
       if (matchPassword) {
         const tokenPayload = {
@@ -69,13 +67,9 @@ class AuthenticationController {
             expiresIn: '12h',
           },
         )
-        const refreshToken = jwt.sign(
-          tokenPayload,
-          process.env.REFRESH_TOKEN_SECRET as string,
-          {
-            expiresIn: '30d',
-          },
-        )
+        const refreshToken = jwt.sign(tokenPayload, process.env.REFRESH_TOKEN_SECRET as string, {
+          expiresIn: '30d',
+        })
 
         await Prisma.userRefreshTokens.upsert({
           where: {
@@ -96,9 +90,9 @@ class AuthenticationController {
           CookieHelper.AuthCookieDefaultOptions.config,
         )
 
-        return res.status(200).json({ userLoggedIn: true })
+        res.status(200).json({ userLoggedIn: true })
       }
-      return res.status(401).json({ message: Errors.NO_AUTH })
+      res.status(401).json({ message: Errors.NO_AUTH })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)
@@ -107,8 +101,7 @@ class AuthenticationController {
 
   static async refreshToken(req: Request, res: Response) {
     try {
-      const { [CookieHelper.AuthCookieDefaultOptions.name]: accessToken } =
-        req.cookies
+      const { [CookieHelper.AuthCookieDefaultOptions.name]: accessToken } = req.cookies
 
       // Check Access Token
       jwt.verify(
@@ -120,12 +113,10 @@ class AuthenticationController {
               CookieHelper.AuthCookieDefaultOptions.name,
               CookieHelper.AuthCookieDefaultOptions.config,
             )
-            return res.status(403).json({ message: Errors.NO_AUTH })
+            res.status(403).json({ message: Errors.NO_AUTH })
           }
 
-          const user = await UsersRepository.getUserByDecodedEmail(
-            decoded.email,
-          )
+          const user = await UsersRepository.getUserByDecodedEmail(decoded.email)
 
           if (!user) {
             res.clearCookie('jwt', {
@@ -133,7 +124,8 @@ class AuthenticationController {
               secure: Environment.isProduction,
               sameSite: Environment.isProduction ? 'none' : undefined,
             })
-            return res.status(403).json({ message: Errors.NO_AUTH })
+            res.status(403).json({ message: Errors.NO_AUTH })
+            return
           }
 
           const { UserRefreshTokens, id: userId } = user
@@ -154,7 +146,9 @@ class AuthenticationController {
                   CookieHelper.AuthCookieDefaultOptions.name,
                   CookieHelper.AuthCookieDefaultOptions.config,
                 )
-                return res.status(403).json({ message: Errors.NO_AUTH })
+
+                res.status(403).json({ message: Errors.NO_AUTH })
+                return
               }
 
               const refreshedAccessToken = jwt.sign(
@@ -189,7 +183,7 @@ class AuthenticationController {
     try {
       const authToken = req.headers.authorization
 
-      if (!authToken) return res.status(401).json({ message: Errors.NO_AUTH })
+      if (!authToken) res.status(401).json({ message: Errors.NO_AUTH })
 
       const { authorization } = req.headers
 
@@ -197,11 +191,11 @@ class AuthenticationController {
         authorization as string,
         process.env.ACTIVATION_TOKEN_SECRET as string,
         async (error: any, decoded: Decoded) => {
-          if (error) return res.status(401).json({ message: Errors.NO_AUTH })
+          if (error) res.status(401).json({ message: Errors.NO_AUTH })
 
           await UsersRepository.activateUserById(decoded.id)
 
-          return res.status(200).json({ message: Success.USER_ACTIVATED })
+          res.status(200).json({ message: Success.USER_ACTIVATED })
         },
       )
     } catch (error) {
@@ -212,28 +206,20 @@ class AuthenticationController {
 
   static async resetPassword(req: Request, res: Response) {
     try {
-      const errors = SchemaHelper.validateSchema(
-        SchemaHelper.RESET_PASSWORD,
-        req.body,
-      )
-      if (errors) return res.status(400).json({ message: errors })
+      const errors = SchemaHelper.validateSchema(SchemaHelper.RESET_PASSWORD, req.body)
+      if (errors) res.status(400).json({ message: errors })
 
       const { email } = req.body
 
       const user = await UsersRepository.getUserByEmail(email)
 
       // False 200 status
-      if (!user || !user.active)
-        return res.status(200).json({ message: Success.RESET_EMAIL_SEND })
+      if (!user || !user.active) res.status(200).json({ message: Success.RESET_EMAIL_SEND })
       // False 200 status
 
-      const resetToken = jwt.sign(
-        { email },
-        process.env.PASSWORD_RESET_TOKEN_SECRET as string,
-        {
-          expiresIn: '24h',
-        },
-      )
+      const resetToken = jwt.sign({ email }, process.env.PASSWORD_RESET_TOKEN_SECRET as string, {
+        expiresIn: '24h',
+      })
 
       if (Environment.isProduction) {
         await SendgridClient.send(
@@ -243,7 +229,7 @@ class AuthenticationController {
         )
       }
 
-      return res.status(200).json({ message: Success.RESET_EMAIL_SEND })
+      res.status(200).json({ message: Success.RESET_EMAIL_SEND })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)
@@ -254,12 +240,11 @@ class AuthenticationController {
     const authToken = req.headers.authorization
 
     try {
-      const errors = SchemaHelper.validateSchema(
-        SchemaHelper.NEW_PASSWORD,
-        req.body,
-      )
-      if (errors || !authToken)
-        return res.status(400).json({ message: Errors.NO_AUTH, error: errors })
+      const errors = SchemaHelper.validateSchema(SchemaHelper.NEW_PASSWORD, req.body)
+      if (errors || !authToken) {
+        res.status(400).json({ message: Errors.NO_AUTH, error: errors })
+        return
+      }
 
       const { password } = req.body
 
@@ -267,11 +252,11 @@ class AuthenticationController {
         authToken,
         process.env.PASSWORD_RESET_TOKEN_SECRET as string,
         async (error: any, decoded: Decoded) => {
-          if (error) return res.status(401).json({ message: Errors.NO_AUTH })
+          if (error) res.status(401).json({ message: Errors.NO_AUTH })
 
           await UsersRepository.setUserPasswordByEmail(decoded.email, password)
 
-          return res.status(200).json({ message: Success.NEW_PASSWORD_SET })
+          res.status(200).json({ message: Success.NEW_PASSWORD_SET })
         },
       )
     } catch (error) {
@@ -286,7 +271,7 @@ class AuthenticationController {
         CookieHelper.AuthCookieDefaultOptions.name,
         CookieHelper.AuthCookieDefaultOptions.config,
       )
-      return res.status(200).json({ message: Success.LOGOUT })
+      res.status(200).json({ message: Success.LOGOUT })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)
@@ -298,13 +283,13 @@ class AuthenticationController {
       const { email, role, id, name, region } = req.cookies.user ?? {}
 
       if (!req.cookies.user) {
-        return res.status(204).json({})
+        res.status(204).json({})
       }
 
-      return res.status(200).json({ email, role, id, name, region })
+      res.status(200).json({ email, role, id, name, region })
     } catch (error) {
       console.error(error)
-      return res.sendStatus(500)
+      res.sendStatus(500)
     }
   }
 }

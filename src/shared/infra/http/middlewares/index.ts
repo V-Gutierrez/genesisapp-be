@@ -35,10 +35,7 @@ export default class Middlewares {
     this.app.use(
       cors({
         credentials: true,
-        origin: [
-          Environment.getStringEnv('FRONT_BASE_URL'),
-          ...localEnvironments,
-        ],
+        origin: [Environment.getStringEnv('FRONT_BASE_URL'), ...localEnvironments],
       }),
     )
   }
@@ -46,8 +43,7 @@ export default class Middlewares {
   private UserContext(app: Express) {
     app.use(async (req: Request, res: Response, next: NextFunction) => {
       try {
-        const { [CookieHelper.AuthCookieDefaultOptions.name]: token } =
-          req.cookies
+        const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
         jwt.verify(
           token,
@@ -88,17 +84,12 @@ export default class Middlewares {
 
   static Authentication(req: Request, res: Response, next: NextFunction) {
     try {
-      const { [CookieHelper.AuthCookieDefaultOptions.name]: token } =
-        req.cookies
+      const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
-      jwt.verify(
-        token,
-        Environment.getStringEnv('ACCESS_TOKEN_SECRET'),
-        (err: any) => {
-          if (err) return res.status(403).json({ message: Errors.NO_AUTH })
-          next()
-        },
-      )
+      jwt.verify(token, Environment.getStringEnv('ACCESS_TOKEN_SECRET'), (err: any) => {
+        if (err) res.status(403).json({ message: Errors.NO_AUTH })
+        next()
+      })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)
@@ -107,16 +98,14 @@ export default class Middlewares {
 
   static AdminPermissioner(req: Request, res: Response, next: NextFunction) {
     try {
-      const { [CookieHelper.AuthCookieDefaultOptions.name]: token } =
-        req.cookies
+      const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
       jwt.verify(
         token,
         Environment.getStringEnv('ACCESS_TOKEN_SECRET'),
         (err: any, decoded: Decoded) => {
-          if (err) return res.status(403).json({ message: Errors.NO_AUTH })
-          if (decoded.role !== 'ADMIN')
-            return res.status(401).json({ message: Errors.NO_AUTH })
+          if (err) res.status(403).json({ message: Errors.NO_AUTH })
+          if (decoded.role !== 'ADMIN') res.status(401).json({ message: Errors.NO_AUTH })
           next()
         },
       )

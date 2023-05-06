@@ -11,16 +11,15 @@ import { Request, Response } from 'express'
 export class CreateEventController implements HTTPController {
   async execute(req: Request, res: Response) {
     try {
-      const errors = SchemaHelper.validateSchema(
-        SchemaHelper.EVENTS_CREATION,
-        req.body,
-      )
+      const errors = SchemaHelper.validateSchema(SchemaHelper.EVENTS_CREATION, req.body)
 
       if (errors) {
-        return res.status(400).json({ message: errors })
+        res.status(400).json({ message: errors })
+        return
       }
       if (!req.file) {
-        return res.status(400).json({ message: 'coverImage is missing' })
+        res.status(400).json({ message: 'coverImage is missing' })
+        return
       }
 
       const { region } = req.cookies.user ?? {}
@@ -47,14 +46,8 @@ export class CreateEventController implements HTTPController {
 
       const newEvent = await EventsRepository.create({
         title,
-        subscriptionsScheduledTo: zonedTimeToUtc(
-          new Date(subscriptionsScheduledTo),
-          TIMEZONE,
-        ),
-        subscriptionsDueDate: zonedTimeToUtc(
-          new Date(subscriptionsDueDate),
-          TIMEZONE,
-        ),
+        subscriptionsScheduledTo: zonedTimeToUtc(new Date(subscriptionsScheduledTo), TIMEZONE),
+        subscriptionsDueDate: zonedTimeToUtc(new Date(subscriptionsDueDate), TIMEZONE),
         eventDate: zonedTimeToUtc(new Date(eventDate), TIMEZONE),
         description,
         maxSlots: Number(maxSlots),
@@ -64,7 +57,7 @@ export class CreateEventController implements HTTPController {
         region,
       })
 
-      return res.status(201).json(newEvent)
+      res.status(201).json(newEvent)
     } catch (err) {
       res.sendStatus(500)
     }

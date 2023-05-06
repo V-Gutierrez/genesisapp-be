@@ -11,12 +11,13 @@ export class GetNewsBySlugController implements HTTPController {
 
       const response = await NewsRepository.getBySlug(slug, region)
 
-      if (!response)
-        return res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
+      if (!response) {
+        res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
+        return
+      }
 
       await NewsRepository.view(response.id, userId)
-
-      return res.status(200).json(response)
+      res.status(200).json(response)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

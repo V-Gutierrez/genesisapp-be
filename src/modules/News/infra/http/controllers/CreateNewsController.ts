@@ -11,17 +11,16 @@ import { Request, Response } from 'express'
 export class CreateNewsController implements HTTPController {
   async execute(req: Request, res: Response) {
     try {
-      const errors = SchemaHelper.validateSchema(
-        SchemaHelper.NEWS_CREATION,
-        req.body,
-      )
+      const errors = SchemaHelper.validateSchema(SchemaHelper.NEWS_CREATION, req.body)
 
       if (errors) {
-        return res.status(400).json({ message: errors })
+        res.status(400).json({ message: errors })
+        return
       }
 
       if (!req.file) {
-        return res.status(400).json({ message: 'coverImage is missing' })
+        res.status(400).json({ message: 'coverImage is missing' })
+        return
       }
 
       const { body, title, scheduledTo, highlightText } = req.body
@@ -50,7 +49,7 @@ export class CreateNewsController implements HTTPController {
         region,
       })
 
-      return res.status(201).json(news)
+      res.status(201).json(news)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

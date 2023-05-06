@@ -9,12 +9,12 @@ export class CreateGrowthGroupsController implements HTTPController {
       const errors = SchemaHelper.validateSchema(SchemaHelper.GROWTH_GROUP_CREATION, req.body)
 
       if (errors) {
-        return res.status(400).json({ message: errors })
+        res.status(400).json({ message: errors })
       }
 
       const response = await GrowthGroupsRepository.create(req.body)
 
-      return res.status(200).json(response)
+      res.status(200).json(response)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

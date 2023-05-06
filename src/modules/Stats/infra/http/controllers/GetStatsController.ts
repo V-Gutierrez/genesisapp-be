@@ -10,7 +10,7 @@ export class GetStatsController implements HTTPController {
       const { devotionals, activeUsers, growthGroups, news, ongoingEvents } =
         await StatsRepository.getStats(region)
 
-      return res.status(200).json({
+      res.status(200).json({
         activeUsers,
         devotionals,
         growthGroups,

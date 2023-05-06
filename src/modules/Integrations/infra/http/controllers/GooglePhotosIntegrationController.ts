@@ -6,11 +6,9 @@ export class GooglePhotosIntegrationController {
     try {
       const { albumUrl } = req.query
 
-      const photos = await GooglePhotosScraper.fetchImagesByAlbumUrl(
-        albumUrl as string,
-      )
+      const photos = await GooglePhotosScraper.fetchImagesByAlbumUrl(albumUrl as string)
 
-      return res.status(200).json(photos)
+      res.status(200).json(photos)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

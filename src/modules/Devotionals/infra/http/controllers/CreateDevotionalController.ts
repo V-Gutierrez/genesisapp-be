@@ -11,16 +11,15 @@ import { Request, Response } from 'express'
 export class CreateDevotionalController implements HTTPController {
   async execute(req: Request, res: Response) {
     try {
-      const errors = SchemaHelper.validateSchema(
-        SchemaHelper.DEVOTIONAL_CREATION,
-        req.body,
-      )
+      const errors = SchemaHelper.validateSchema(SchemaHelper.DEVOTIONAL_CREATION, req.body)
 
       if (errors) {
-        return res.status(400).json({ message: errors })
+        res.status(400).json({ message: errors })
+        return
       }
       if (!req.file) {
-        return res.status(400).json({ message: 'coverImage is missing' })
+        res.status(400).json({ message: 'coverImage is missing' })
+        return
       }
 
       const { body, title, scheduledTo, author } = req.body
@@ -49,7 +48,7 @@ export class CreateDevotionalController implements HTTPController {
         region,
       })
 
-      return res.status(201).json(devotional)
+      res.status(201).json(devotional)
     } catch (e) {
       res.sendStatus(500)
     }

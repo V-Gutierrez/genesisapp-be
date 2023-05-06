@@ -7,12 +7,9 @@ import { Request, Response } from 'express'
 export class SubscribeToEventController implements HTTPController {
   async execute(req: Request, res: Response) {
     try {
-      const errors = SchemaHelper.validateSchema(
-        SchemaHelper.EVENTS_SUBSCRIPTION,
-        req.body,
-      )
+      const errors = SchemaHelper.validateSchema(SchemaHelper.EVENTS_SUBSCRIPTION, req.body)
       if (errors) {
-        return res.status(400).json({ message: errors })
+        res.status(400).json({ message: errors })
       }
 
       const { eventId } = req.params

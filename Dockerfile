@@ -22,7 +22,7 @@ COPY . .
 # Construir o aplicativo
 RUN npm run prisma:generate
 RUN npm run build:webpack
-#RUN npm run prisma:migrate:deploy
+RUN npm run prisma:migrate:deploy
 
 # --- Segunda etapa - criar imagem final apenas com arquivos necessários ---
 
