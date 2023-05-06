@@ -22,7 +22,6 @@ COPY . .
 # Construir o aplicativo
 RUN npm run prisma:generate
 RUN npm run build:webpack
-RUN npm run prisma:migrate:deploy
 
 # --- Segunda etapa - criar imagem final apenas com arquivos necessários ---
 
@@ -43,6 +42,7 @@ COPY --from=builder /usr/src/app/schema.prisma ./src/shared/infra/prisma/schema.
 # Instala as dependências do projeto
 RUN npm ci --only=production
 RUN npm run prisma:generate
+RUN npm run prisma:migrate:deploy
 
 # Expor a porta do aplicativo
 EXPOSE $PORT
