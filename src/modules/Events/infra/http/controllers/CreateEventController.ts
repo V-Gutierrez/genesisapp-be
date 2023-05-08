@@ -14,12 +14,10 @@ export class CreateEventController implements HTTPController {
       const errors = SchemaHelper.validateSchema(SchemaHelper.EVENTS_CREATION, req.body)
 
       if (errors) {
-        res.status(400).json({ message: errors })
-        return
+        return res.status(400).json({ message: errors })
       }
       if (!req.file) {
-        res.status(400).json({ message: 'coverImage is missing' })
-        return
+        return res.status(400).json({ message: 'coverImage is missing' })
       }
 
       const { region } = req.cookies.user ?? {}
@@ -57,7 +55,7 @@ export class CreateEventController implements HTTPController {
         region,
       })
 
-      res.status(201).json(newEvent)
+      return res.status(201).json(newEvent)
     } catch (err) {
       res.sendStatus(500)
     }

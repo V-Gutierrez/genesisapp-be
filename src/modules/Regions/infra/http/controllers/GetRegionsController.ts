@@ -7,7 +7,7 @@ class GetRegionsController implements HTTPController {
     try {
       const regions = await RegionsRepository.getAll()
 
-      res.status(200).json(regions)
+      return res.status(200).json(regions)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

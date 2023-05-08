@@ -9,7 +9,7 @@ export class GetEventsController implements HTTPController {
     try {
       const response = await EventsRepository.getReleasedEvents(region)
 
-      res.status(200).json(response)
+      return res.status(200).json(response)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

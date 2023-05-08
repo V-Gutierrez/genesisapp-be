@@ -11,7 +11,7 @@ export class LikeNewsController implements HTTPController {
 
       await NewsRepository.like(id, userId)
 
-      res.status(201).json({ message: Success.RESOURCE_CREATED })
+      return res.status(201).json({ message: Success.RESOURCE_CREATED })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

@@ -14,12 +14,10 @@ export class CreateDevotionalController implements HTTPController {
       const errors = SchemaHelper.validateSchema(SchemaHelper.DEVOTIONAL_CREATION, req.body)
 
       if (errors) {
-        res.status(400).json({ message: errors })
-        return
+        return res.status(400).json({ message: errors })
       }
       if (!req.file) {
-        res.status(400).json({ message: 'coverImage is missing' })
-        return
+        return res.status(400).json({ message: 'coverImage is missing' })
       }
 
       const { body, title, scheduledTo, author } = req.body
@@ -48,7 +46,7 @@ export class CreateDevotionalController implements HTTPController {
         region,
       })
 
-      res.status(201).json(devotional)
+      return res.status(201).json(devotional)
     } catch (e) {
       res.sendStatus(500)
     }

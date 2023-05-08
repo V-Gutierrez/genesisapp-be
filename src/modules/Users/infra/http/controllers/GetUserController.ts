@@ -8,13 +8,13 @@ export class GetUsersController implements HTTPController {
     const { id } = req.params
 
     try {
-      if (!id) res.status(401).json({ message: Errors.INVALID_OR_MISSING_ID })
-      else {
+      if (!id) return res.status(401).json({ message: Errors.INVALID_OR_MISSING_ID })
+      
         const user = await UsersRepository.getUserById(id)
 
-        if (!user) res.status(404).json({ message: Errors.USER_NOT_FOUND })
-        if (user) res.status(200).json(user)
-      }
+        if (!user) return res.status(404).json({ message: Errors.USER_NOT_FOUND })
+        if (user) return res.status(200).json(user)
+      
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

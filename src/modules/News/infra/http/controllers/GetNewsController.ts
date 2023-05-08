@@ -9,7 +9,7 @@ export class GetNewsController implements HTTPController {
     try {
       const response = await NewsRepository.getReleasedNews(region)
 
-      res.status(200).json(response)
+      return res.status(200).json(response)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

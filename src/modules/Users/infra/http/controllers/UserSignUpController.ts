@@ -15,7 +15,7 @@ export class UserSignUpController implements HTTPController {
     try {
       const errors = SchemaHelper.validateSchema(SchemaHelper.SIGNUP_SCHEMA, req.body)
 
-      if (errors) res.status(400).json({ message: errors })
+      if (errors) return res.status(400).json({ message: errors })
 
       const { email, name, password, phone, birthdate, region }: User = req.body
 
@@ -39,12 +39,12 @@ export class UserSignUpController implements HTTPController {
         }),
       )
 
-      res.status(201).json({ message: Success.USER_CREATED, user })
+      return res.status(201).json({ message: Success.USER_CREATED, user })
     } catch (error) {
       console.error(error)
       if ((error as any).code === 'P2002')
-        res.status(409).json({ message: Errors.USER_ALREADY_EXISTS })
-      else res.status(500).json({ message: Errors.INTERNAL_SERVER_ERROR })
+        return res.status(409).json({ message: Errors.USER_ALREADY_EXISTS })
+      return res.status(500).json({ message: Errors.INTERNAL_SERVER_ERROR })
     }
   }
 }

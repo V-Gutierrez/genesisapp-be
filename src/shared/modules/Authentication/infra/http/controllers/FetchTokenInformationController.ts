@@ -7,10 +7,10 @@ export class FetchTokenInformationController implements HTTPController {
       const { email, role, id, name, region } = req.cookies.user ?? {}
 
       if (!req.cookies.user) {
-        res.status(204).json({})
+        return res.status(204).json({})
       }
 
-      res.status(200).json({ email, role, id, name, region })
+      return res.status(200).json({ email, role, id, name, region })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

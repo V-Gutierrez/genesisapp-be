@@ -8,7 +8,7 @@ export class GetGooglePhotosAlbumPhotosController {
 
       const photos = await GooglePhotos.fetchImagesByAlbumUrl(albumUrl as string)
 
-      res.status(200).json(photos)
+      return res.status(200).json(photos)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

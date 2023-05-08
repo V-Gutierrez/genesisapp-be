@@ -11,7 +11,7 @@ export class LikeDevotionalController implements HTTPController {
 
       await DevotionalsRepository.like(id, userId)
 
-      res.status(201).json({ status: Success.RESOURCE_CREATED })
+      return res.status(201).json({ status: Success.RESOURCE_CREATED })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

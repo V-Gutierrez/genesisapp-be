@@ -7,7 +7,7 @@ export class GetEventsAsAdminController implements HTTPController {
     try {
       const response = await EventsRepository.getAll()
 
-      res.status(200).json(response)
+      return res.status(200).json(response)
     } catch (error) {
       console.error(error)
 

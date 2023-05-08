@@ -9,7 +9,7 @@ export class GetGrowthGroupsController implements HTTPController {
     try {
       const response = await GrowthGroupsRepository.getAll(region)
 
-      res.status(200).json(response)
+      return res.status(200).json(response)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

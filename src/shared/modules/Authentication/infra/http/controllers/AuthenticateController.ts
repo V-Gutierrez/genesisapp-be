@@ -28,19 +28,17 @@ export class AuthenticateController implements HTTPController {
       }
 
       const errors = SchemaHelper.validateSchema(SchemaHelper.LOGIN_SCHEMA, req.body)
-      if (errors) res.status(400).json({ message: errors })
+      if (errors) return res.status(400).json({ message: errors })
 
       const { email, password }: User = req.body
 
       const user = await UsersRepository.getUserByEmail(email)
 
       if (!user) {
-        res.status(404).json({ message: Errors.USER_NOT_FOUND })
-        return
+        return res.status(404).json({ message: Errors.USER_NOT_FOUND })
       }
       if (!user.active) {
-        res.status(403).json({ message: Errors.USER_NOT_ACTIVE })
-        return
+        return res.status(403).json({ message: Errors.USER_NOT_ACTIVE })
       }
 
       const matchPassword = await Bcrypt.comparePassword(password, user.password)
@@ -80,10 +78,9 @@ export class AuthenticateController implements HTTPController {
           CookieHelper.AuthCookieDefaultOptions.config,
         )
 
-        res.status(200).json({ message: Success.LOGIN })
-        return
+        return res.status(200).json({ message: Success.LOGIN })
       }
-      res.status(401).json({ message: Errors.NO_AUTH })
+      return res.status(401).json({ message: Errors.NO_AUTH })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

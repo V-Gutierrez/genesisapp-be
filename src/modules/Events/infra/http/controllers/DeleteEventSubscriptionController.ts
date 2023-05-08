@@ -9,7 +9,7 @@ export class DeleteEventSubscriptionController implements HTTPController {
       const { id } = req.params
       await EventsRepository.removeSubscriptionById(id)
 
-      res.status(200).json({ message: Success.RESOURCE_DELETED })
+      return res.status(200).json({ message: Success.RESOURCE_DELETED })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

@@ -12,8 +12,7 @@ export class CreateGrowthGroupsController implements HTTPController {
       const errors = SchemaHelper.validateSchema(SchemaHelper.GROWTH_GROUP_CREATION, req.body)
 
       if (errors) {
-        res.status(400).json({ message: errors })
-        return
+        return res.status(400).json({ message: errors })
       }
 
       const { region } = req.cookies.user ?? {}
@@ -24,10 +23,9 @@ export class CreateGrowthGroupsController implements HTTPController {
       const addressResponse = await GoogleMaps.getGeocodeFromAddress(address)
 
       if (!addressResponse) {
-        res.status(400).json({
+        return res.status(400).json({
           message: Errors.INVALID_ADDRESS,
         })
-        return
       }
 
       const response = await GrowthGroupsRepository.create({
@@ -37,8 +35,7 @@ export class CreateGrowthGroupsController implements HTTPController {
         lng: addressResponse.lng,
       })
 
-      res.status(201).json(response)
-      return
+      return res.status(201).json(response)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

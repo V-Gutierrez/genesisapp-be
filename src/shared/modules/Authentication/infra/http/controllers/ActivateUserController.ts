@@ -10,7 +10,7 @@ export class ActivateUserController implements HTTPController {
     try {
       const authToken = req.headers.authorization
 
-      if (!authToken) res.status(401).json({ message: Errors.NO_AUTH })
+      if (!authToken) return res.status(401).json({ message: Errors.NO_AUTH })
 
       const { authorization } = req.headers
 
@@ -18,11 +18,11 @@ export class ActivateUserController implements HTTPController {
         authorization as string,
         process.env.ACTIVATION_TOKEN_SECRET as string,
         async (error: any, decoded: Decoded) => {
-          if (error) res.status(401).json({ message: Errors.NO_AUTH })
+          if (error) return res.status(401).json({ message: Errors.NO_AUTH })
 
           await UsersRepository.activateUserById(decoded.id)
 
-          res.status(200).json({ message: Success.USER_ACTIVATED })
+          return res.status(200).json({ message: Success.USER_ACTIVATED })
         },
       )
     } catch (error) {

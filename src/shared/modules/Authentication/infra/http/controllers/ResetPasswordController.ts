@@ -11,14 +11,14 @@ export class ResetPasswordController implements HTTPController {
   async execute(req: Request, res: Response) {
     try {
       const errors = SchemaHelper.validateSchema(SchemaHelper.RESET_PASSWORD, req.body)
-      if (errors) res.status(400).json({ message: errors })
+      if (errors) return res.status(400).json({ message: errors })
 
       const { email } = req.body
 
       const user = await UsersRepository.getUserByEmail(email)
 
       // False 200 status
-      if (!user || !user.active) res.status(200).json({ message: Success.RESET_EMAIL_SEND })
+      if (!user || !user.active) return res.status(200).json({ message: Success.RESET_EMAIL_SEND })
       // False 200 status
 
       const resetToken = jwt.sign({ email }, process.env.PASSWORD_RESET_TOKEN_SECRET as string, {
@@ -33,7 +33,7 @@ export class ResetPasswordController implements HTTPController {
         )
       }
 
-      res.status(200).json({ message: Success.RESET_EMAIL_SEND })
+      return res.status(200).json({ message: Success.RESET_EMAIL_SEND })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

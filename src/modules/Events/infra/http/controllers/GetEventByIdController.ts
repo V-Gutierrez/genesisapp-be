@@ -10,7 +10,7 @@ export class GetEventByIdController implements HTTPController {
       const { id } = req.params
       const response = await EventsRepository.getEventById(id, region)
 
-      res.status(200).json(response)
+      return res.status(200).json(response)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

@@ -7,11 +7,9 @@ export class GetDevotionalsController implements HTTPController {
     const { region } = req.cookies.user ?? {}
 
     try {
-      const response = await DevotionalsRepository.getReleasedDevotionals(
-        region,
-      )
+      const response = await DevotionalsRepository.getReleasedDevotionals(region)
 
-      res.status(200).json(response)
+      return res.status(200).json(response)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

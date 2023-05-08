@@ -23,7 +23,7 @@ export class RefreshTokenController implements HTTPController {
               CookieHelper.AuthCookieDefaultOptions.name,
               CookieHelper.AuthCookieDefaultOptions.config,
             )
-            res.status(403).json({ message: Errors.NO_AUTH })
+            return res.status(403).json({ message: Errors.NO_AUTH })
           }
 
           const user = await UsersRepository.getUserByDecodedEmail(decoded.email)
@@ -34,8 +34,7 @@ export class RefreshTokenController implements HTTPController {
               secure: Environment.isProduction,
               sameSite: Environment.isProduction ? 'none' : undefined,
             })
-            res.status(403).json({ message: Errors.NO_AUTH })
-            return
+            return res.status(403).json({ message: Errors.NO_AUTH })
           }
 
           const { UserRefreshTokens, id: userId } = user
@@ -58,8 +57,7 @@ export class RefreshTokenController implements HTTPController {
                   CookieHelper.AuthCookieDefaultOptions.config,
                 )
 
-                res.status(403).json({ message: Errors.NO_AUTH })
-                return
+                return res.status(403).json({ message: Errors.NO_AUTH })
               }
 
               const refreshedAccessToken = jwt.sign(
@@ -79,7 +77,7 @@ export class RefreshTokenController implements HTTPController {
                 refreshedAccessToken,
                 CookieHelper.AuthCookieDefaultOptions.config,
               )
-              res.status(200).json({ message: Success.LOGIN })
+              return res.status(200).json({ message: Success.LOGIN })
             },
           )
         },

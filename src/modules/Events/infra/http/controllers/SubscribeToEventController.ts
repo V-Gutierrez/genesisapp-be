@@ -9,7 +9,7 @@ export class SubscribeToEventController implements HTTPController {
     try {
       const errors = SchemaHelper.validateSchema(SchemaHelper.EVENTS_SUBSCRIPTION, req.body)
       if (errors) {
-        res.status(400).json({ message: errors })
+        return res.status(400).json({ message: errors })
       }
 
       const { eventId } = req.params
@@ -26,7 +26,7 @@ export class SubscribeToEventController implements HTTPController {
         region,
       )
 
-      res.status(201).json({ message: Success.SUBSCRIPTION_CREATED })
+      return res.status(201).json({ message: Success.SUBSCRIPTION_CREATED })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

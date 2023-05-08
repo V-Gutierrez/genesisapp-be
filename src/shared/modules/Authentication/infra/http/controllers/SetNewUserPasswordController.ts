@@ -13,8 +13,7 @@ export class SetNewUserPasswordController implements HTTPController {
     try {
       const errors = SchemaHelper.validateSchema(SchemaHelper.NEW_PASSWORD, req.body)
       if (errors || !authToken) {
-        res.status(400).json({ message: Errors.NO_AUTH, error: errors })
-        return
+        return res.status(400).json({ message: Errors.NO_AUTH, error: errors })
       }
 
       const { password } = req.body
@@ -23,11 +22,11 @@ export class SetNewUserPasswordController implements HTTPController {
         authToken,
         process.env.PASSWORD_RESET_TOKEN_SECRET as string,
         async (error: any, decoded: Decoded) => {
-          if (error) res.status(401).json({ message: Errors.NO_AUTH })
+          if (error) return res.status(401).json({ message: Errors.NO_AUTH })
 
           await UsersRepository.setUserPasswordByEmail(decoded.email, password)
 
-          res.status(200).json({ message: Success.NEW_PASSWORD_SET })
+          return res.status(200).json({ message: Success.NEW_PASSWORD_SET })
         },
       )
     } catch (error) {

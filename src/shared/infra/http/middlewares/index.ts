@@ -87,7 +87,7 @@ export default class Middlewares {
       const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
       jwt.verify(token, Environment.getEnv('ACCESS_TOKEN_SECRET'), (err: any) => {
-        if (err) res.status(403).json({ message: Errors.NO_AUTH })
+        if (err) return res.status(403).json({ message: Errors.NO_AUTH })
         next()
       })
     } catch (error) {
@@ -101,8 +101,8 @@ export default class Middlewares {
       const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
       jwt.verify(token, Environment.getEnv('ACCESS_TOKEN_SECRET'), (err: any, decoded: Decoded) => {
-        if (err) res.status(403).json({ message: Errors.NO_AUTH })
-        if (decoded.role !== 'ADMIN') res.status(401).json({ message: Errors.NO_AUTH })
+        if (err) return res.status(403).json({ message: Errors.NO_AUTH })
+        if (decoded.role !== 'ADMIN') return res.status(401).json({ message: Errors.NO_AUTH })
         next()
       })
     } catch (error) {

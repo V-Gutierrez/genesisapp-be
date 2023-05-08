@@ -10,7 +10,7 @@ export class LogoutController implements HTTPController {
         CookieHelper.AuthCookieDefaultOptions.name,
         CookieHelper.AuthCookieDefaultOptions.config,
       )
-      res.status(200).json({ message: Success.LOGOUT })
+      return res.status(200).json({ message: Success.LOGOUT })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

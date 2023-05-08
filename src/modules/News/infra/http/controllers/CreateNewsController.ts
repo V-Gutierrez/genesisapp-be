@@ -14,13 +14,11 @@ export class CreateNewsController implements HTTPController {
       const errors = SchemaHelper.validateSchema(SchemaHelper.NEWS_CREATION, req.body)
 
       if (errors) {
-        res.status(400).json({ message: errors })
-        return
+        return res.status(400).json({ message: errors })
       }
 
       if (!req.file) {
-        res.status(400).json({ message: 'coverImage is missing' })
-        return
+        return res.status(400).json({ message: 'coverImage is missing' })
       }
 
       const { body, title, scheduledTo, highlightText } = req.body
@@ -49,7 +47,7 @@ export class CreateNewsController implements HTTPController {
         region,
       })
 
-      res.status(201).json(news)
+      return res.status(201).json(news)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

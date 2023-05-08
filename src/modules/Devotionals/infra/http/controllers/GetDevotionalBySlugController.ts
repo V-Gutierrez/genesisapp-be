@@ -12,12 +12,11 @@ export class GetDevotionalBySlugController implements HTTPController {
       const response = await DevotionalsRepository.getBySlug(slug, region)
 
       if (!response) {
-        res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
-        return
+        return res.status(404).json({ message: Errors.RESOURCE_NOT_FOUND })
       }
 
       await DevotionalsRepository.view(response.id, userId)
-      res.status(200).json(response)
+      return res.status(200).json(response)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)
