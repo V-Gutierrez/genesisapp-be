@@ -35,7 +35,7 @@ export default class Middlewares {
     this.app.use(
       cors({
         credentials: true,
-        origin: [Environment.getStringEnv('FRONT_BASE_URL'), ...localEnvironments],
+        origin: [Environment.getEnv('FRONT_BASE_URL'), ...localEnvironments],
       }),
     )
   }
@@ -47,7 +47,7 @@ export default class Middlewares {
 
         jwt.verify(
           token,
-          Environment.getStringEnv('ACCESS_TOKEN_SECRET'),
+          Environment.getEnv('ACCESS_TOKEN_SECRET'),
           (err: any, decoded: Decoded) => {
             if (err) req.cookies.user = null
             else req.cookies.user = decoded
@@ -86,7 +86,7 @@ export default class Middlewares {
     try {
       const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
-      jwt.verify(token, Environment.getStringEnv('ACCESS_TOKEN_SECRET'), (err: any) => {
+      jwt.verify(token, Environment.getEnv('ACCESS_TOKEN_SECRET'), (err: any) => {
         if (err) res.status(403).json({ message: Errors.NO_AUTH })
         next()
       })
@@ -100,15 +100,11 @@ export default class Middlewares {
     try {
       const { [CookieHelper.AuthCookieDefaultOptions.name]: token } = req.cookies
 
-      jwt.verify(
-        token,
-        Environment.getStringEnv('ACCESS_TOKEN_SECRET'),
-        (err: any, decoded: Decoded) => {
-          if (err) res.status(403).json({ message: Errors.NO_AUTH })
-          if (decoded.role !== 'ADMIN') res.status(401).json({ message: Errors.NO_AUTH })
-          next()
-        },
-      )
+      jwt.verify(token, Environment.getEnv('ACCESS_TOKEN_SECRET'), (err: any, decoded: Decoded) => {
+        if (err) res.status(403).json({ message: Errors.NO_AUTH })
+        if (decoded.role !== 'ADMIN') res.status(401).json({ message: Errors.NO_AUTH })
+        next()
+      })
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

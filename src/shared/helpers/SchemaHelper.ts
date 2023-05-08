@@ -3,7 +3,15 @@ import * as R from 'ramda'
 import Joi, { Schema } from 'joi'
 
 class SchemaHelper {
-  private readonly weekdays = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+  private readonly weekdays = [
+    'Domingo',
+    'Segunda-feira',
+    'Terça-feira',
+    'Quarta-feira',
+    'Quinta-feira',
+    'Sexta-feira',
+    'Sábado',
+  ]
 
   SIGNUP_SCHEMA = Joi.object().keys({
     email: Joi.string().email().required(),
@@ -49,14 +57,12 @@ class SchemaHelper {
   })
 
   GROWTH_GROUP_CREATION = Joi.object().keys({
-    lat: Joi.number().required(),
-    lng: Joi.number().required(),
     name: Joi.string().required(),
     whatsappLink: Joi.string().required(),
-    addressInfo: Joi.allow(this.weekdays).required(),
-    weekDay: Joi.string().required(),
+    addressInfo: Joi.string().required(),
+    weekDay: Joi.allow(this.weekdays).required(),
     scheduledTime: Joi.string().required(),
-    leadership: Joi.array().required(),
+    leadership: Joi.array().min(2).items(Joi.string()).required(),
   })
 
   EVENTS_CREATION = Joi.object().keys({
@@ -88,7 +94,7 @@ class SchemaHelper {
     })
 
     if (!error || !error.details) {
-      return undefined
+      return null
     }
 
     const errorsArray = error.details.map(({ message, path }) => ({

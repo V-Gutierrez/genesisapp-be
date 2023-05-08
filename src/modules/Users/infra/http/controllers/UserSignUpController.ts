@@ -28,14 +28,14 @@ export class UserSignUpController implements HTTPController {
         region,
       })
 
-      const token = jwt.sign({ id: user.id }, Environment.getStringEnv('ACTIVATION_TOKEN_SECRET'), {
+      const token = jwt.sign({ id: user.id }, Environment.getEnv('ACTIVATION_TOKEN_SECRET'), {
         expiresIn: '30d',
       })
 
       await SendgridClient.send(
         SendgridClient.TEMPLATES.confirmationEmail.config(user.email, {
           userFirstName: Formatter.getUserFirstName(user.name),
-          activationUrl: `${Environment.getStringEnv('FRONT_BASE_URL')}/activate?token=${token}`,
+          activationUrl: `${Environment.getEnv('FRONT_BASE_URL')}/activate?token=${token}`,
         }),
       )
 

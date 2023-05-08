@@ -1,6 +1,6 @@
 import { Prisma as PrismaType, Region } from '@prisma/client'
-import Bcrypt from 'src/shared/helpers/Bcrypt'
-import Prisma from 'src/shared/infra/prisma'
+import Bcrypt from '@Shared/helpers/Bcrypt'
+import Prisma from '@Shared/infra/prisma'
 
 class UsersRepository {
   async getUserById(id: string) {

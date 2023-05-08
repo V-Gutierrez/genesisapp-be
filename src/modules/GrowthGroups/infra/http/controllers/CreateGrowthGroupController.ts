@@ -2,6 +2,9 @@ import GrowthGroupsRepository from '@Modules/GrowthGroups/domain/repositories/Gr
 import { HTTPController } from '@Shared/types/interfaces'
 import { Request, Response } from 'express'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
+import GoogleMaps from '@Shared/services/GoogleMaps'
+import RegionsRepository from '@Modules/Regions/domain/repositories/RegionsRepository'
+import { Errors } from '@Shared/helpers/Messages'
 
 export class CreateGrowthGroupsController implements HTTPController {
   async execute(req: Request, res: Response) {
@@ -10,11 +13,32 @@ export class CreateGrowthGroupsController implements HTTPController {
 
       if (errors) {
         res.status(400).json({ message: errors })
+        return
       }
 
-      const response = await GrowthGroupsRepository.create(req.body)
+      const { region } = req.cookies.user ?? {}
 
-      res.status(200).json(response)
+      const regionName = RegionsRepository.getRegionName(region as string)
+
+      const address = `${req.body.addressInfo}, ${regionName}`
+      const addressResponse = await GoogleMaps.getGeocodeFromAddress(address)
+
+      if (!addressResponse) {
+        res.status(400).json({
+          message: Errors.INVALID_ADDRESS,
+        })
+        return
+      }
+
+      const response = await GrowthGroupsRepository.create({
+        ...req.body,
+        region,
+        lat: addressResponse.lat,
+        lng: addressResponse.lng,
+      })
+
+      res.status(201).json(response)
+      return
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

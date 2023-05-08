@@ -1,1 +1,1 @@
-export * from './GooglePhotosIntegrationController'
+export * from './GetGooglePhotosAlbumPhotosController'

@@ -1,10 +1,8 @@
 import * as GIS from 'google-photos-album-image-url-fetch'
 import { GooglePhotosImageSet } from './dtos'
 
-class GooglePhotosScrapper {
-  private parseImageOptmizations(
-    Images: GIS.ImageInfo[],
-  ): GooglePhotosImageSet[] {
+class GooglePhotos {
+  private parseImageOptmizations(Images: GIS.ImageInfo[]): GooglePhotosImageSet[] {
     return Images.map((image) => ({
       ...image,
       smartCropped: `${image.url}=p`,
@@ -14,9 +12,7 @@ class GooglePhotosScrapper {
     }))
   }
 
-  async fetchImagesByAlbumUrl(
-    albumUrl: string,
-  ): Promise<GooglePhotosImageSet[]> {
+  async fetchImagesByAlbumUrl(albumUrl: string): Promise<GooglePhotosImageSet[]> {
     try {
       const result = await GIS.fetchImageUrls(albumUrl)
 
@@ -28,4 +24,4 @@ class GooglePhotosScrapper {
   }
 }
 
-export default new GooglePhotosScrapper()
+export default new GooglePhotos()

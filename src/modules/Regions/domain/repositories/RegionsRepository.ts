@@ -4,7 +4,8 @@ class RegionRepository {
   private translateRegion(region: Region) {
     if (region === Region.AEP) return 'Buenos Aires'
     if (region === Region.FEC) return 'Feira de Santana'
-    return '-'
+
+    throw new Error('Invalid region')
   }
 
   async getAll() {
@@ -12,6 +13,10 @@ class RegionRepository {
       regionKey: key,
       regionTitle: this.translateRegion(value),
     }))
+  }
+
+  getRegionName(regionKey: string) {
+    return this.translateRegion(Region[regionKey as keyof typeof Region])
   }
 }
 

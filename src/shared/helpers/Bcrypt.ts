@@ -3,7 +3,7 @@ import Environment from '@Shared/helpers/Environment'
 
 class Bcrypt {
   static hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, Environment.getStringEnv('BCRYPTSALT'))
+    return bcrypt.hash(password, Environment.getEnv('BCRYPTSALT'))
   }
 
   static comparePassword(password: string, hash: string): Promise<boolean> {

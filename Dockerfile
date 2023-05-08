@@ -41,7 +41,11 @@ COPY --from=builder /usr/src/app/schema.prisma ./src/shared/infra/prisma/schema.
 
 # Instala as dependências do projeto
 RUN npm ci --only=production
-RUN npm run prisma:generate
+
+# Prisma procedures
+RUN npm run prisma:generate:types
+RUN npm run prisma:generate:migration
+RUN npm run prisma:migrate
 
 # Expor a porta do aplicativo
 EXPOSE $PORT

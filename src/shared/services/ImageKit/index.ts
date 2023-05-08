@@ -3,7 +3,7 @@ import { ImageKitFolders } from 'src/shared/types/Enum'
 import { UploadResponse } from 'imagekit/dist/libs/interfaces/UploadResponse'
 
 class ImageKit {
-  private imageKitInstance: ImageKitInstance
+  private readonly imageKitInstance: ImageKitInstance
 
   constructor() {
     this.imageKitInstance = new ImageKitInstance({
