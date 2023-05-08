@@ -43,9 +43,10 @@ COPY --from=builder /usr/src/app/schema.prisma ./src/shared/infra/prisma/schema.
 RUN npm ci --only=production
 
 # Prisma procedures
-RUN npm run prisma:generate:types
-RUN npm run prisma:generate:migration
-RUN npm run prisma:migrate
+# TODO: check why it breaks in GCP
+# RUN npm run prisma:generate:types
+# RUN npm run prisma:generate:migration
+# RUN npm run prisma:migrate
 
 # Expor a porta do aplicativo
 EXPOSE $PORT
