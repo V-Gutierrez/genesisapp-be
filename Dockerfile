@@ -20,7 +20,7 @@ RUN npm ci
 COPY . .
 
 # Construir o aplicativo
-RUN npm run prisma:generate
+RUN npm run prisma:generate:types
 RUN npm run build:webpack
 
 # --- Segunda etapa - criar imagem final apenas com arquivos necessários ---
