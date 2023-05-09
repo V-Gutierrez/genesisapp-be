@@ -1,4 +1,4 @@
-import { Region } from '@prisma/client'
+import { Prisma as PrismaType, Region } from '@prisma/client'
 import Prisma from '@Shared/infra/prisma'
 
 class GalleriesRepository {
@@ -20,8 +20,14 @@ class GalleriesRepository {
   }
 
   async deleteById(id: string) {
-    return Prisma.devotional.delete({
+    return Prisma.gallery.delete({
       where: { id },
+    })
+  }
+
+  async create(data: PrismaType.GalleryCreateInput) {
+    return Prisma.gallery.create({
+      data,
     })
   }
 }
