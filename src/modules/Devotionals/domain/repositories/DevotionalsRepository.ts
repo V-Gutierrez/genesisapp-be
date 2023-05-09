@@ -5,7 +5,7 @@ import { TIMEZONE } from 'src/shared/constants'
 import Prisma from '@Shared/infra/prisma'
 
 class DevotionalsRepository {
-  async getReleasedDevotionals(region: Region) {
+  async getReleased(region: Region) {
     return Prisma.devotional.findMany({
       where: {
         scheduledTo: {
