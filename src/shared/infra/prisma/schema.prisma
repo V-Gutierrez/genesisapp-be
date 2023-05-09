@@ -157,3 +157,14 @@ model EventsSubscriptions {
   userPhone String
   createdAt DateTime @default(now())
 }
+
+model Gallery {
+  id                   String   @id @default(uuid())
+  title                String
+  coverImage           String
+  coverThumbnail       String
+  googlePhotosAlbumUrl String   @unique
+  assetId              String
+  region               Region   @default(AEP)
+  createdAt            DateTime @default(now())
+}
