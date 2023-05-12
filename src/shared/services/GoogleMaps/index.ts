@@ -1,21 +1,34 @@
-/* eslint-disable node/no-unsupported-features/node-builtins */
 import Environment from '@Shared/helpers/Environment'
-import { AddressAPI } from '@Shared/services/GoogleMaps/dtos'
+import { AddressAPI, AutocompleteAPI } from '@Shared/services/GoogleMaps/dtos'
 import axios from 'axios'
+import fs from 'fs'
 
 class GoogleMaps {
-  public async getGeocodeFromAddress(address: string): Promise<AddressAPI.Location | null> {
-    if (!address) throw new Error('Address is required')
+  private MAPS_BASE_URL = 'https://maps.googleapis.com/maps/api'
 
-    const url = new URL(
-      `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${Environment.getEnv(
+  private async fetchQueryAsAPlace(address: string): Promise<string> {
+    const response = await axios.get<AutocompleteAPI.Response>(
+      `${this.MAPS_BASE_URL}/place/autocomplete/json?input=${address}&key=${Environment.getEnv(
         'GOOGLE_MAPS_API_KEY',
       )}`,
     )
 
-    const response = await axios.get<AddressAPI.Response>(url.toString())
+    return response.data.predictions[0].description
+  }
 
-    if (response) return response.data.results[0].geometry.location
+  public async getGeocodeFromAddress(address: string): Promise<AddressAPI.Location | null> {
+    if (!address) throw new Error('Address is required')
+
+    const autocompletedAddress = encodeURIComponent(await this.fetchQueryAsAPlace(address))
+
+    const response = await axios.get<AddressAPI.Response>(
+      `${this.MAPS_BASE_URL}/geocode/json?address=${autocompletedAddress}&key=${Environment.getEnv(
+        'GOOGLE_MAPS_API_KEY',
+      )}`,
+    )
+    const result = response.data.results[0]
+
+    if (response && result) return result.geometry.location
 
     return null
   }

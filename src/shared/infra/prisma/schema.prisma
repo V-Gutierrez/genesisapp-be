@@ -50,8 +50,8 @@ model UserRefreshTokens {
 
 model GrowthGroup {
   id            String   @id @default(uuid())
-  lat           Float
-  lng           Float
+  lat           Float    @unique
+  lng           Float    @unique
   name          String
   whatsappLink  String
   addressInfo   String
