@@ -55,7 +55,7 @@ class SchemaHelper {
       .regex(/[0-9]/)
       .regex(/[ `!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?~]/)
       .required(),
-    birthdate: Joi.date().required(),
+    birthdate: Joi.string().required(),
     region: Joi.string().required(),
   })
 
@@ -82,7 +82,7 @@ class SchemaHelper {
     body: Joi.string().required(),
     title: Joi.string().required(),
     author: Joi.string().required(),
-    scheduledTo: Joi.date().required(),
+    scheduledTo: Joi.string().required(),
   })
 
   GROWTH_GROUP_CREATION = Joi.object().keys({
@@ -97,9 +97,9 @@ class SchemaHelper {
   EVENTS_CREATION = Joi.object().keys({
     title: Joi.string().required(),
     maxSlots: Joi.string().required(),
-    subscriptionsScheduledTo: Joi.date().required(),
-    subscriptionsDueDate: Joi.date().required(),
-    eventDate: Joi.date().required(),
+    subscriptionsScheduledTo: Joi.string().required(),
+    subscriptionsDueDate: Joi.string().required(),
+    eventDate: Joi.string().required(),
     description: Joi.string().required(),
   })
 
@@ -113,7 +113,7 @@ class SchemaHelper {
     title: Joi.string().required(),
     body: Joi.string().required(),
     highlightText: Joi.string().required(),
-    scheduledTo: Joi.date().required(),
+    scheduledTo: Joi.string().required(),
   })
 
   validateSchema<T>(schema: Schema, validationTarget: T) {

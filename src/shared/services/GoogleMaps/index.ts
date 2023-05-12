@@ -14,10 +14,6 @@ class GoogleMaps extends Service {
 
   private async useAutocompleteAPI(address: string): Promise<string> {
     const encodedAddress = encodeURIComponent(address)
-    console.log(
-      '🚀 ~ file: index.ts:17 ~ GoogleMaps ~ useAutocompleteAPI ~ encodedAddress:',
-      encodedAddress,
-    )
 
     const response = await axios.get<AutocompleteAPI.Response>(
       `${this.MAPS_BASE_URL}/place/autocomplete/json?input=${encodedAddress}&key=${this.API_KEY}`,
