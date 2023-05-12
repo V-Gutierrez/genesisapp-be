@@ -5,7 +5,7 @@ import Environment from '@Shared/helpers/Environment'
 import Formatter from '@Shared/helpers/Formatter'
 import { Success, Errors } from '@Shared/helpers/Messages'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
-import SendgridClient from '@Shared/services/Sendgrid'
+import Sendgrid from '@Shared/services/Sendgrid'
 import { HTTPController } from '@Shared/types/interfaces'
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
@@ -32,8 +32,8 @@ export class UserSignUpController implements HTTPController {
         expiresIn: '30d',
       })
 
-      await SendgridClient.send(
-        SendgridClient.TEMPLATES.confirmationEmail.config(user.email, {
+      await Sendgrid.send(
+        Sendgrid.TEMPLATES.confirmationEmail.config(user.email, {
           userFirstName: Formatter.getUserFirstName(user.name),
           activationUrl: `${Environment.getEnv('FRONT_BASE_URL')}/activate?token=${token}`,
         }),

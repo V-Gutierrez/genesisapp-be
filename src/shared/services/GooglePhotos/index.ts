@@ -1,7 +1,12 @@
+import { Service } from '@Shared/services'
 import * as GIS from 'google-photos-album-image-url-fetch'
 import { GooglePhotosImageSet } from './dtos'
 
-class GooglePhotos {
+class GooglePhotos extends Service {
+  constructor() {
+    super()
+  }
+
   private parseImageOptmizations(Images: GIS.ImageInfo[]): GooglePhotosImageSet[] {
     return Images.map((image) => ({
       ...image,
@@ -19,7 +24,7 @@ class GooglePhotos {
       return this.parseImageOptmizations(result as GIS.ImageInfo[])
     } catch (error) {
       console.error(error)
-      throw new Error('Error in Google Photos Scrapper flow')
+      throw new Error('Error in Google Photos Service')
     }
   }
 }

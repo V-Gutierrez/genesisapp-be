@@ -1,51 +1,18 @@
 import SendgridMail, { MailDataRequired } from '@sendgrid/mail'
+import Environment from '@Shared/helpers/Environment'
+import { Service } from '@Shared/services'
+import { TEMPLATES } from '@Shared/services/Sendgrid/templates'
+import { TemplateDepedency } from './dtos/index'
 
-class SendgridClient {
-  TEMPLATES = {
-    confirmationEmail: {
-      config: (
-        to: string,
-        dynamicTemplateData: { userFirstName: string; activationUrl: string },
-      ): MailDataRequired => ({
-        to,
-        from: {
-          email: 'suportegenesischurch@gmail.com',
-          name: 'Genesis Church',
-        },
-        subject: 'Seja bem vindo à Genesis Church',
-        templateId: 'd-20dab053877c41cdb7feeda798233024',
-        dynamicTemplateData,
-      }),
-    },
-    resetPassword: {
-      config: (
-        to: string,
-        dynamicTemplateData: { resetPasswordUrl: string },
-      ): MailDataRequired => ({
-        to,
-        from: {
-          email: 'suportegenesischurch@gmail.com',
-          name: 'Genesis Church',
-        },
-        subject: 'Alteração de senha',
-        templateId: 'd-03325789ee6f4014858e14ac7cde78e1',
-        dynamicTemplateData,
-      }),
-    },
-    anniversary: {
-      config: (to: string): MailDataRequired => ({
-        templateId: 'd-b5cc420efe514a31bef0e658747cf56d',
-        from: {
-          email: 'suportegenesischurch@gmail.com',
-          name: 'Genesis Church',
-        },
-        to,
-      }),
-    },
-  }
+class Sendgrid extends Service {
+  public readonly TEMPLATES: TemplateDepedency
 
-  constructor() {
-    SendgridMail.setApiKey(process.env.SENDGRID_API_KEY as string)
+  constructor(templates: TemplateDepedency) {
+    super()
+
+    this.TEMPLATES = templates
+
+    SendgridMail.setApiKey(Environment.getEnv('SENDGRID_API_KEY'))
   }
 
   async send(templateConfig: MailDataRequired | MailDataRequired[]) {
@@ -60,4 +27,4 @@ class SendgridClient {
   }
 }
 
-export default new SendgridClient()
+export default new Sendgrid(TEMPLATES)

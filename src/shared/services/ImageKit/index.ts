@@ -1,11 +1,14 @@
+import { Service } from '@Shared/services'
 import ImageKitInstance from 'imagekit'
 import { ImageKitFolders } from 'src/shared/types/Enum'
 import { UploadResponse } from 'imagekit/dist/libs/interfaces/UploadResponse'
 
-class ImageKit {
+class ImageKit extends Service {
   private readonly imageKitInstance: ImageKitInstance
 
   constructor() {
+    super()
+
     this.imageKitInstance = new ImageKitInstance({
       publicKey: process.env.IMAGEKIT_PUBLIC_KEY as string,
       privateKey: process.env.IMAGEKIT_PRIVATE_KEY as string,
@@ -26,7 +29,7 @@ class ImageKit {
       })
     } catch (error) {
       console.error(error)
-      throw new Error('Error in ImageKitService')
+      throw new Error('Error in ImageKit Service')
     }
   }
 
@@ -35,7 +38,7 @@ class ImageKit {
       await this.imageKitInstance.deleteFile(fileId)
     } catch (error) {
       console.error(error)
-      throw new Error('Error in ImageKitService')
+      throw new Error('Error in ImageKit Service')
     }
   }
 }
