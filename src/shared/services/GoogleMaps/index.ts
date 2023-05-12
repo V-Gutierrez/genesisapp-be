@@ -1,10 +1,9 @@
 import Environment from '@Shared/helpers/Environment'
 import { AddressAPI, AutocompleteAPI } from '@Shared/services/GoogleMaps/dtos'
 import axios from 'axios'
-import fs from 'fs'
 
 class GoogleMaps {
-  private MAPS_BASE_URL = 'https://maps.googleapis.com/maps/api'
+  private readonly MAPS_BASE_URL = 'https://maps.googleapis.com/maps/api'
 
   private async fetchQueryAsAPlace(address: string): Promise<string> {
     const response = await axios.get<AutocompleteAPI.Response>(
