@@ -16,7 +16,7 @@ export class GetGalleriesController implements HTTPController {
         Number(limit),
       )
 
-      return res.json(response.galleries)
+      return res.status(200).json(response.galleries)
     } catch (error) {
       return res.status(500).json({ error: Errors.INTERNAL_SERVER_ERROR })
     }
