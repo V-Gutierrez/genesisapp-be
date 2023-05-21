@@ -10,7 +10,7 @@ class GetAllUsersAsAdminController implements HTTPController {
     try {
       const users = await UsersRepository.getAll(region, Number(page), Number(limit))
 
-      return res.status(200).json(users)
+      return res.status(200).json(users.users)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)
