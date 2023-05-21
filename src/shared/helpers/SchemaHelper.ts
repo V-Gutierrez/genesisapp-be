@@ -116,6 +116,11 @@ class SchemaHelper {
     scheduledTo: Joi.string().required(),
   })
 
+  GALLERY_CREATION = Joi.object().keys({
+    title: Joi.string().required(),
+    googlePhotosAlbumUrl: Joi.string().required(),
+  })
+
   validateSchema<T>(schema: Schema, validationTarget: T) {
     const { error } = Joi.validate(validationTarget, schema, {
       abortEarly: false,

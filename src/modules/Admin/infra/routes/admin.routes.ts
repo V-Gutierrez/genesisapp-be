@@ -11,6 +11,7 @@ import Middlewares from '@Shared/infra/http/middlewares'
 import GetNewsAsAdminController from '@Modules/News/infra/http/controllers/GetNewsAsAdminController'
 import CreateNewsController from '@Modules/News/infra/http/controllers/CreateNewsController'
 import GetAllUsersAsAdminController from '@Modules/Users/infra/http/controllers/GetAllUsersAsAdminController'
+import CreateGalleryController from '@Modules/Galleries/infra/http/controllers/CreateGalleryController'
 
 const AdminRouter = Router()
 
@@ -21,6 +22,7 @@ AdminRouter.route('/admin/devotionals')
     Middlewares.SingleFileUpload('coverImage'),
     CreateDevotionalController,
   )
+
 AdminRouter.route('/admin/devotionals/:id').delete(
   Middlewares.Authentication,
   Middlewares.AdminPermissioner,
@@ -55,10 +57,17 @@ AdminRouter.route('/admin/news')
     CreateNewsController,
   )
 
-AdminRouter.route('/admin/users/').get(
+AdminRouter.route('/admin/users').get(
   Middlewares.Authentication,
   Middlewares.AdminPermissioner,
   GetAllUsersAsAdminController,
+)
+
+AdminRouter.route('/admin/galleries').post(
+  Middlewares.Authentication,
+  Middlewares.AdminPermissioner,
+  Middlewares.SingleFileUpload('coverImage'),
+  CreateGalleryController,
 )
 
 export default AdminRouter

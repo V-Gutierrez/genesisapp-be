@@ -12,12 +12,14 @@ import AuthenticationRouter from 'src/shared/modules/Authentication/infra/http/r
 import GrowthGroupsRouter from '@Modules/GrowthGroups/infra/http/routes/growthgroups.routes'
 import AdminRouter from '@Modules/Admin/infra/routes/admin.routes'
 import { Errors, Success } from '@Shared/helpers/Messages'
+import GalleriesRouter from '@Modules/Galleries/infra/http/routes/galleries.routes'
 
 export class ApplicationRouter {
   constructor(private readonly app: Express) {
     new Middlewares(this.app)
 
     this.app.use('/api/', AdminRouter)
+    this.app.use('/api/', GalleriesRouter)
     this.app.use('/api/', DevotionalsRouter)
     this.app.use('/api/', EventsRouter)
     this.app.use('/api/', GrowthGroupsRouter)
@@ -35,7 +37,9 @@ export class ApplicationRouter {
   }
 
   private healthCheck() {
-    this.app.use('/api/healthcheck', (_req, res) => res.status(200).json({ message: Success.HEALTHCHECK }))
+    this.app.use('/api/healthcheck', (_req, res) =>
+      res.status(200).json({ message: Success.HEALTHCHECK }),
+    )
   }
 
   private handleNotFound() {
