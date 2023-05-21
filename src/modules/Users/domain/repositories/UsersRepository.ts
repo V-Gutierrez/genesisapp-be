@@ -16,8 +16,10 @@ class UsersRepository {
     })
   }
 
-  async getAll(region: Region) {
-    return Prisma.user.findMany({
+  async getAll(region: Region, page: number, limit: number) {
+    const skip = (page - 1) * limit
+
+    const users = await Prisma.user.findMany({
       select: {
         id: true,
         email: true,
@@ -30,7 +32,21 @@ class UsersRepository {
       where: {
         region,
       },
+      skip,
+      take: limit,
     })
+
+    const totalUsers = await Prisma.user.count({
+      where: {
+        region,
+      },
+    })
+
+    return {
+      users,
+      currentPage: page,
+      totalPages: Math.ceil(totalUsers / limit),
+    }
   }
 
   async create(data: PrismaType.UserCreateInput) {

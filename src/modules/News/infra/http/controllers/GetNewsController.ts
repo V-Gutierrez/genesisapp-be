@@ -5,11 +5,12 @@ import { Request, Response } from 'express'
 export class GetNewsController implements HTTPController {
   async execute(req: Request, res: Response) {
     const { region } = req.cookies.user ?? {}
+    const { page = 1, limit = 5 } = req.query
 
     try {
-      const response = await NewsRepository.getReleasedNews(region)
+      const response = await NewsRepository.getReleasedNews(region, Number(page), Number(limit))
 
-      return res.status(200).json(response)
+      return res.status(200).json(response.news)
     } catch (error) {
       console.error(error)
       res.sendStatus(500)

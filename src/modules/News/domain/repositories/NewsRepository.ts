@@ -53,18 +53,40 @@ class NewsRepository {
     })
   }
 
-  async getReleasedNews(region: Region) {
-    return Prisma.news.findMany({
-      where: {
-        scheduledTo: {
-          lte: zonedTimeToUtc(new Date(), TIMEZONE),
+  async getReleasedNews(region: Region, page: number, perPage: number) {
+    const skip = (page - 1) * perPage
+    const take = perPage
+
+    const [data, count] = await Promise.all([
+      Prisma.news.findMany({
+        where: {
+          scheduledTo: {
+            lte: zonedTimeToUtc(new Date(), TIMEZONE),
+          },
+          region,
         },
-        region,
-      },
-      orderBy: {
-        scheduledTo: 'desc',
-      },
-    })
+        orderBy: {
+          scheduledTo: 'desc',
+        },
+        skip,
+        take,
+      }),
+      Prisma.news.count({
+        where: {
+          scheduledTo: {
+            lte: zonedTimeToUtc(new Date(), TIMEZONE),
+          },
+          region,
+        },
+      }),
+    ])
+
+    return {
+      news: data,
+      count,
+      totalPages: Math.ceil(count / perPage),
+      currentPage: page,
+    }
   }
 
   async getAll(region: Region) {

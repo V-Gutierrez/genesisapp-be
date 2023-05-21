@@ -5,8 +5,11 @@ import { TIMEZONE } from 'src/shared/constants'
 import Prisma from '@Shared/infra/prisma'
 
 class DevotionalsRepository {
-  async getReleased(region: Region) {
-    return Prisma.devotional.findMany({
+  async getReleased(region: Region, page: number, perPage: number) {
+    const skip = (page - 1) * perPage
+    const take = perPage
+
+    const devotionals = await Prisma.devotional.findMany({
       where: {
         scheduledTo: {
           lte: zonedTimeToUtc(new Date(), TIMEZONE),
@@ -16,7 +19,27 @@ class DevotionalsRepository {
       orderBy: {
         scheduledTo: 'desc',
       },
+      skip,
+      take,
     })
+
+    const total = await Prisma.devotional.count({
+      where: {
+        scheduledTo: {
+          lte: zonedTimeToUtc(new Date(), TIMEZONE),
+        },
+        region,
+      },
+    })
+
+    const totalPages = Math.ceil(total / perPage)
+
+    return {
+      devotionals,
+      total,
+      totalPages,
+      currentPage: page,
+    }
   }
 
   async getBySlug(slug: string, region: Region) {

@@ -17,27 +17,54 @@ class EventsRepository {
     })
   }
 
-  async getReleasedEvents(region: Region) {
-    return Prisma.events.findMany({
-      where: {
-        subscriptionsScheduledTo: {
-          lte: zonedTimeToUtc(new Date(), TIMEZONE),
+  async getReleasedEvents(region: Region, page: number, perPage: number) {
+    const skip = (page - 1) * perPage
+    const take = perPage
+
+    const [events, count] = await Promise.all([
+      Prisma.events.findMany({
+        where: {
+          subscriptionsScheduledTo: {
+            lte: zonedTimeToUtc(new Date(), TIMEZONE),
+          },
+          eventDate: {
+            gte: zonedTimeToUtc(new Date(), TIMEZONE),
+          },
+          subscriptionsDueDate: {
+            gte: zonedTimeToUtc(new Date(), TIMEZONE),
+          },
+          region,
         },
-        eventDate: {
-          gte: zonedTimeToUtc(new Date(), TIMEZONE),
+        include: {
+          _count: { select: { EventsSubscriptions: true } },
         },
-        subscriptionsDueDate: {
-          gte: zonedTimeToUtc(new Date(), TIMEZONE),
+        orderBy: {
+          subscriptionsScheduledTo: 'desc',
         },
-        region,
-      },
-      include: {
-        _count: { select: { EventsSubscriptions: true } },
-      },
-      orderBy: {
-        subscriptionsScheduledTo: 'desc',
-      },
-    })
+        skip,
+        take,
+      }),
+      Prisma.events.count({
+        where: {
+          subscriptionsScheduledTo: {
+            lte: zonedTimeToUtc(new Date(), TIMEZONE),
+          },
+          eventDate: {
+            gte: zonedTimeToUtc(new Date(), TIMEZONE),
+          },
+          subscriptionsDueDate: {
+            gte: zonedTimeToUtc(new Date(), TIMEZONE),
+          },
+          region,
+        },
+      }),
+    ])
+    return {
+      events,
+      count,
+      totalPages: Math.ceil(count / perPage),
+      currentPage: page,
+    }
   }
 
   async create(data: PrismaType.EventsCreateInput) {
