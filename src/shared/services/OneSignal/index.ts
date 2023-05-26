@@ -1,4 +1,4 @@
-import * as OneSignal from 'onesignal-node'
+import * as OneSignalProvider from 'onesignal-node'
 import Environment from '@Shared/helpers/Environment'
 import { CreateNotificationBody } from 'onesignal-node/lib/types'
 import { Service } from '..'
@@ -7,13 +7,13 @@ import { Service } from '..'
  * Service for sending push notifications using OneSignal API.
  * @extends Service
  */
-class OneSignalService extends Service {
+class OneSignal extends Service {
   /**
    * OneSignal client instance.
    * @private
-   * @type {OneSignal.Client}
+   * @type {OneSignalProvider.Client}
    */
-  private readonly oneSignalClient: OneSignal.Client
+  private readonly oneSignalClient: OneSignalProvider.Client
 
   /**
    * Creates an instance of OneSignalService.
@@ -25,9 +25,9 @@ class OneSignalService extends Service {
     /**
      * OneSignal client instance.
      * @private
-     * @type {OneSignal.Client}
+     * @type {OneSignalProvider.Client}
      */
-    this.oneSignalClient = new OneSignal.Client(
+    this.oneSignalClient = new OneSignalProvider.Client(
       Environment.getEnv('ONESIGNAL_APP_ID'),
       Environment.getEnv('ONESIGNAL_API_KEY'),
     )
@@ -49,4 +49,4 @@ class OneSignalService extends Service {
   }
 }
 
-export default new OneSignalService()
+export default new OneSignal()
