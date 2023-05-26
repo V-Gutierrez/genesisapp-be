@@ -22,7 +22,7 @@ class Sendgrid extends Service {
       await SendgridMail.send(msg)
     } catch (error) {
       console.error(error)
-      throw new Error('Error in Sendgrid flow')
+      throw new Error('Error in Sendgrid Service')
     }
   }
 }

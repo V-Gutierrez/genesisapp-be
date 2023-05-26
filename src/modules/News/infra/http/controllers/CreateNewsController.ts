@@ -4,6 +4,7 @@ import Formatter from '@Shared/helpers/Formatter'
 import { Errors } from '@Shared/helpers/Messages'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
 import ImageKit from '@Shared/services/ImageKit'
+import OneSignal from '@Shared/services/OneSignal'
 import { ImageKitFolders } from '@Shared/types/Enum'
 import { HTTPController } from '@Shared/types/interfaces'
 import { zonedTimeToUtc } from 'date-fns-tz'
@@ -46,6 +47,13 @@ export class CreateNewsController implements HTTPController {
         assetId: fileId,
         highlightText,
         region,
+      })
+
+      await OneSignal.send({
+        contents: {
+          pt: `Notícia:  ${title}`,
+        },
+        send_after: new Date(scheduledTo).toISOString(),
       })
 
       return res.status(201).json(news)

@@ -25,4 +25,6 @@ export interface EnvConfigInterface {
   TWILLIO_TRIAL_NUMBER: string
   TZ: string
   GOOGLE_MAPS_API_KEY: string
+  ONESIGNAL_APP_ID: string
+  ONESIGNAL_API_KEY: string
 }

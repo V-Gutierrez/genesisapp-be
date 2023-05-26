@@ -3,6 +3,7 @@ import { TIMEZONE } from '@Shared/constants'
 import Formatter from '@Shared/helpers/Formatter'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
 import ImageKit from '@Shared/services/ImageKit'
+import OneSignal from '@Shared/services/OneSignal'
 import { ImageKitFolders } from '@Shared/types/Enum'
 import { HTTPController } from '@Shared/types/interfaces'
 import { zonedTimeToUtc } from 'date-fns-tz'
@@ -44,6 +45,13 @@ export class CreateDevotionalController implements HTTPController {
         coverThumbnail,
         assetId: fileId,
         region,
+      })
+
+      await OneSignal.send({
+        contents: {
+          pt: `Novo devocional na plataforma Gênesis Church! ${title}`,
+        },
+        send_after: new Date(scheduledTo).toISOString(),
       })
 
       return res.status(201).json(devotional)

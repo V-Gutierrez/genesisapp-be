@@ -2,6 +2,7 @@ import { Service } from '@Shared/services'
 import ImageKitInstance from 'imagekit'
 import { ImageKitFolders } from 'src/shared/types/Enum'
 import { UploadResponse } from 'imagekit/dist/libs/interfaces/UploadResponse'
+import Environment from '@Shared/helpers/Environment'
 
 class ImageKit extends Service {
   private readonly imageKitInstance: ImageKitInstance
@@ -10,9 +11,9 @@ class ImageKit extends Service {
     super()
 
     this.imageKitInstance = new ImageKitInstance({
-      publicKey: process.env.IMAGEKIT_PUBLIC_KEY as string,
-      privateKey: process.env.IMAGEKIT_PRIVATE_KEY as string,
-      urlEndpoint: process.env.IMAGEKIT_PROJECT_URL as string,
+      publicKey: Environment.getEnv('IMAGEKIT_PUBLIC_KEY'),
+      privateKey: Environment.getEnv('IMAGEKIT_PRIVATE_KEY'),
+      urlEndpoint: Environment.getEnv('IMAGEKIT_PROJECT_URL'),
     })
   }
 
