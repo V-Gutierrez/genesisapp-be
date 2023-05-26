@@ -49,12 +49,10 @@ export class CreateNewsController implements HTTPController {
         region,
       })
 
-      await OneSignal.send({
-        contents: {
-          pt: `Notícia:  ${title}`,
-        },
-        send_after: new Date(scheduledTo).toISOString(),
-      })
+      await OneSignal.send(
+        `Nova notícia: ${title}`,
+        zonedTimeToUtc(new Date(scheduledTo), TIMEZONE),
+      )
 
       return res.status(201).json(news)
     } catch (error) {

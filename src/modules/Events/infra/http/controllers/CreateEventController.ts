@@ -57,12 +57,10 @@ export class CreateEventController implements HTTPController {
         region,
       })
 
-      await OneSignal.send({
-        contents: {
-          pt: `Inscrições Abertas! ${title}`,
-        },
-        send_after: new Date(subscriptionsScheduledTo).toISOString(),
-      })
+      await OneSignal.send(
+        `Inscrições abertas: ${title}`,
+        zonedTimeToUtc(new Date(subscriptionsScheduledTo), TIMEZONE),
+      )
 
       return res.status(201).json(newEvent)
     } catch (err) {

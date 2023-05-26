@@ -33,15 +33,15 @@ class OneSignal extends Service {
     )
   }
 
-  /**
-   * Sends a push notification using OneSignal API.
-   * @param {CreateNotificationBody} payload - Notification payload.
-   * @returns {Promise<void>} Promise that resolves when the notification is sent.
-   * @throws {Error} If an error occurs while sending the notification.
-   */
-  public async send(payload: CreateNotificationBody): Promise<void> {
+  public async send(message: string, scheduledDate?: Date): Promise<void> {
     try {
-      await this.oneSignalClient.createNotification(payload)
+      await this.oneSignalClient.createNotification({
+        contents: {
+          en: message,
+          pt: message,
+        },
+        send_after: scheduledDate?.toISOString(),
+      })
     } catch (error) {
       console.error(error)
       throw new Error('Error in OneSignalService')

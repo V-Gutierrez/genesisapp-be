@@ -48,12 +48,10 @@ export class CreateDevotionalController implements HTTPController {
         region,
       })
 
-      await OneSignal.send({
-        contents: {
-          pt: `Novo devocional na plataforma Gênesis Church! ${title}`,
-        },
-        send_after: new Date(scheduledTo).toISOString(),
-      })
+      await OneSignal.send(
+        `Novo devocional: ${title}`,
+        zonedTimeToUtc(new Date(scheduledTo), TIMEZONE),
+      )
 
       return res.status(201).json(devotional)
     } catch (e) {
