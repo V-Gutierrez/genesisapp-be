@@ -1,6 +1,7 @@
 import EventsRepository from '@Modules/Events/domain/repositories/EventsRepository'
 import { TIMEZONE } from '@Shared/constants'
 import Formatter from '@Shared/helpers/Formatter'
+import { Errors } from '@Shared/helpers/Messages'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
 import ImageKit from '@Shared/services/ImageKit'
 import OneSignal from '@Shared/services/OneSignal'
@@ -65,7 +66,8 @@ export class CreateEventController implements HTTPController {
 
       return res.status(201).json(newEvent)
     } catch (err) {
-      res.sendStatus(500)
+      console.error(err)
+      return res.status(500).json({ error: Errors.INTERNAL_SERVER_ERROR })
     }
   }
 }

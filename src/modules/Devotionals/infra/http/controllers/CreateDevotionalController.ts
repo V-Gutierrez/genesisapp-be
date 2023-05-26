@@ -1,6 +1,7 @@
 import DevotionalsRepository from '@Modules/Devotionals/domain/repositories/DevotionalsRepository'
 import { TIMEZONE } from '@Shared/constants'
 import Formatter from '@Shared/helpers/Formatter'
+import { Errors } from '@Shared/helpers/Messages'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
 import ImageKit from '@Shared/services/ImageKit'
 import OneSignal from '@Shared/services/OneSignal'
@@ -56,7 +57,8 @@ export class CreateDevotionalController implements HTTPController {
 
       return res.status(201).json(devotional)
     } catch (e) {
-      res.sendStatus(500)
+      console.error(e)
+      return res.status(500).json({ error: Errors.INTERNAL_SERVER_ERROR })
     }
   }
 }
