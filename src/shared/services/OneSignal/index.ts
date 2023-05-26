@@ -40,6 +40,7 @@ class OneSignal extends Service {
           en: message,
           pt: message,
         },
+        included_segments: ['Subscribed Users'],
         send_after: scheduledDate?.toISOString(),
       })
     } catch (error) {
