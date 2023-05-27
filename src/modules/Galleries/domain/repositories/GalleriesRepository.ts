@@ -32,6 +32,29 @@ class GalleriesRepository {
         id,
         region,
       },
+      orderBy: {
+        createdAt: 'desc',
+      },
+      include: {
+        GalleryLikes: {
+          select: {
+            User: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        GalleryViews: {
+          select: {
+            User: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
     })
   }
 

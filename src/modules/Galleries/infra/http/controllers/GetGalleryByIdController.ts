@@ -5,7 +5,7 @@ import { Request, Response } from 'express'
 
 export class GetGalleryByIdController implements HTTPController {
   async execute(req: Request, res: Response): Promise<any> {
-    const { region, userId } = req.cookies.user ?? {}
+    const { region, id: userId } = req.cookies.user ?? {}
 
     try {
       const { id } = req.params
