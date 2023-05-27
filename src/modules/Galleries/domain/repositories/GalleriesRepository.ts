@@ -46,6 +46,62 @@ class GalleriesRepository {
       data,
     })
   }
+
+  async like(id: string, userId: string) {
+    try {
+      const like = await Prisma.galleryLikes.findFirst({
+        where: {
+          userId,
+          galleryId: id,
+        },
+      })
+
+      if (like) {
+        await Prisma.galleryLikes.delete({
+          where: {
+            userId_galleryId: {
+              galleryId: id,
+              userId,
+            },
+          },
+        })
+      } else {
+        await Prisma.galleryLikes.create({
+          data: {
+            galleryId: id,
+            userId,
+          },
+        })
+      }
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  async view(id: string, userId: string) {
+    try {
+      if (!userId) return
+
+      await Prisma.galleryViews.upsert({
+        create: {
+          galleryId: id,
+          userId,
+        },
+        where: {
+          userId_galleryId: {
+            galleryId: id,
+            userId,
+          },
+        },
+        update: {
+          galleryId: id,
+          userId,
+        },
+      })
+    } catch (error) {
+      console.error(error)
+    }
+  }
 }
 
 export default new GalleriesRepository()

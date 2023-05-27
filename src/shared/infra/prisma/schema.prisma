@@ -37,6 +37,8 @@ model User {
   DevotionalViews   DevotionalViews[]
   NewsLikes         NewsLikes[]
   NewsViews         NewsViews[]
+  GalleryLikes      GalleryLikes[]
+  GalleryViews      GalleryViews[]
 }
 
 model UserRefreshTokens {
@@ -159,12 +161,32 @@ model EventsSubscriptions {
 }
 
 model Gallery {
-  id                   String   @id @default(uuid())
+  id                   String         @id @default(uuid())
   title                String
   coverImage           String
   coverThumbnail       String
-  googlePhotosAlbumUrl String   @unique
+  googlePhotosAlbumUrl String         @unique
   assetId              String
-  region               Region   @default(AEP)
-  createdAt            DateTime @default(now())
+  region               Region         @default(AEP)
+  createdAt            DateTime       @default(now())
+  GalleryLikes         GalleryLikes[]
+  GalleryViews         GalleryViews[]
+}
+
+model GalleryLikes {
+  gallery   Gallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  galleryId String
+  User      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@id([userId, galleryId])
+}
+
+model GalleryViews {
+  gallery   Gallery @relation(fields: [galleryId], references: [id], onDelete: Cascade)
+  galleryId String
+  User      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+
+  @@id([userId, galleryId])
 }
