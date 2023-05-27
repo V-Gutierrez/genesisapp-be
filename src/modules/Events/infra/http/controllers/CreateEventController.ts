@@ -67,14 +67,6 @@ export class CreateEventController implements HTTPController {
         newEvent?.region,
       )
 
-      await OneSignal.send(
-        'Fim das inscrições',
-        `${title}: Falta uma hora para o fim das inscrições, não perca! Inscreva-se no app.`,
-        `${Environment.getEnv('FRONT_BASE_URL')}/eventos/inscricoes/${newEvent?.id}`,
-        zonedTimeToUtc(subHours(new Date(subscriptionsDueDate), 1), TIMEZONE),
-        newEvent?.region,
-      )
-
       return res.status(201).json(newEvent)
     } catch (err) {
       console.error(err)
