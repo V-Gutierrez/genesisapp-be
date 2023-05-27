@@ -8,6 +8,7 @@ import ImageKit from '@Shared/services/ImageKit'
 import OneSignal from '@Shared/services/OneSignal'
 import { ImageKitFolders } from '@Shared/types/Enum'
 import { HTTPController } from '@Shared/types/interfaces'
+import { subHours } from 'date-fns'
 import { zonedTimeToUtc } from 'date-fns-tz'
 import { Request, Response } from 'express'
 
@@ -63,6 +64,15 @@ export class CreateEventController implements HTTPController {
         `Inscreva-se para ${title} no app da Gênesis Church`,
         `${Environment.getEnv('FRONT_BASE_URL')}/eventos/inscricoes/${newEvent?.id}`,
         zonedTimeToUtc(new Date(subscriptionsScheduledTo), TIMEZONE),
+        newEvent?.region,
+      )
+
+      await OneSignal.send(
+        'Fim das inscrições',
+        `${title}: Falta uma hora para o fim das inscrições, não perca! Inscreva-se no app.`,
+        `${Environment.getEnv('FRONT_BASE_URL')}/eventos/inscricoes/${newEvent?.id}`,
+        zonedTimeToUtc(subHours(new Date(subscriptionsDueDate), 1), TIMEZONE),
+        newEvent?.region,
       )
 
       return res.status(201).json(newEvent)

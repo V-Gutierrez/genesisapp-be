@@ -1,6 +1,7 @@
 import * as OneSignalProvider from 'onesignal-node'
 import Environment from '@Shared/helpers/Environment'
 import { CreateNotificationBody } from 'onesignal-node/lib/types'
+import { Region } from '@prisma/client'
 import { Service } from '..'
 
 /**
@@ -33,11 +34,23 @@ class OneSignal extends Service {
     )
   }
 
+  private detectSegment(region?: Region): string[] {
+    switch (region) {
+      case 'FEC':
+        return ['Brazil']
+      case 'AEP':
+        return ['Argentina']
+      default:
+        return ['Subscribed Users']
+    }
+  }
+
   public async send(
     title: string,
     message: string,
     url?: string,
     scheduledDate?: Date,
+    region?: Region,
   ): Promise<void> {
     try {
       await this.oneSignalClient.createNotification({
@@ -50,7 +63,7 @@ class OneSignal extends Service {
           en: title,
           pt: title,
         },
-        included_segments: ['Subscribed Users'],
+        included_segments: this.detectSegment(region),
         send_after: scheduledDate?.toISOString(),
       })
     } catch (error) {
