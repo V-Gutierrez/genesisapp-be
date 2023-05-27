@@ -1,5 +1,6 @@
 import EventsRepository from '@Modules/Events/domain/repositories/EventsRepository'
 import { TIMEZONE } from '@Shared/constants'
+import Environment from '@Shared/helpers/Environment'
 import Formatter from '@Shared/helpers/Formatter'
 import { Errors } from '@Shared/helpers/Messages'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
@@ -58,7 +59,9 @@ export class CreateEventController implements HTTPController {
       })
 
       await OneSignal.send(
-        `Inscrições abertas: ${title}`,
+        'Inscrições abertas',
+        `Inscreva-se para ${title} no app da Gênesis Church`,
+        `${Environment.getEnv('FRONT_BASE_URL')}/eventos/inscricoes/${newEvent?.id}`,
         zonedTimeToUtc(new Date(subscriptionsScheduledTo), TIMEZONE),
       )
 

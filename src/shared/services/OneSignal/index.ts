@@ -33,12 +33,22 @@ class OneSignal extends Service {
     )
   }
 
-  public async send(message: string, scheduledDate?: Date): Promise<void> {
+  public async send(
+    title: string,
+    message: string,
+    url?: string,
+    scheduledDate?: Date,
+  ): Promise<void> {
     try {
       await this.oneSignalClient.createNotification({
         contents: {
           en: message,
           pt: message,
+        },
+        url,
+        headings: {
+          en: title,
+          pt: title,
         },
         included_segments: ['Subscribed Users'],
         send_after: scheduledDate?.toISOString(),

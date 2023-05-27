@@ -1,5 +1,6 @@
 import DevotionalsRepository from '@Modules/Devotionals/domain/repositories/DevotionalsRepository'
 import { TIMEZONE } from '@Shared/constants'
+import Environment from '@Shared/helpers/Environment'
 import Formatter from '@Shared/helpers/Formatter'
 import { Errors } from '@Shared/helpers/Messages'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
@@ -49,7 +50,9 @@ export class CreateDevotionalController implements HTTPController {
       })
 
       await OneSignal.send(
-        `Novo devocional: ${title}`,
+        'Novo devocional',
+        `Leia ${title} no app da Gênesis Church`,
+        `${Environment.getEnv('FRONT_BASE_URL')}/devocionais/${devotional.slug}`,
         zonedTimeToUtc(new Date(scheduledTo), TIMEZONE),
       )
 

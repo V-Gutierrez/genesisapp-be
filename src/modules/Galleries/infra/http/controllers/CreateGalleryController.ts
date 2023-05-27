@@ -1,8 +1,10 @@
 import GalleriesRepository from '@Modules/Galleries/domain/repositories/GalleriesRepository'
+import Environment from '@Shared/helpers/Environment'
 import Formatter from '@Shared/helpers/Formatter'
 import { Errors } from '@Shared/helpers/Messages'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
 import ImageKit from '@Shared/services/ImageKit'
+import OneSignal from '@Shared/services/OneSignal'
 import { ImageKitFolders } from '@Shared/types/Enum'
 import { HTTPController } from '@Shared/types/interfaces'
 import { Request, Response } from 'express'
@@ -42,6 +44,12 @@ export class CreateGalleryController implements HTTPController {
         region,
         googlePhotosAlbumUrl,
       })
+
+      await OneSignal.send(
+        'Nova galeria',
+        `Veja a galeria "${title}" no app da Gênesis Church`,
+        `${Environment.getEnv('FRONT_BASE_URL')}/galerias/${created.id}`,
+      )
 
       return res.status(201).json(created)
     } catch (error) {

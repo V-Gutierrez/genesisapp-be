@@ -1,5 +1,6 @@
 import NewsRepository from '@Modules/News/domain/repositories/NewsRepository'
 import { TIMEZONE } from '@Shared/constants'
+import Environment from '@Shared/helpers/Environment'
 import Formatter from '@Shared/helpers/Formatter'
 import { Errors } from '@Shared/helpers/Messages'
 import SchemaHelper from '@Shared/helpers/SchemaHelper'
@@ -50,7 +51,9 @@ export class CreateNewsController implements HTTPController {
       })
 
       await OneSignal.send(
-        `Nova notícia: ${title}`,
+        'Nova notícia',
+        `Confira: ${title}`,
+        `${Environment.getEnv('FRONT_BASE_URL')}/noticias/${news.slug}`,
         zonedTimeToUtc(new Date(scheduledTo), TIMEZONE),
       )
 

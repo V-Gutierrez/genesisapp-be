@@ -1,6 +1,5 @@
 import GrowthGroupsRepository from '@Modules/GrowthGroups/domain/repositories/GrowthGroupsRepository'
 import { Errors } from '@Shared/helpers/Messages'
-import OneSignal from '@Shared/services/OneSignal'
 import { HTTPController } from '@Shared/types/interfaces'
 import { Request, Response } from 'express'
 
