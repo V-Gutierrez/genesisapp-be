@@ -55,7 +55,7 @@ export class CreateNewsController implements HTTPController {
         `Confira: ${title}`,
         `${Environment.getEnv('FRONT_BASE_URL')}/noticias/${news.slug}`,
         zonedTimeToUtc(new Date(scheduledTo), TIMEZONE),
-        news.region,
+        news?.region,
       )
 
       return res.status(201).json(news)

@@ -54,7 +54,7 @@ export class CreateDevotionalController implements HTTPController {
         `Leia ${title} no app da Gênesis Church`,
         `${Environment.getEnv('FRONT_BASE_URL')}/devocionais/${devotional.slug}`,
         zonedTimeToUtc(new Date(scheduledTo), TIMEZONE),
-        devotional.region,
+        devotional?.region,
       )
 
       return res.status(201).json(devotional)

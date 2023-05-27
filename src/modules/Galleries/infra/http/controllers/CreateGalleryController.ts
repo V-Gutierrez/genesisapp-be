@@ -50,7 +50,7 @@ export class CreateGalleryController implements HTTPController {
         `Veja a galeria "${title}" no app da Gênesis Church`,
         `${Environment.getEnv('FRONT_BASE_URL')}/galerias/${created.id}`,
         undefined,
-        created.region,
+        created?.region,
       )
 
       return res.status(201).json(created)
