@@ -4,7 +4,7 @@ import ImageKit from '@Shared/services/ImageKit'
 import { HTTPController } from '@Shared/types/interfaces'
 import { Request, Response } from 'express'
 
-class DeleteGalleryByIdController implements HTTPController {
+export class DeleteGalleryByIdController implements HTTPController {
   async execute(req: Request, res: Response): Promise<any> {
     try {
       const { id } = req.params
@@ -20,3 +20,5 @@ class DeleteGalleryByIdController implements HTTPController {
     }
   }
 }
+
+export default new DeleteGalleryByIdController().execute
