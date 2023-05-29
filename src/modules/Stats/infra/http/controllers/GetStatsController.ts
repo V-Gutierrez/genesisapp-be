@@ -7,7 +7,7 @@ export class GetStatsController implements HTTPController {
     const { region } = req.cookies.user ?? {}
 
     try {
-      const { devotionals, activeUsers, growthGroups, news, ongoingEvents } =
+      const { devotionals, activeUsers, growthGroups, news, ongoingEvents, galleries } =
         await StatsRepository.getStats(region)
 
       return res.status(200).json({
@@ -16,6 +16,7 @@ export class GetStatsController implements HTTPController {
         growthGroups,
         news,
         ongoingEvents,
+        galleries,
       })
     } catch (error) {
       console.error(error)

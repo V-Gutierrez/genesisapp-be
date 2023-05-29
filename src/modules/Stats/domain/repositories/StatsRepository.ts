@@ -40,10 +40,21 @@ class StatsRepository {
           region,
         },
       }),
+      Prisma.gallery.count({
+        where: {
+          region,
+        },
+      }),
     ]
 
-    const [activeUsers, devotionals, growthGroups, news, ongoingEvents] =
-      await Promise.all(promises)
+    const {
+      0: activeUsers,
+      1: devotionals,
+      2: growthGroups,
+      3: news,
+      4: ongoingEvents,
+      5: galleries,
+    } = await Promise.all(promises)
 
     return {
       activeUsers,
@@ -51,6 +62,7 @@ class StatsRepository {
       growthGroups,
       news,
       ongoingEvents,
+      galleries,
     }
   }
 }
