@@ -114,6 +114,7 @@ class SchemaHelper {
     body: Joi.string().required(),
     highlightText: Joi.string().required(),
     scheduledTo: Joi.string().required(),
+    isHighlight: Joi.boolean().required(),
   })
 
   GALLERY_CREATION = Joi.object().keys({

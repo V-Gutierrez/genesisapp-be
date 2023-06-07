@@ -24,7 +24,7 @@ export class CreateNewsController implements HTTPController {
         return res.status(400).json({ message: 'coverImage is missing' })
       }
 
-      const { body, title, scheduledTo, highlightText } = req.body
+      const { body, title, scheduledTo, highlightText, isHighlight } = req.body
       const { file } = req
       const { region } = req.cookies.user ?? {}
 
@@ -48,6 +48,7 @@ export class CreateNewsController implements HTTPController {
         assetId: fileId,
         highlightText,
         region,
+        isHighlight,
       })
 
       await OneSignal.send(

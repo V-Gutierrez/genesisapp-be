@@ -53,7 +53,7 @@ class NewsRepository {
     })
   }
 
-  async getReleasedNews(region: Region, page: number, perPage: number) {
+  async getReleasedNews(region: Region, page: number, perPage: number, isHighlight = false) {
     const skip = (page - 1) * perPage
     const take = perPage
 
@@ -64,6 +64,7 @@ class NewsRepository {
             lte: zonedTimeToUtc(new Date(), TIMEZONE),
           },
           region,
+          isHighlight,
         },
         orderBy: {
           scheduledTo: 'desc',
