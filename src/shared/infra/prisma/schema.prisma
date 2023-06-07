@@ -114,6 +114,7 @@ model News {
   NewsLikes      NewsLikes[]
   NewsViews      NewsViews[]
   region         Region      @default(AEP)
+  isHighlight    Boolean     @default(false)
 }
 
 model NewsLikes {
