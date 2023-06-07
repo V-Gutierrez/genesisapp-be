@@ -55,6 +55,7 @@ export class CreateGalleryController implements HTTPController {
 
       return res.status(201).json(created)
     } catch (error) {
+      console.error(error)
       return res.status(500).json({ error: Errors.INTERNAL_SERVER_ERROR })
     }
   }

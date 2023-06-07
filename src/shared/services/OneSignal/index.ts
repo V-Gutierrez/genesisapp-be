@@ -52,6 +52,10 @@ class OneSignal extends Service {
     scheduledDate?: Date,
     region?: Region,
   ): Promise<void> {
+    if (!Environment.isProduction) {
+      return
+    }
+
     try {
       await this.oneSignalClient.createNotification({
         contents: {

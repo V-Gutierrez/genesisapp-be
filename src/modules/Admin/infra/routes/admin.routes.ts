@@ -12,6 +12,7 @@ import GetNewsAsAdminController from '@Modules/News/infra/http/controllers/GetNe
 import CreateNewsController from '@Modules/News/infra/http/controllers/CreateNewsController'
 import GetAllUsersAsAdminController from '@Modules/Users/infra/http/controllers/GetAllUsersAsAdminController'
 import CreateGalleryController from '@Modules/Galleries/infra/http/controllers/CreateGalleryController'
+import DeleteGalleryByIdController from '@Modules/Galleries/infra/http/controllers/DeleteGalleryByIdController'
 
 const AdminRouter = Router()
 
@@ -68,6 +69,12 @@ AdminRouter.route('/admin/galleries').post(
   Middlewares.AdminPermissioner,
   Middlewares.SingleFileUpload('coverImage'),
   CreateGalleryController,
+)
+
+AdminRouter.route('/admin/galleries/:id').delete(
+  Middlewares.Authentication,
+  Middlewares.AdminPermissioner,
+  DeleteGalleryByIdController,
 )
 
 export default AdminRouter
