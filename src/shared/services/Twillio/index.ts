@@ -1,3 +1,4 @@
+import Environment from '@Shared/helpers/Environment'
 import { Service } from '@Shared/services'
 import Formatter from 'src/shared/helpers/Formatter'
 
@@ -14,6 +15,7 @@ class Twillio extends Service {
 
   constructor() {
     super()
+
     this.accountSid = process.env.TWILIO_ACCOUNT_SID as string
     this.authToken = process.env.TWILIO_AUTH_TOKEN as string
     this.messagingServiceSid = process.env.TWILLIO_MESSAGING_SERVICE_SID as string
@@ -22,6 +24,8 @@ class Twillio extends Service {
   }
 
   async sendSimpleMessage(body: string, to: string) {
+    if (!Environment.isProduction) return
+
     try {
       await this.TwillioInstance.messages.create({
         body,

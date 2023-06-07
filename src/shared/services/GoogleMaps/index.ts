@@ -24,6 +24,7 @@ class GoogleMaps extends Service {
 
   public async getGeocodeFromAddress(address: string): Promise<AddressAPI.Location | null> {
     if (!address) throw new Error('Address is required')
+    if (!Environment.isProduction) return { lat: 0, lng: 0 }
 
     const autocompletedAddress = encodeURIComponent(await this.useAutocompleteAPI(address))
 
