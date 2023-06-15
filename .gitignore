@@ -3,3 +3,4 @@ build
 .env
 dist
 /prisma/seeds/execute.ts
+.DS_Store
