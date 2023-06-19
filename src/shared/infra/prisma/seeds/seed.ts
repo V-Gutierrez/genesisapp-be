@@ -8,12 +8,12 @@ async function seedUsers() {
     data: [
       {
         name: 'John Doe',
-        email: 'johndoe@example.com',
+        email: 'victorgutierrezgomes@gmail.com',
         phone: '+1 555-1234',
-        password: 'password123',
+        password: '$2a$09$yr1UKKhAabK1xwkVliGAIuMxaTLMuq.TFepXPITzlVt1RosEcUol2',
         birthdate: new Date('1990-01-01'),
         role: Role.ADMIN,
-        region: 'FEC',
+        region: 'AEP',
         active: true,
       },
       {
@@ -248,8 +248,7 @@ async function seedEvents() {
       description:
         'Join us for a day of giving back to the community! We will be cleaning up local parks and streets, planting trees, and more.',
       coverImage: 'https://example.com/images/community-service-day.jpg',
-      coverThumbnail:
-        'https://example.com/images/community-service-day-thumbnail.jpg',
+      coverThumbnail: 'https://example.com/images/community-service-day-thumbnail.jpg',
       assetId: 'c75f1b0f-c84f-413e-bb06-9399ac39c36a',
       maxSlots: 50,
       subscriptionsScheduledTo: new Date('2023-05-10T00:00:00Z'),
@@ -276,8 +275,7 @@ async function seedEvents() {
       description:
         'Bring the whole family for a night of fun and entertainment! We will be screening the latest blockbuster movies and serving free popcorn and drinks.',
       coverImage: 'https://example.com/images/family-movie-night.jpg',
-      coverThumbnail:
-        'https://example.com/images/family-movie-night-thumbnail.jpg',
+      coverThumbnail: 'https://example.com/images/family-movie-night-thumbnail.jpg',
       assetId: '11b179fc-08ea-4d9d-a9a2-5c9602e6fc84',
       maxSlots: 100,
       subscriptionsScheduledTo: new Date('2023-05-17T00:00:00Z'),
@@ -311,9 +309,10 @@ async function seedEvents() {
 
 async function main() {
   // await seedDevotionals()
-  // await seedUsers()
+  await seedUsers()
   // await seedNews()
   // await seedEvents()
+
   await seedGrowthGroups()
 }
 
