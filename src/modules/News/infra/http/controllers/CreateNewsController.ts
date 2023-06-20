@@ -15,6 +15,14 @@ export class CreateNewsController implements HTTPController {
   async execute(req: Request, res: Response) {
     try {
       const errors = SchemaHelper.validateSchema(SchemaHelper.NEWS_CREATION, req.body)
+      const isHighlightString = req.body.isHighlight
+
+      const isHighlightFlagABoolean =
+        typeof isHighlightString === 'string' ? Boolean(isHighlightString) : isHighlightString
+
+      if (!isHighlightFlagABoolean) {
+        return res.status(400).json({ message: 'isHighlight should be a boolean' })
+      }
 
       if (errors) {
         return res.status(400).json({ message: errors })
@@ -48,7 +56,7 @@ export class CreateNewsController implements HTTPController {
         assetId: fileId,
         highlightText,
         region,
-        isHighlight,
+        isHighlight: isHighlight === 'true' ? true : false,
       })
 
       await OneSignal.send(
