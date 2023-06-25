@@ -16,7 +16,7 @@ export const TEMPLATES: TemplateDepedency = {
     ): MailDataRequired => ({
       to,
       ...fromObject,
-      subject: 'Seja bem vindo à Genesis Church',
+      subject: 'Seja bem-vindo à Genesis Church',
       templateId: 'd-20dab053877c41cdb7feeda798233024',
       dynamicTemplateData,
     }),

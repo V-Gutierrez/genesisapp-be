@@ -10,8 +10,8 @@ class ImageKit extends Service {
   private readonly fakeUploadResponse: UploadResponse = {
     fileId: 'abc123',
     name: 'example.jpg',
-    url: 'https://example.com/images/example.jpg',
-    thumbnailUrl: 'https://example.com/images/example-thumbnail.jpg',
+    url: 'https://placehold.co/600x400',
+    thumbnailUrl: 'https://placehold.co/600x400',
     height: 1080,
     width: 1920,
     size: 1024,
