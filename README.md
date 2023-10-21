@@ -1,14 +1,23 @@
-Genesis App Backend
+# Genesis Church App
 
-https://app.treblle.com/projects/fcae4e28-2517-473f-bcab-b56e117736bc/documentation
+Este é um projeto dedicado a uma igreja na Argentina, que oferece um dashboard e um site para os usuários. O objetivo principal é fornecer uma plataforma abrangente para a comunidade da igreja.
 
-https://www.genesischurch.app/ <-
+## Descrição do Projeto (Backend)
 
-API Capabilities:
+O Genesis Church App Backend é a espinha dorsal deste projeto, fornecendo uma base sólida para todas as funcionalidades disponíveis. Alguns dos principais recursos incluem:
 
-- Store Data, Images and other.
-- Auth
-- Sendgrid and Twillio Integration
-- Google Photos Integration
-- Users Regionalization
-- CMS
+- **Armazenamento de Dados e Imagens**: Capacidade de armazenar dados e imagens importantes para a igreja.
+
+- **Autenticação (Auth)**: Um sistema robusto de autenticação para garantir a segurança e a privacidade dos usuários.
+
+- **Integração com Sendgrid e Twilio**: Possibilidade de se comunicar efetivamente com os membros da igreja por meio de e-mails e mensagens de texto.
+
+- **Integração com Google Photos**: Facilita o compartilhamento de fotos e memórias da igreja.
+
+- **Regionalização de Usuários**: Personalização da experiência do usuário com base em sua localização.
+
+- **Sistema de Gerenciamento de Conteúdo (CMS)**: Permite à equipe da igreja gerenciar e atualizar facilmente o conteúdo do site e do dashboard.
+
+Este repositório é uma parte fundamental do Genesis Church App e é mantido com carinho para apoiar a missão da igreja na Argentina. Junte-se a nós nessa jornada de fé e tecnologia.
+
+Para mais informações sobre o projeto, visite [Genesis Church App](https://www.genesischurch.app/).
