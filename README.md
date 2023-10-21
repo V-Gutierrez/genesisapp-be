@@ -20,4 +20,4 @@ O Genesis Church App Backend é a espinha dorsal deste projeto, fornecendo uma b
 
 Este repositório é uma parte fundamental do Genesis Church App e é mantido com carinho para apoiar a missão da igreja na Argentina. Junte-se a nós nessa jornada de fé e tecnologia.
 
-Para mais informações sobre o projeto, visite [Genesis Church App](https://www.genesischurch.app/).
+Para mais informações sobre o projeto, visite [Genesis Church App](https://github.com/V-Gutierrez/genesisapp-fe).
